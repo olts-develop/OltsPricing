@@ -1,0 +1,6 @@
+!.gitignore
+node_modules
+oltspricing.prj
+oltspricing.*.*.pui
+*.bak
+*.log

@@ -1,0 +1,106 @@
+BSP1:Ok: TUIXYA213233: TUIXYA193642: select * from TABLE( func_roompricebydest ('IMHO', 'LAS', DATE('2016-01-22'), DATE('2016-01-27'), current date, 1 ) )
+
+BSP2:Ok: TUIXYA192344: select * from TABLE( func_roompricebydest ('IMHO', 'MRU', DATE('2016-10-03'), DATE('2016-10-12'), current date, 2 ) )
+
+BSP3:NoK - No price lines returned: TUIXYA225404: select * from TABLE( func_roompricebydest ('IMHO', 'LAS', DATE('2016-03-13'), DATE('2016-03-31'), current date, 2 ) )
+select * from TABLE( func_all_tbl ('IMHO', 'TUIXYA225404', DATE('2016-03-13'), DATE('2016-03-31'), 2 ) )
+
+BSP4:Ok: TUIXYZ52136: select * from TABLE( func_roompricebydest ('IMHO', 'MCT', DATE('2016-08-27'), DATE('2016-09-03'), current date, 3 ) )
+
+BSP5:Ok: TUIXYA226264: select * from TABLE( func_roompricebydest ('IMHO', 'PRI', DATE('2016-07-07'), DATE('2016-07-17'), current date, 2, DATE('2011-04-25'), DATE('2007-04-25') ) )
+
+BSP6:Ok - 1240 anstatt 1445: TUIXYA226278: select * from TABLE( func_roompricebydest ('IMHO', 'PRI', DATE('2016-07-01'), DATE('2016-07-06'), current date, 2, DATE('2011-04-25') ) )
+Ok: select * from TABLE( func_all_tbl ('IMHO', 'TUIXYA226278', DATE('2016-07-01'), DATE('2016-07-06'),  2, DATE('2011-04-25') ) )
+Ok: select * from TABLE( func_spof3_tbl ('IMHO', 'TUIXYA226278', DATE('2016-07-01'), DATE('2016-07-06'), CURRENT DATE, 2, DATE('2011-04-25') ) )
+Ok: select * from TABLE( func_pricing3_tbl ('IMHO', 'TUIXYA226278', DATE('2016-07-01'), DATE('2016-07-06'), CURRENT DATE, 2, DATE('2011-04-25') ) )
+Ok: 1445: select func_pricing3 ('IMHO', 'TUIXYA226278', DATE('2016-07-01'), DATE('2016-07-06'), CURRENT DATE, 2, DATE('2011-04-25') )  from sysibm.sysdummy1
+OK: Liefert keien EB zurück: select * from  TABLE (func_eb2_tbl ('IMHO', 'TUIXYA226278', DATE('2016-07-01'), DATE('2016-07-06'), CURRENT DATE, 2, DATE('2011-04-25') ) ) 
+Ok: 1445: select func_pricing2 ('IMHO', 'TUIXYA226278', DATE('2016-07-01'), DATE('2016-07-06'), CURRENT DATE, 2, DATE('2011-04-25') )  from sysibm.sysdummy1
+Problem liegt mit "func_roompricebydest" Function!!!
+select * from TABLE( func_roomvalid( 'IMHO', 'TUIXYA226278', 2, DATE('2011-04-25') ) )
+ TOCODE  ROOMKEY       NRADULTS  CHILDBIRTHDATE1  CHILDBIRTHDATE2  CHILDBIRTHDATE3  CHILDBIRTHDATE4
+ ------  ------------  --------  ---------------  ---------------  ---------------  ---------------
+  IMHO   TUIXYA226278         2  NULL             NULL             NULL             NULL
+Hier liegt der Bock!!!
+select func_getposdatedesc( 0, 1, DATE('2011-04-25'), CAST(NULL AS DATE), CAST(NULL AS DATE), CAST(NULL AS DATE) ) from sysibm.sysdummy1
+1
+----
+NULL
+Hier liegt der Bock !!!
+Nach Korrektur von "func_getposdatedesc" funktioniert dies korrekt: Ergebnis ist jetzt 1445.
+
+BSP7:Ok: TUIXYA166116: select * from TABLE( func_roompricebydest ('IMHO', 'KBV', DATE('2016-12-26'), DATE('2017-01-05'), current date, 2 ) )
+
+BSP8:Ok - Viele Zeilen werden zurückgeliefert, 8988 anstatt 8089.20: TUIXYA194584: select * from TABLE( func_roompricebydest ('IMHO', 'HKT', DATE('2016-05-05'), DATE('2016-05-12'), current date, 3 ) )
+Ok: 8988: select * from TABLE( func_all_tbl ('IMHO', 'TUIXYA194584', DATE('2016-05-05'), DATE('2016-05-12'), 3 ) )
+NoK: liefert nichts zurück: select * from  TABLE (func_eb2_tbl ('IMHO', 'TUIXYA194584', DATE('2016-05-05'), DATE('2016-05-12'), CURRENT DATE, 3 ) ) 
+select * from TOOEARLYBOOKINGS where ROOMKEY='TUIXYA194584'
+
+ID  HOTELKEY     ROOMKEY       CURRENCY  DATEFROM    DATETO      FROMDAY  TODAY  DAYSBEFOREDEPARTUREFROM  DAYSBEFOREDEPARTURETO  DATEBEFOREDEPARTUREFROM  DATEBEFOREDEPARTURETO  PERCENT  STARTDATERELEVANT  ENDDATERELEVANT  ADDAMOUNT  FORCEDISPLAY  FORALLDAYS  DESCID  SPECIALCOMMISSION  RULETYPE  WEEKDAYSVALID  AGEFROM  AGETO  CHILDIDXNR  SPECIALCOMMISSIONFLAG  ONETIME  TOCODE  P_SEQ
+--  -----------  ------------  --------  ----------  ----------  -------  -----  -----------------------  ---------------------  -----------------------  ---------------------  -------  -----------------  ---------------  ---------  ------------  ----------  ------  -----------------  --------  -------------  -------  -----  ----------  ---------------------  -------  ------  -----
+13  TUIXYA41018  TUIXYA194584  CHF       2016-04-01  2016-10-31        1     99                      999                     30  NULL                     NULL                    -10.00                  0                0       0.00             0           0       3               0.00  Nr        1111111              0      0           0                      0        0  IMHO    NULL
+Würde hier ein EarlyBooking von 10% erwarten.
+Nach fix von "func_eb2_tbl" alles Ok.
+
+BSP9:Ok - Viele Zeilen werden zurückgeliefert, 8128 anstatt 7483.20: TUIXYA167760: select * from TABLE( func_roompricebydest ('IMHO', 'HKT', DATE('2016-05-13'), DATE('2016-05-21'), current date, 2, DATE('2011-04-25') ) )
+Ok: select * from TABLE( func_all_tbl ('IMHO', 'TUIXYA167760', DATE('2016-05-13'), DATE('2016-05-21'), 2, DATE('2011-04-25') ) )
+select * from TOOEARLYBOOKINGS where ROOMKEY='TUIXYA167760'
+select * from  TABLE (func_eb2_tbl ('IMHO', 'TUIXYA167760', DATE('2016-05-13'), DATE('2016-05-21'), current date, 2, DATE('2011-04-25') ) )
+Dies liefert anstatt 812.80 neu 828.80, was aber richtiger ist als die Berechnung im TO Online, weil hier noch die Kinderpreise mitberücksichtigt werden.
+NR  PRICE    TOTAL    TYPE1  TYPE2  FROMDATE    TODATE      DESCID  P_SEQ
+--  -------  -------  -----  -----  ----------  ----------  ------  -----
+ 1  -101.60  -101.60  EB     ADT    2016-05-13  2016-05-13       5  NULL
+ 1    -2.10    -2.10  EB     CHD1   2016-05-13  2016-05-13       5  NULL
+Dies 8 mal.
+Ich würde sagen die Berechnung im SQL ist besser und korrekter als die im TO Online, also müsste dieses Beispiel Ok sein.
+
+BSP10:Ok - 8635 anstatt 8391.40: TUIXYA193642: select * from TABLE( func_roompricebydest ('IMHO', 'MLE', DATE('2016-06-24'), DATE('2016-07-02'), current date, 2, DATE('2007-04-25'), DATE('2007-04-25') ) )
+TOCODE ROOMKEY      TOTAL   DESTINATIONCODE HOTELCODE TOURBOCODE MEALCODE
+------ ------------ ------- --------------- --------- ---------- --------
+IMHO   TUIXYA193642 9875.00 MLE             SIXLAA    B2         HB
+
+select * from TABLE( func_all_tbl ('IMHO', 'TUIXYA167760', DATE('2016-06-24'), DATE('2016-07-02'), 2, DATE('2007-04-25'), DATE('2007-04-25') ) )
+The price for the first child is returned, but not for the second child. The reason: there are no prices for the second child!
+TODO: need to check why we do not export prices for the second child.
+TODO: need to check how the current internal pricing handles the child-pricing based on the current flag structure.
+
+select * from TABLE( func_all_tbl ('IMHO', 'TUIXYA193642', DATE('2016-06-24'), DATE('2016-07-02'), 2, DATE('2007-04-25'), DATE('2007-04-25') ) )
+order by TYPE2 ASC, case TYPE1 when 'PDP' then 1 when 'APDP' then 2 when 'OT' then 3 when 'SO' then 4 when 'EB' then 5 else 99 end ASC, FROMDATE ASC, TODATE ASC
+
+This now returns the correct price for PDP, APDP and OT. The problem must be with EB or SO.
+
+select sum(TOTAL) from  TABLE (func_eb2_tbl ('IMHO', 'TUIXYA193642', DATE('2016-06-24'), DATE('2016-07-02'), current date, 2, DATE('2007-04-25'), DATE('2007-04-25') ) )
+Returns: -643, which does not map the value in TO Online.
+
+select * from  TABLE (func_eb2_tbl ('IMHO', 'TUIXYA193642', DATE('2016-06-24'), DATE('2016-07-02'), current date, 2, DATE('2007-04-25'), DATE('2007-04-25') ) )
+WHERE TOTAL <> 0
+order by TYPE2 ASC, case TYPE1 when 'PDP' then 1 when 'APDP' then 2 when 'OT' then 3 when 'SO' then 4 when 'EB' then 5 else 99 end ASC, FROMDATE ASC, TODATE ASC 
+NR PRICE  TOTAL  TYPE1 TYPE2 FROMDATE   TODATE     DESCID P_SEQ
+-- ------ ------ ----- ----- ---------- ---------- ------ -----
+ 1 -89.40 -89.40 EB    ADT   2016-06-24 2016-06-24     17 NULL
+ 1 -89.40 -89.40 EB    ADT   2016-06-25 2016-06-25     17 NULL
+ 1 -89.40 -89.40 EB    ADT   2016-06-26 2016-06-26     17 NULL
+ 1 -89.40 -89.40 EB    ADT   2016-06-27 2016-06-27     17 NULL
+ 1 -17.20 -17.20 EB    ADT   2016-06-28 2016-06-28     17 NULL <---- Strange
+ 1 -89.40 -89.40 EB    ADT   2016-06-29 2016-06-29     17 NULL
+ 1 -89.40 -89.40 EB    ADT   2016-06-30 2016-06-30     17 NULL
+ 1 -89.40 -89.40 EB    ADT   2016-07-01 2016-07-01     17 NULL
+
+select * from  TABLE (func_spof3_tbl ('IMHO', 'TUIXYA193642', DATE('2016-06-24'), DATE('2016-07-02'), current date, 2, DATE('2007-04-25'), DATE('2007-04-25') ) )
+Daten kommen hier korrekt.
+
+Ok, jetzt geht es besser. Problem war in der Berechnung vom SO, wo der AddAmount addiert anstatt subtrahiert wurde.
+
+select * from TABLE( func_pricing3_tbl ('IMHO', 'TUIXYA193642', DATE('2016-06-24'), DATE('2016-07-02'), current date, 2, DATE('2007-04-25'), DATE('2007-04-25') ) )
+order by TYPE2 ASC, case TYPE1 when 'PDP' then 1 when 'APDP' then 2 when 'OT' then 3 when 'SO' then 4 when 'EB' then 5 else 99 end ASC, FROMDATE ASC, TODATE ASC
+
+Alles Ok, ausser der EB fehlt
+
+select * from TABLE( func_pricing2_tbl ('IMHO', 'TUIXYA193642', DATE('2016-06-24'), DATE('2016-07-02'), current date, 2, DATE('2007-04-25'), DATE('2007-04-25') ) )
+order by TYPE2 ASC, case TYPE1 when 'PDP' then 1 when 'APDP' then 2 when 'OT' then 3 when 'SO' then 4 when 'EB' then 5 else 99 end ASC, FROMDATE ASC, TODATE ASC
+
+Beachte: hier wird "func_pricing2_tbl" aufgerufen. Jetzt kommt auch der EB und die Preise sind korrekt.
+
+Es gab noch ein Schreibfehler in "func_getposdatedesc". Jetzt kommen die Daten auch mit "func_roompricebydest" korrekt.
+
+select * from TABLE( func_roompricebydest ('STOH', 'MRU', DATE('2015-09-03'), DATE('2015-09-10'), current date, 2 ) )
