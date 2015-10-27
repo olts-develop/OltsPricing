@@ -16,10 +16,10 @@ alter table TOOMISCTEXT         alter ID set cache 1000 @
 
 -- REPLACE löscht alle Daten in der Tabelle vor dem Import
 CALL SYSPROC.ADMIN_CMD( 'LOAD FROM "C:\dev\github\OltsPricing\sql\import\tooHotels.csv"           OF DEL MODIFIED BY norowwarnings   REPLACE INTO TOOHOTEL' ) @
-CALL SYSPROC.ADMIN_CMD( 'LOAD FROM "C:\dev\github\OltsPricing\sql\import\tooRooms_c.csv"          OF DEL                             REPLACE INTO TOOROOMS' ) @
+CALL SYSPROC.ADMIN_CMD( 'LOAD FROM "C:\dev\github\OltsPricing\sql\import\tooRooms.csv"            OF DEL                             REPLACE INTO TOOROOMS' ) @
 CALL SYSPROC.ADMIN_CMD( 'LOAD FROM "C:\dev\github\OltsPricing\sql\import\tooMisc.csv"             OF DEL                             REPLACE INTO TOOMISC' ) @
-CALL SYSPROC.ADMIN_CMD( 'LOAD FROM "C:\dev\github\OltsPricing\sql\import\tooMiscHotel.csv"        OF DEL                             REPLACE INTO TOOMISCHOTEL' ) @
-CALL SYSPROC.ADMIN_CMD( 'LOAD FROM "C:\dev\github\OltsPricing\sql\import\tooMiscText.csv"         OF DEL                             REPLACE INTO TOOMISCTEXT' ) @
+CALL SYSPROC.ADMIN_CMD( 'LOAD FROM "C:\dev\github\OltsPricing\sql\import\tooMiscHotel.csv"        OF DEL MODIFIED BY identitymissing REPLACE INTO TOOMISCHOTEL' ) @
+CALL SYSPROC.ADMIN_CMD( 'LOAD FROM "C:\dev\github\OltsPricing\sql\import\tooMiscText.csv"         OF DEL MODIFIED BY identitymissing REPLACE INTO TOOMISCTEXT' ) @
 CALL SYSPROC.ADMIN_CMD( 'LOAD FROM "C:\dev\github\OltsPricing\sql\import\tooDescriptions.csv"     OF DEL MODIFIED BY identitymissing REPLACE INTO TOODESCRIPTIONS' ) @
 CALL SYSPROC.ADMIN_CMD( 'LOAD FROM "C:\dev\github\OltsPricing\sql\import\tooPerDayPrices.csv"     OF DEL MODIFIED BY identitymissing REPLACE INTO TOOPERDAYPRICE' ) @
 CALL SYSPROC.ADMIN_CMD( 'LOAD FROM "C:\dev\github\OltsPricing\sql\import\tooAddPerDayPrices.csv"  OF DEL MODIFIED BY identitymissing REPLACE INTO TOOADDPERDAYPRICE' ) @

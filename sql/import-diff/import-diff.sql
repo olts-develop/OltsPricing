@@ -55,22 +55,22 @@ alter table TOOMISCTEXT          alter ID set cache 20 @
 
 -- INSERT fügt nur die neuen Daten hinzu. Da die Daten oben gelöscht wurden führt dies zu keinen Konflikten.
 -- Am Besten wäre wenn der DELETE in einer Transaktion wäre, und bei einem Problem gibt es ein ROLLBACK.
-CALL SYSPROC.ADMIN_CMD( 'IMPORT FROM "C:\dev\github\OltsPricing\sql\import\tooRooms_c.csv" OF DEL COMMITCOUNT 10000 INSERT INTO TOOROOMS' ) @
-CALL SYSPROC.ADMIN_CMD( 'IMPORT FROM "C:\dev\github\OltsPricing\sql\import\tooMisc.csv" OF DEL COMMITCOUNT 10000 INSERT INTO TOOMISC' ) @
-CALL SYSPROC.ADMIN_CMD( 'IMPORT FROM "C:\dev\github\OltsPricing\sql\import\tooMiscHotel.csv" OF DEL COMMITCOUNT 10000 INSERT INTO TOOMISCHOTEL' ) @
-CALL SYSPROC.ADMIN_CMD( 'IMPORT FROM "C:\dev\github\OltsPricing\sql\import\tooMiscText.csv" OF DEL COMMITCOUNT 10000 INSERT INTO TOOMISCTEXT' ) @
-CALL SYSPROC.ADMIN_CMD( 'IMPORT FROM "C:\dev\github\OltsPricing\sql\import\tooDescriptions.csv" OF DEL MODIFIED BY identitymissing COMMITCOUNT 10000 INSERT INTO TOODESCRIPTIONS' ) @
-CALL SYSPROC.ADMIN_CMD( 'IMPORT FROM "C:\dev\github\OltsPricing\sql\import\tooPerDayPrices.csv" OF DEL MODIFIED BY identitymissing COMMITCOUNT 10000 INSERT INTO TOOPERDAYPRICE' ) @
+CALL SYSPROC.ADMIN_CMD( 'IMPORT FROM "C:\dev\github\OltsPricing\sql\import\tooRooms.csv"           OF DEL                             COMMITCOUNT 10000 INSERT INTO TOOROOMS' ) @
+CALL SYSPROC.ADMIN_CMD( 'IMPORT FROM "C:\dev\github\OltsPricing\sql\import\tooMisc.csv"            OF DEL                             COMMITCOUNT 10000 INSERT INTO TOOMISC' ) @
+CALL SYSPROC.ADMIN_CMD( 'IMPORT FROM "C:\dev\github\OltsPricing\sql\import\tooMiscHotel.csv"       OF DEL MODIFIED BY identitymissing COMMITCOUNT 10000 INSERT INTO TOOMISCHOTEL' ) @
+CALL SYSPROC.ADMIN_CMD( 'IMPORT FROM "C:\dev\github\OltsPricing\sql\import\tooMiscText.csv"        OF DEL MODIFIED BY identitymissing COMMITCOUNT 10000 INSERT INTO TOOMISCTEXT' ) @
+CALL SYSPROC.ADMIN_CMD( 'IMPORT FROM "C:\dev\github\OltsPricing\sql\import\tooDescriptions.csv"    OF DEL MODIFIED BY identitymissing COMMITCOUNT 10000 INSERT INTO TOODESCRIPTIONS' ) @
+CALL SYSPROC.ADMIN_CMD( 'IMPORT FROM "C:\dev\github\OltsPricing\sql\import\tooPerDayPrices.csv"    OF DEL MODIFIED BY identitymissing COMMITCOUNT 10000 INSERT INTO TOOPERDAYPRICE' ) @
 CALL SYSPROC.ADMIN_CMD( 'IMPORT FROM "C:\dev\github\OltsPricing\sql\import\tooAddPerDayPrices.csv" OF DEL MODIFIED BY identitymissing COMMITCOUNT 10000 INSERT INTO TOOADDPERDAYPRICE' ) @
-CALL SYSPROC.ADMIN_CMD( 'IMPORT FROM "C:\dev\github\OltsPricing\sql\import\tooOneTimes.csv" OF DEL MODIFIED BY identitymissing COMMITCOUNT 10000 INSERT INTO TOOONETIME' ) @
-CALL SYSPROC.ADMIN_CMD( 'IMPORT FROM "C:\dev\github\OltsPricing\sql\import\tooSpecialOffers.csv" OF DEL MODIFIED BY identitymissing COMMITCOUNT 10000 INSERT INTO TOOSPECIALOFFERS' ) @
-CALL SYSPROC.ADMIN_CMD( 'IMPORT FROM "C:\dev\github\OltsPricing\sql\import\tooEarlyBookings.csv" OF DEL MODIFIED BY identitymissing COMMITCOUNT 10000 INSERT INTO TOOEARLYBOOKINGS' ) @
-CALL SYSPROC.ADMIN_CMD( 'IMPORT FROM "C:\dev\github\OltsPricing\sql\import\tooAllotments.csv" OF DEL MODIFIED BY identitymissing COMMITCOUNT 10000 INSERT INTO TOOALLOTMENTS' ) @
-CALL SYSPROC.ADMIN_CMD( 'IMPORT FROM "C:\dev\github\OltsPricing\sql\import\tooCancellations.csv" OF DEL MODIFIED BY identitymissing COMMITCOUNT 10000 INSERT INTO TOOCANCELLATIONS' ) @
-CALL SYSPROC.ADMIN_CMD( 'IMPORT FROM "C:\dev\github\OltsPricing\sql\import\tooItemInfos.csv" OF DEL MODIFIED BY identitymissing COMMITCOUNT 10000 INSERT INTO TOOITEMINFOS' ) @
-CALL SYSPROC.ADMIN_CMD( 'IMPORT FROM "C:\dev\github\OltsPricing\sql\import\tooPeriodPrices.csv" OF DEL MODIFIED BY identitymissing COMMITCOUNT 10000 INSERT INTO TOOPERIODPRICE' ) @
+CALL SYSPROC.ADMIN_CMD( 'IMPORT FROM "C:\dev\github\OltsPricing\sql\import\tooOneTimes.csv"        OF DEL MODIFIED BY identitymissing COMMITCOUNT 10000 INSERT INTO TOOONETIME' ) @
+CALL SYSPROC.ADMIN_CMD( 'IMPORT FROM "C:\dev\github\OltsPricing\sql\import\tooSpecialOffers.csv"   OF DEL MODIFIED BY identitymissing COMMITCOUNT 10000 INSERT INTO TOOSPECIALOFFERS' ) @
+CALL SYSPROC.ADMIN_CMD( 'IMPORT FROM "C:\dev\github\OltsPricing\sql\import\tooEarlyBookings.csv"   OF DEL MODIFIED BY identitymissing COMMITCOUNT 10000 INSERT INTO TOOEARLYBOOKINGS' ) @
+CALL SYSPROC.ADMIN_CMD( 'IMPORT FROM "C:\dev\github\OltsPricing\sql\import\tooAllotments.csv"      OF DEL MODIFIED BY identitymissing COMMITCOUNT 10000 INSERT INTO TOOALLOTMENTS' ) @
+CALL SYSPROC.ADMIN_CMD( 'IMPORT FROM "C:\dev\github\OltsPricing\sql\import\tooCancellations.csv"   OF DEL MODIFIED BY identitymissing COMMITCOUNT 10000 INSERT INTO TOOCANCELLATIONS' ) @
+CALL SYSPROC.ADMIN_CMD( 'IMPORT FROM "C:\dev\github\OltsPricing\sql\import\tooItemInfos.csv"       OF DEL MODIFIED BY identitymissing COMMITCOUNT 10000 INSERT INTO TOOITEMINFOS' ) @
+CALL SYSPROC.ADMIN_CMD( 'IMPORT FROM "C:\dev\github\OltsPricing\sql\import\tooPeriodPrices.csv"    OF DEL MODIFIED BY identitymissing COMMITCOUNT 10000 INSERT INTO TOOPERIODPRICE' ) @
 CALL SYSPROC.ADMIN_CMD( 'IMPORT FROM "C:\dev\github\OltsPricing\sql\import\tooAddPeriodPrices.csv" OF DEL MODIFIED BY identitymissing COMMITCOUNT 10000 INSERT INTO TOOADDPERIODPRICE' ) @
-CALL SYSPROC.ADMIN_CMD( 'IMPORT FROM "C:\dev\github\OltsPricing\sql\import\tooHotels.csv" OF DEL MODIFIED BY norowwarnings COMMITCOUNT 10000 INSERT INTO TOOHOTEL' ) @
+CALL SYSPROC.ADMIN_CMD( 'IMPORT FROM "C:\dev\github\OltsPricing\sql\import\tooHotels.csv"          OF DEL MODIFIED BY norowwarnings   COMMITCOUNT 10000 INSERT INTO TOOHOTEL' ) @
 
 
 alter table TOODESCRIPTIONS      alter ID set no cache @

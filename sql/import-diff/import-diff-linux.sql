@@ -53,10 +53,10 @@ alter table TOOMISCTEXT         alter ID set cache 20 @
 
 -- INSERT fügt nur die neuen Daten hinzu. Da die Daten oben gelöscht wurden führt dies zu keinen Konflikten.
 -- Am Besten wäre wenn der DELETE in einer Transaktion wäre, und bei einem Problem gibt es ein ROLLBACK.
-IMPORT FROM ../import/tooRooms_c.csv         OF DEL                             COMMITCOUNT 10000   INSERT INTO TOOROOMS @
+IMPORT FROM ../import/tooRooms.csv           OF DEL                             COMMITCOUNT 10000   INSERT INTO TOOROOMS @
 IMPORT FROM ../import/tooMisc.csv            OF DEL                             COMMITCOUNT 10000   INSERT INTO TOOMISC @
-IMPORT FROM ../import/tooMiscHotel.csv       OF DEL                             COMMITCOUNT 10000   INSERT INTO TOOMISCHOTEL @
-IMPORT FROM ../import/tooMiscText.csv        OF DEL                             COMMITCOUNT 10000   INSERT INTO TOOMISCTEXT @
+IMPORT FROM ../import/tooMiscHotel.csv       OF DEL MODIFIED BY identitymissing COMMITCOUNT 10000   INSERT INTO TOOMISCHOTEL @
+IMPORT FROM ../import/tooMiscText.csv        OF DEL MODIFIED BY identitymissing COMMITCOUNT 10000   INSERT INTO TOOMISCTEXT @
 IMPORT FROM ../import/tooDescriptions.csv    OF DEL MODIFIED BY identitymissing COMMITCOUNT 10000   INSERT INTO TOODESCRIPTIONS @
 IMPORT FROM ../import/tooPerDayPrices.csv    OF DEL MODIFIED BY identitymissing COMMITCOUNT 10000   INSERT INTO TOOPERDAYPRICE @
 IMPORT FROM ../import/tooAddPerDayPrices.csv OF DEL MODIFIED BY identitymissing COMMITCOUNT 10000   INSERT INTO TOOADDPERDAYPRICE @

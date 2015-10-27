@@ -15,10 +15,10 @@ alter table TOOMISCTEXT         alter ID set cache 1000 @
 
 
 -- REPLACE löscht alle Daten in der Tabelle vor dem Import
-CALL SYSPROC.ADMIN_CMD( 'IMPORT FROM "C:\dev\github\OltsPricing\sql\import\tooRooms_c.csv"         OF DEL                             COMMITCOUNT 10000 REPLACE INTO TOOROOMS' ) @
+CALL SYSPROC.ADMIN_CMD( 'IMPORT FROM "C:\dev\github\OltsPricing\sql\import\tooRooms.csv"           OF DEL                             COMMITCOUNT 10000 REPLACE INTO TOOROOMS' ) @
 CALL SYSPROC.ADMIN_CMD( 'IMPORT FROM "C:\dev\github\OltsPricing\sql\import\tooMisc.csv"            OF DEL                             COMMITCOUNT 10000 REPLACE INTO TOOMISC' ) @
-CALL SYSPROC.ADMIN_CMD( 'IMPORT FROM "C:\dev\github\OltsPricing\sql\import\tooMiscHotel.csv"       OF DEL                             COMMITCOUNT 10000 REPLACE INTO TOOMISCHOTEL' ) @
-CALL SYSPROC.ADMIN_CMD( 'IMPORT FROM "C:\dev\github\OltsPricing\sql\import\tooMiscText.csv"        OF DEL                             COMMITCOUNT 10000 REPLACE INTO TOOMISCTEXT' ) @
+CALL SYSPROC.ADMIN_CMD( 'IMPORT FROM "C:\dev\github\OltsPricing\sql\import\tooMiscHotel.csv"       OF DEL MODIFIED BY identitymissing COMMITCOUNT 10000 REPLACE INTO TOOMISCHOTEL' ) @
+CALL SYSPROC.ADMIN_CMD( 'IMPORT FROM "C:\dev\github\OltsPricing\sql\import\tooMiscText.csv"        OF DEL MODIFIED BY identitymissing COMMITCOUNT 10000 REPLACE INTO TOOMISCTEXT' ) @
 CALL SYSPROC.ADMIN_CMD( 'IMPORT FROM "C:\dev\github\OltsPricing\sql\import\tooDescriptions.csv"    OF DEL MODIFIED BY identitymissing COMMITCOUNT 10000 REPLACE INTO TOODESCRIPTIONS' ) @
 CALL SYSPROC.ADMIN_CMD( 'IMPORT FROM "C:\dev\github\OltsPricing\sql\import\tooPerDayPrices.csv"    OF DEL MODIFIED BY identitymissing COMMITCOUNT 10000 REPLACE INTO TOOPERDAYPRICE' ) @
 CALL SYSPROC.ADMIN_CMD( 'IMPORT FROM "C:\dev\github\OltsPricing\sql\import\tooAddPerDayPrices.csv" OF DEL MODIFIED BY identitymissing COMMITCOUNT 10000 REPLACE INTO TOOADDPERDAYPRICE' ) @

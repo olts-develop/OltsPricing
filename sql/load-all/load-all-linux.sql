@@ -15,10 +15,10 @@ alter table TOOMISCTEXT         alter ID set cache 1000 @
 
 
 -- REPLACE löscht alle Daten in der Tabelle vor dem Import
-LOAD CLIENT FROM "/home/oltworker/projects/hotel_api/src/modules/tfs/tfsimporter/sql/import/tooRooms_c.csv"         OF DEL                             REPLACE INTO TOOROOMS @
+LOAD CLIENT FROM "/home/oltworker/projects/hotel_api/src/modules/tfs/tfsimporter/sql/import/tooRooms.csv"           OF DEL                             REPLACE INTO TOOROOMS @
 LOAD CLIENT FROM "/home/oltworker/projects/hotel_api/src/modules/tfs/tfsimporter/sql/import/tooMisc.csv"            OF DEL                             REPLACE INTO TOOMISC @
-LOAD CLIENT FROM "/home/oltworker/projects/hotel_api/src/modules/tfs/tfsimporter/sql/import/tooMiscHotel.csv"       OF DEL                             REPLACE INTO TOOMISCHOTEL @
-LOAD CLIENT FROM "/home/oltworker/projects/hotel_api/src/modules/tfs/tfsimporter/sql/import/tooMiscText.csv"        OF DEL                             REPLACE INTO TOOMISCTEXT @
+LOAD CLIENT FROM "/home/oltworker/projects/hotel_api/src/modules/tfs/tfsimporter/sql/import/tooMiscHotel.csv"       OF DEL MODIFIED BY identitymissing REPLACE INTO TOOMISCHOTEL @
+LOAD CLIENT FROM "/home/oltworker/projects/hotel_api/src/modules/tfs/tfsimporter/sql/import/tooMiscText.csv"        OF DEL MODIFIED BY identitymissing REPLACE INTO TOOMISCTEXT @
 LOAD CLIENT FROM "/home/oltworker/projects/hotel_api/src/modules/tfs/tfsimporter/sql/import/tooDescriptions.csv"    OF DEL MODIFIED BY identitymissing REPLACE INTO TOODESCRIPTIONS @
 LOAD CLIENT FROM "/home/oltworker/projects/hotel_api/src/modules/tfs/tfsimporter/sql/import/tooPerDayPrices.csv"    OF DEL MODIFIED BY identitymissing REPLACE INTO TOOPERDAYPRICE @
 LOAD CLIENT FROM "/home/oltworker/projects/hotel_api/src/modules/tfs/tfsimporter/sql/import/tooAddPerDayPrices.csv" OF DEL MODIFIED BY identitymissing REPLACE INTO TOOADDPERDAYPRICE @
@@ -32,7 +32,7 @@ LOAD CLIENT FROM "/home/oltworker/projects/hotel_api/src/modules/tfs/tfsimporter
 LOAD CLIENT FROM "/home/oltworker/projects/hotel_api/src/modules/tfs/tfsimporter/sql/import/tooAddPeriodPrices.csv" OF DEL MODIFIED BY identitymissing REPLACE INTO TOOADDPERIODPRICE @
 -- Important: the tooHotels.csv can, and normally does, contain duplicated data. A LOAD will result in duplicate data.
 -- It is *very* important to use the IMPORT here, as this will ignore duplicates.                                              
-IMPORT FROM "../import/tooHotels.csv"  OF DEL MODIFIED BY norowwarnings COMMITCOUNT 100000 REPLACE INTO TOOHOTEL @
+IMPORT      FROM "../import/tooHotels.csv"  OF DEL MODIFIED BY norowwarnings COMMITCOUNT 100000 REPLACE INTO TOOHOTEL @
 
 
 alter table TOODESCRIPTIONS     alter ID set no cache @
