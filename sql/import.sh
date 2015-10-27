@@ -42,7 +42,7 @@ echo "#########################################################"
 echo "."
 
 # convert from utf-8 to iso-8859-1
-iconv -f 'utf-8' -t 'iso-8859-1' -o tooRooms_c.csv tooRooms.csv
+# iconv -f 'utf-8' -t 'iso-8859-1' -o tooRooms_c.csv tooRooms.csv
 
 # move files to import folder
 mv *.csv import
