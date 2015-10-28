@@ -122,6 +122,67 @@ BEGIN
 END
 @
 
+DROP FUNCTION func_miscvalid_ch @
+
+create function func_miscvalid_ch
+(
+   p_tocode VARCHAR(5) DEFAULT ''
+  ,p_misckey VARCHAR(20) DEFAULT ''
+  ,p_startdate VARCHAR(10) DEFAULT ''
+  ,p_enddate VARCHAR(10) DEFAULT '' 
+  ,p_nradults INTEGER DEFAULT 0
+  ,p_childbirthdate1 VARCHAR(10) DEFAULT ''
+  ,p_childbirthdate2 VARCHAR(10) DEFAULT ''
+  ,p_childbirthdate3 VARCHAR(10) DEFAULT ''
+  ,p_childbirthdate4 VARCHAR(10) DEFAULT ''
+)
+RETURNS
+  TABLE
+  (
+	NRADULTS INTEGER
+	,CHILDBIRTHDATE1 DATE
+	,CHILDBIRTHDATE2 DATE
+	,CHILDBIRTHDATE3 DATE
+	,CHILDBIRTHDATE4 DATE
+	-- The misc might be start date relevant only, which affects
+	-- the pricing and/or allotment SQL function parameters.
+	,PRICEENDDATE DATE
+	,ALLOTMENTENDDATE DATE
+  )
+NOT DETERMINISTIC
+LANGUAGE SQL
+BEGIN ATOMIC
+
+  DECLARE startdate DATE;
+  DECLARE enddate DATE;
+  DECLARE childbirthdate1 DATE;
+  DECLARE childbirthdate2 DATE;
+  DECLARE childbirthdate3 DATE;
+  DECLARE childbirthdate4 DATE;
+
+  SET startdate = cast(nullif(p_startdate,'') as date) ;
+  SET enddate = cast(nullif(p_enddate,'') as date) ;
+  SET childbirthdate1 = cast(nullif(p_childbirthdate1,'') as date) ;
+  SET childbirthdate2 = cast(nullif(p_childbirthdate2,'') as date) ;
+  SET childbirthdate3 = cast(nullif(p_childbirthdate3,'') as date) ;
+  SET childbirthdate4 = cast(nullif(p_childbirthdate4,'') as date) ;
+
+RETURN
+
+SELECT
+	x.NRADULTS
+	,x.CHILDBIRTHDATE1
+	,x.CHILDBIRTHDATE2
+	,x.CHILDBIRTHDATE3
+	,x.CHILDBIRTHDATE4
+	,x.PRICEENDDATE
+	,x.ALLOTMENTENDDATE
+FROM
+   TABLE( func_miscvalid( p_tocode, p_misckey, startdate, enddate, p_nradults, childbirthdate1, childbirthdate2, childbirthdate3, childbirthdate4 ) ) AS x
+;
+END
+@
+
 -- -----------------------------------------------------------------------------
 -- EOF
 -- -----------------------------------------------------------------------------
