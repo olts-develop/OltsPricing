@@ -53,22 +53,22 @@ alter table TOOMISCTEXT         alter ID set cache 20 @
 
 -- INSERT fügt nur die neuen Daten hinzu. Da die Daten oben gelöscht wurden führt dies zu keinen Konflikten.
 -- Am Besten wäre wenn der DELETE in einer Transaktion wäre, und bei einem Problem gibt es ein ROLLBACK.
-IMPORT FROM ../import/tooRooms.csv           OF DEL                             COMMITCOUNT 10000   INSERT INTO TOOROOMS @
-IMPORT FROM ../import/tooMisc.csv            OF DEL                             COMMITCOUNT 10000   INSERT INTO TOOMISC @
-IMPORT FROM ../import/tooMiscHotel.csv       OF DEL MODIFIED BY identitymissing COMMITCOUNT 10000   INSERT INTO TOOMISCHOTEL @
-IMPORT FROM ../import/tooMiscText.csv        OF DEL MODIFIED BY identitymissing COMMITCOUNT 10000   INSERT INTO TOOMISCTEXT @
-IMPORT FROM ../import/tooDescriptions.csv    OF DEL MODIFIED BY identitymissing COMMITCOUNT 10000   INSERT INTO TOODESCRIPTIONS @
-IMPORT FROM ../import/tooPerDayPrices.csv    OF DEL MODIFIED BY identitymissing COMMITCOUNT 10000   INSERT INTO TOOPERDAYPRICE @
-IMPORT FROM ../import/tooAddPerDayPrices.csv OF DEL MODIFIED BY identitymissing COMMITCOUNT 10000   INSERT INTO TOOADDPERDAYPRICE @
-IMPORT FROM ../import/tooOneTimes.csv        OF DEL MODIFIED BY identitymissing COMMITCOUNT 10000   INSERT INTO TOOONETIME @
-IMPORT FROM ../import/tooSpecialOffers.csv   OF DEL MODIFIED BY identitymissing COMMITCOUNT 10000   INSERT INTO TOOSPECIALOFFERS @
-IMPORT FROM ../import/tooEarlyBookings.csv   OF DEL MODIFIED BY identitymissing COMMITCOUNT 10000   INSERT INTO TOOEARLYBOOKINGS @
-IMPORT FROM ../import/tooAllotments.csv      OF DEL MODIFIED BY identitymissing COMMITCOUNT 10000   INSERT INTO TOOALLOTMENTS @
-IMPORT FROM ../import/tooCancellations.csv   OF DEL MODIFIED BY identitymissing COMMITCOUNT 10000   INSERT INTO TOOCANCELLATIONS @
-IMPORT FROM ../import/tooItemInfos.csv       OF DEL MODIFIED BY identitymissing COMMITCOUNT 10000   INSERT INTO TOOITEMINFOS @
-IMPORT FROM ../import/tooPeriodPrices.csv    OF DEL MODIFIED BY identitymissing COMMITCOUNT 10000   INSERT INTO TOOPERIODPRICE @
-IMPORT FROM ../import/tooAddPeriodPrices.csv OF DEL MODIFIED BY identitymissing COMMITCOUNT 10000   INSERT INTO TOOADDPERIODPRICE @
-IMPORT FROM ../import/tooHotels.csv          OF DEL MODIFIED BY norowwarnings   COMMITCOUNT 10000   INSERT INTO TOOHOTEL @
+IMPORT FROM ../import/tooRooms.csv           OF DEL                                              COMMITCOUNT 10000   INSERT INTO TOOROOMS @
+IMPORT FROM ../import/tooMisc.csv            OF DEL                                              COMMITCOUNT 10000   INSERT INTO TOOMISC @
+IMPORT FROM ../import/tooMiscHotel.csv       OF DEL MODIFIED BY identitymissing                  COMMITCOUNT 10000   INSERT INTO TOOMISCHOTEL @
+IMPORT FROM ../import/tooMiscText.csv        OF DEL MODIFIED BY identitymissing delprioritychar  COMMITCOUNT 10000   INSERT INTO TOOMISCTEXT @
+IMPORT FROM ../import/tooDescriptions.csv    OF DEL MODIFIED BY identitymissing                  COMMITCOUNT 10000   INSERT INTO TOODESCRIPTIONS @
+IMPORT FROM ../import/tooPerDayPrices.csv    OF DEL MODIFIED BY identitymissing                  COMMITCOUNT 10000   INSERT INTO TOOPERDAYPRICE @
+IMPORT FROM ../import/tooAddPerDayPrices.csv OF DEL MODIFIED BY identitymissing                  COMMITCOUNT 10000   INSERT INTO TOOADDPERDAYPRICE @
+IMPORT FROM ../import/tooOneTimes.csv        OF DEL MODIFIED BY identitymissing                  COMMITCOUNT 10000   INSERT INTO TOOONETIME @
+IMPORT FROM ../import/tooSpecialOffers.csv   OF DEL MODIFIED BY identitymissing                  COMMITCOUNT 10000   INSERT INTO TOOSPECIALOFFERS @
+IMPORT FROM ../import/tooEarlyBookings.csv   OF DEL MODIFIED BY identitymissing                  COMMITCOUNT 10000   INSERT INTO TOOEARLYBOOKINGS @
+IMPORT FROM ../import/tooAllotments.csv      OF DEL MODIFIED BY identitymissing                  COMMITCOUNT 10000   INSERT INTO TOOALLOTMENTS @
+IMPORT FROM ../import/tooCancellations.csv   OF DEL MODIFIED BY identitymissing                  COMMITCOUNT 10000   INSERT INTO TOOCANCELLATIONS @
+IMPORT FROM ../import/tooItemInfos.csv       OF DEL MODIFIED BY identitymissing                  COMMITCOUNT 10000   INSERT INTO TOOITEMINFOS @
+IMPORT FROM ../import/tooPeriodPrices.csv    OF DEL MODIFIED BY identitymissing                  COMMITCOUNT 10000   INSERT INTO TOOPERIODPRICE @
+IMPORT FROM ../import/tooAddPeriodPrices.csv OF DEL MODIFIED BY identitymissing                  COMMITCOUNT 10000   INSERT INTO TOOADDPERIODPRICE @
+IMPORT FROM ../import/tooHotels.csv          OF DEL MODIFIED BY norowwarnings                    COMMITCOUNT 10000   INSERT INTO TOOHOTEL @
 
 
 alter table TOODESCRIPTIONS      alter ID set no cache @
