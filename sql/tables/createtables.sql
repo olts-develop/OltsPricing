@@ -671,7 +671,7 @@ create table TOOMISCTEXT
   ,tocode VARCHAR(5) not null with default ''
   ,lang VARCHAR(2) not null with default ''  -- EN, FR, IT, DE
   ,type VARCHAR(5) not null with default ''  -- INV = Invoice text, ITIN = Itinerary text, VCHR = Voucher text
-  ,title VARCHAR(100) not null with default ''
+  ,title VARCHAR(120) not null with default ''
   ,detail VARCHAR(3600) not null with default ''
   ,PRIMARY key(id)
 )
