@@ -328,7 +328,7 @@ create table TOOSPECIALOFFERS
   ,weekdaysvalid varchar(7) with default ''
   ,lastspoffenddate date
   ,ruletype varchar(20) with default ''
-  ,daystring varchar(40) not null with default ''
+  ,daystring varchar(80) not null with default ''
   ,days integer not null with default 0
   ,baby integer not null with default 0
   ,child integer not null with default 0
