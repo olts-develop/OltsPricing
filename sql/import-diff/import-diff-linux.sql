@@ -1,8 +1,8 @@
 
 -- REPLACE löscht alle Daten in der Tabelle vor dem Import
-IMPORT FROM ../import/tooHotels.csv    OF DEL MODIFIED BY norowwarnings METHOD P ( 1, 33 ) COMMITCOUNT 10000  INSERT INTO TOOHOTEL2 ( HOTELKEY, TOCODE ) @
-IMPORT FROM ../import/tooRooms_c.csv   OF DEL                           METHOD P ( 2, 29 ) COMMITCOUNT 10000  INSERT INTO TOOROOMS2 ( ROOMKEY, TOCODE ) @
-IMPORT FROM ../import/tooMisc.csv      OF DEL                           METHOD P ( 1, 2 )  COMMITCOUNT 10000  INSERT INTO TOOMISC2  ( MISCKEY, TOCODE ) @
+IMPORT FROM ../import/tooHotels.csv    OF DEL MODIFIED BY norowwarnings METHOD P ( 1, 33 ) COMMITCOUNT 10000  REPLACE INTO TOOHOTEL2 ( HOTELKEY, TOCODE ) @
+IMPORT FROM ../import/tooRooms.csv     OF DEL                           METHOD P ( 2, 29 ) COMMITCOUNT 10000  REPLACE INTO TOOROOMS2 ( ROOMKEY, TOCODE ) @
+IMPORT FROM ../import/tooMisc.csv      OF DEL                           METHOD P ( 1, 2 )  COMMITCOUNT 10000  REPLACE INTO TOOMISC2  ( MISCKEY, TOCODE ) @
 
 
 delete from TOOHOTEL where (TOOHOTEL.HOTELKEY, TOOHOTEL.TOCODE)                           in (select TOOHOTEL2.HOTELKEY, TOOHOTEL2.TOCODE from TOOHOTEL2) @
