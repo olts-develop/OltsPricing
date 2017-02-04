@@ -135,191 +135,145 @@ CREATE FUNCTION func_miscpriceav (
 	,IN_MISCKEY VARCHAR(20) DEFAULT ''
 	)
 RETURNS TABLE (
-
-	MISCKEY
-	,INVTITLE
-	,INVDETAIL
-	,ITINTITLE
-	,ITINDETAIL
-	,REGION
-	,SUBREGION
-	,COUNTRY
-	,COUNTRYCODE
-	,DESTINATIONCODE
-	,MISCCODE
-	,MISCITEMCODE 
+	MISCKEY VARCHAR(20)
+	,INVTITLE VARCHAR(120)
+	,INVDETAIL VARCHAR(3600)
+	,ITINTITLE VARCHAR(120)
+	,ITINDETAIL VARCHAR(3600)
+	,REGION VARCHAR(50)
+	,SUBREGION VARCHAR(50)
+	,COUNTRY VARCHAR(50)
+	,COUNTRYCODE VARCHAR(50)
+	,DESTINATIONCODE VARCHAR(50)
+	,MISCCODE VARCHAR(10)
+	,MISCITEMCODE VARCHAR(10)
 	,MINIMUMPERSONS INTEGER
 	,MAXIMUMPERSONS INTEGER
 	,TOTAL FLOAT
 	,STATUS VARCHAR(2)
-
-	TOCODE VARCHAR(20)
-	,MISCKEY VARCHAR(20)
-	,TOTAL DECIMAL(10, 2)
-	,DESTINATIONCODE VARCHAR(5)
-	,MISCCODE VARCHAR(30)
-	,TOURBOCODE VARCHAR(20)
-	,STATUS VARCHAR(4)
-	)
-
-NOT DETERMINISTIC LANGUAGE SQL
+	) NOT DETERMINISTIC LANGUAGE SQL
 
 BEGIN
 	ATOMIC
-	
-	DECLARE IN_IGNORE_PRICE0 INTEGER;
-	DECLARE IN_IGNORE_RQ INTEGER;
-	DECLARE IN_IGNORE_XX INTEGER;
-	
-	SET IN_IGNORE_XX = 1
-	SET IN_IGNORE_RQ = 0
-	SET IN_IGNORE_PRICE0 = 1
-	
-	
+
+	DECLARE startdate DATE;
 	DECLARE enddate DATE;
 	DECLARE currentdate DATE;
-	DECLARE childbirthdate1 DATE;
-	DECLARE childbirthdate2 DATE;
-	DECLARE childbirthdate3 DATE;
-	DECLARE childbirthdate4 DATE;
+	DECLARE p_childbirthdate1 DATE;
+	DECLARE p_childbirthdate2 DATE;
+	DECLARE p_childbirthdate3 DATE;
+	DECLARE p_childbirthdate4 DATE;
 
-	
-	SET startdate = cast(nullif(p_startdate, '') AS DATE);
-	SET enddate = cast(nullif(p_enddate, '') AS DATE);
-	SET currentdate = coalesce(cast(nullif(p_currentdate, '') AS DATE), CURRENT DATE);
-	SET childbirthdate1 = cast(nullif(p_childbirthdate1, '') AS DATE);
-	SET childbirthdate2 = cast(nullif(p_childbirthdate2, '') AS DATE);
-	SET childbirthdate3 = cast(nullif(p_childbirthdate3, '') AS DATE);
-	SET childbirthdate4 = cast(nullif(p_childbirthdate4, '') AS DATE);
-
+	SET startdate = cast(nullif(IN_PRICEDATEFROM, '') AS DATE);
+	SET enddate = cast(nullif(IN_PRICEDATETO, '') AS DATE);
+	SET currentdate = coalesce(cast(nullif(IN_CURRENTDATE, '') AS DATE), CURRENT DATE);
+	SET p_childbirthdate1 = cast(nullif(IN_CHDDOB1, '') AS DATE);
+	SET p_childbirthdate2 = cast(nullif(IN_CHDDOB2, '') AS DATE);
+	SET p_childbirthdate3 = cast(nullif(IN_CHDDOB3, '') AS DATE);
+	SET p_childbirthdate4 = cast(nullif(IN_CHDDOB4, '') AS DATE);
 
 	RETURN
-	
-	WITH tmptable1 (
-	MISCKEY
-	,NRADULTS
-	,CHDDOB1
-	,CHDDOB2
-	,CHDDOB3
-	,CHDDOB4
-	,PRICEENDDATE
-	,ALLOTMENTENDDATE
-	)
-AS (
-	SELECT TOOMISC.MISCKEY
-		,x.NRADULTS
-		,x.CHILDBIRTHDATE1
-		,x.CHILDBIRTHDATE2
-		,x.CHILDBIRTHDATE3
-		,x.CHILDBIRTHDATE4
-		,x.PRICEENDDATE
-		,x.ALLOTMENTENDDATE
-	FROM TOOMISC TOOMISC
-		,TABLE (func_miscvalid('', TOOMISC.MISCKEY, p_startdate, p_enddate, p_nradults, p_childbirthdate1, p_childbirthdate2, p_childbirthdate3, p_childbirthdate4)) AS x
+	WITH tmptable1(MISCKEY, NRADULTS, CHDDOB1, CHDDOB2, CHDDOB3, CHDDOB4, PRICEENDDATE, ALLOTMENTENDDATE) AS (
+			SELECT TOOMISC.MISCKEY
+				,x.NRADULTS
+				,x.CHILDBIRTHDATE1
+				,x.CHILDBIRTHDATE2
+				,x.CHILDBIRTHDATE3
+				,x.CHILDBIRTHDATE4
+				,x.PRICEENDDATE
+				,x.ALLOTMENTENDDATE
+			FROM TOOMISC TOOMISC
+				,TABLE (func_miscvalid(IN_TOCODE, TOOMISC.MISCKEY, startdate, enddate, IN_NRADULTS, p_childbirthdate1, p_childbirthdate2, p_childbirthdate3, p_childbirthdate4)) AS x
+			WHERE TOOMISC.DESTINATIONCODE = coalesce(nullif(IN_DESTINATIONCODE, ''), TOOMISC.DESTINATIONCODE)
+				AND TOOMISC.MISCCODE = coalesce(nullif(IN_MISCCODE, ''), TOOMISC.MISCCODE)
+				AND TOOMISC.MISCITEMCODE = coalesce(nullif(IN_MISCITEMCODE, ''), TOOMISC.MISCITEMCODE)
+				AND TOOMISC.MISCKEY = coalesce(nullif(IN_MISCKEY, ''), TOOMISC.MISCKEY)
+			)
+		,tmptable2(MISCKEY, NRADULTS, CHDDOB1, CHDDOB2, CHDDOB3, CHDDOB4, PRICEENDDATE, STATUS) AS (
+			SELECT x.MISCKEY
+				,x.NRADULTS
+				,x.CHDDOB1
+				,x.CHDDOB2
+				,x.CHDDOB3
+				,x.CHDDOB4
+				,x.PRICEENDDATE
+				,(
+					CASE 
+						WHEN (
+								coalesce(TOOMISC.PASSIVE, 0) = 0
+								OR (
+									TOOMISC.PASSIVE = 1
+									AND coalesce(TOOMISC.PASSIVEFROMDATE, currentdate) > currentdate
+									)
+								)
+							THEN func_get_allotment2(IN_TOCODE, x.MISCKEY, 'M', enddate, x.ALLOTMENTENDDATE, currentdate)
+						ELSE 'XX'
+						END
+					)
+			FROM tmptable1 x
+				,TOOMISC TOOMISC
+			WHERE TOOMISC.MISCKEY = x.MISCKEY
+			)
+		,tmptable3(MISCKEY, STATUS, TOTAL) AS (
+			SELECT max(x.MISCKEY) AS MISCKEY
+				,max(x.STATUS) AS STATUS
+				,sum(cast(pricing.TOTAL AS FLOAT)) as TOTAL
+			FROM tmptable2 x
+				,TABLE (func_pricing2_tbl(IN_TOCODE, x.MISCKEY, 'M', startdate, x.PRICEENDDATE, currentdate, x.NRADULTS, x.CHDDOB1, x.CHDDOB2, x.CHDDOB3, x.CHDDOB4)) AS pricing
+			GROUP BY x.MISCKEY
+			)
+
+	SELECT TOOMISC.MISCKEY AS MISCKEY
+		,INV.TITLE AS INVTITLE
+		,INV.DETAIL AS INVDETAIL
+		,ITIN.TITLE AS ITINTITLE
+		,ITIN.DETAIL AS ITINDETAIL
+		,TOOMISC.REGION AS REGION
+		,TOOMISC.SUBREGION AS SUBREGION
+		,TOOMISC.COUNTRY AS COUNTRY
+		,TOOMISC.COUNTRYISOCODE AS COUNTRYCODE
+		,TOOMISC.DESTINATIONCODE AS DESTINATIONCODE
+		,TOOMISC.MISCCODE AS MISCCODE
+		,TOOMISC.MISCITEMCODE AS MISCITEMCODE
+		,TOOMISC.MINIMUMPERSONS AS MINIMUMPERSONS
+		,TOOMISC.MAXIMUMPERSONS AS MAXIMUMPERSONS
+		,coalesce(x.TOTAL, 0) AS TOTAL
+		,coalesce(x.STATUS, 'XX') AS STATUS
+	FROM TOOMISC
+	LEFT OUTER JOIN tmptable3 x ON x.MISCKEY = TOOMISC.MISCKEY
+	LEFT OUTER JOIN TOOMISCTEXT AS INV ON TOOMISC.MISCKEY = INV.MISCKEY
+		AND TOOMISC.TOCODE = INV.TOCODE
+		AND INV.type = 'INV'
+		AND INV.LANG = (
+			CASE upper(IN_LANGCODE)
+				WHEN 'EN'
+					THEN 'EN'
+				WHEN 'FR'
+					THEN 'FR'
+				WHEN 'IT'
+					THEN 'IT'
+				ELSE 'DE'
+				END
+			)
+	LEFT OUTER JOIN TOOMISCTEXT AS ITIN ON TOOMISC.MISCKEY = ITIN.MISCKEY
+		AND TOOMISC.TOCODE = ITIN.TOCODE
+		AND ITIN.type = 'ITIN'
+		AND ITIN.LANG = (
+			CASE upper(IN_LANGCODE)
+				WHEN 'EN'
+					THEN 'EN'
+				WHEN 'FR'
+					THEN 'FR'
+				WHEN 'IT'
+					THEN 'IT'
+				ELSE 'DE'
+				END
+			)
 	WHERE TOOMISC.DESTINATIONCODE = coalesce(nullif(IN_DESTINATIONCODE, ''), TOOMISC.DESTINATIONCODE)
 		AND TOOMISC.MISCCODE = coalesce(nullif(IN_MISCCODE, ''), TOOMISC.MISCCODE)
 		AND TOOMISC.MISCITEMCODE = coalesce(nullif(IN_MISCITEMCODE, ''), TOOMISC.MISCITEMCODE)
 		AND TOOMISC.MISCKEY = coalesce(nullif(IN_MISCKEY, ''), TOOMISC.MISCKEY)
-	)
-	,tmptable2 (
-	MISCKEY
-	,NRADULTS
-	,CHDDOB1
-	,CHDDOB2
-	,CHDDOB3
-	,CHDDOB4
-	,PRICEENDDATE
-	,STATUS
-	)
-AS (
-	SELECT x.MISCKEY
-		,x.NRADULTS
-		,x.CHDDOB1
-		,x.CHDDOB2
-		,x.CHDDOB3
-		,x.CHDDOB4
-		,x.PRICEENDDATE
-		,(
-			CASE 
-				WHEN (
-						coalesce(TOOMISC.PASSIVE, 0) = 0
-						OR (
-							TOOMISC.PASSIVE = 1
-							AND coalesce(TOOMISC.PASSIVEFROMDATE, currentdate) > currentdate
-							)
-						)
-					THEN func_get_allotment2('', x.MISCKEY, 'M', pricedatefrom, x.ALLOTMENTENDDATE, currentdate)
-				ELSE 'XX'
-				END
-			)
-	FROM tmptable1 x
-		,TOOMISC TOOMISC
-	WHERE TOOMISC.MISCKEY=x.MISCKEY
-	)
-	,tmptable3 (
-	MISCKEY
-	,STATUS
-	,TOTAL
-	)
-AS (
-	SELECT max(x.MISCKEY) AS MISCKEY
-		,max(x.STATUS) AS STATUS
-		,sum(cast(pricing.TOTAL AS FLOAT)) as TOTAL
-	FROM tmptable2 x
-		,TABLE (func_pricing2_tbl('', x.MISCKEY, 'M', pricedatefrom, x.PRICEENDDATE, currentdate, x.NRADULTS, x.CHDDOB1, x.CHDDOB2, x.CHDDOB3, x.CHDDOB4)) AS pricing
-	GROUP BY x.MISCKEY
-	)
-SELECT TOOMISC.MISCKEY AS MISCKEY
-	,INV.TITLE AS INVTITLE
-	,INV.DETAIL AS INVDETAIL
-	,ITIN.TITLE AS ITINTITLE
-	,ITIN.DETAIL AS ITINDETAIL
-	,TOOMISC.REGION AS REGION
-	,TOOMISC.SUBREGION AS SUBREGION
-	,TOOMISC.COUNTRY AS COUNTRY
-	,TOOMISC.COUNTRYISOCODE AS COUNTRYCODE
-	,TOOMISC.DESTINATIONCODE AS DESTINATIONCODE
-	,TOOMISC.MISCCODE AS MISCCODE
-	,TOOMISC.MISCITEMCODE AS MISCITEMCODE
-	,TOOMISC.MINIMUMPERSONS AS MINIMUMPERSONS
-	,TOOMISC.MAXIMUMPERSONS AS MAXIMUMPERSONS
-	,coalesce(x.TOTAL, 0) AS TOTAL
-	,coalesce(x.STATUS, 'XX') AS STATUS
-FROM TOOMISC
-LEFT OUTER JOIN tmptable3 x ON x.MISCKEY = TOOMISC.MISCKEY
-LEFT OUTER JOIN TOOMISCTEXT AS INV ON TOOMISC.MISCKEY = INV.MISCKEY
-	AND TOOMISC.TOCODE = INV.TOCODE
-	AND INV.type = 'INV'
-	AND INV.LANG = (
-		CASE upper(IN_LANGCODE)
-			WHEN 'EN'
-				THEN 'EN'
-			WHEN 'FR'
-				THEN 'FR'
-			WHEN 'IT'
-				THEN 'IT'
-			ELSE 'DE'
-			END
-		)
-LEFT OUTER JOIN TOOMISCTEXT AS ITIN ON TOOMISC.MISCKEY = ITIN.MISCKEY
-	AND TOOMISC.TOCODE = ITIN.TOCODE
-	AND ITIN.type = 'ITIN'
-	AND ITIN.LANG = (
-		CASE upper(IN_LANGCODE)
-			WHEN 'EN'
-				THEN 'EN'
-			WHEN 'FR'
-				THEN 'FR'
-			WHEN 'IT'
-				THEN 'IT'
-			ELSE 'DE'
-			END
-		)
-WHERE TOOMISC.DESTINATIONCODE = coalesce(nullif(IN_DESTINATIONCODE, ''), TOOMISC.DESTINATIONCODE)
-	AND TOOMISC.MISCCODE = coalesce(nullif(IN_MISCCODE, ''), TOOMISC.MISCCODE)
-	AND TOOMISC.MISCITEMCODE = coalesce(nullif(IN_MISCITEMCODE, ''), TOOMISC.MISCITEMCODE)
-	AND TOOMISC.MISCKEY = coalesce(nullif(IN_MISCKEY, ''), TOOMISC.MISCKEY)
-    AND coalesce(x.STATUS, 'XX') <> (
+		AND coalesce(x.STATUS, 'XX') <> (
 			CASE 
 				WHEN IN_IGNORE_XX = 1
 					THEN 'XX'
@@ -339,19 +293,7 @@ WHERE TOOMISC.DESTINATIONCODE = coalesce(nullif(IN_DESTINATIONCODE, ''), TOOMISC
 				AND cast(x.TOTAL AS FLOAT) > 0
 				)
 			OR IN_IGNORE_PRICE0 = 0
-			)
-
-	SELECT p_tocode
-		,toomisc.misckey
-		,func_miscpricing(p_tocode, toomisc.misckey, p_startdate, p_enddate, p_currentdate, p_nradults, p_childbirthdate1, p_childbirthdate2, p_childbirthdate3, p_childbirthdate4) AS pricetotal
-		,destinationcode
-		,misccode
-		,miscitemcode
-		,func_get_allotment2(p_tocode, toomisc.misckey, 'M', p_startdate, x.ALLOTMENTENDDATE, p_currentdate )
-	FROM toomisc
-		, TABLE (func_miscvalid(p_tocode, toomisc.misckey, p_startdate, p_enddate, p_nradults, p_childbirthdate1, p_childbirthdate2, p_childbirthdate3, p_childbirthdate4)) AS x
-	WHERE toomisc.tocode = p_tocode
-;
+			);
 END
 @
 
