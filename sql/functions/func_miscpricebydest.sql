@@ -269,29 +269,29 @@ DROP FUNCTION func_miscpriceav2 @
 --
 -- Here an example as used by the data center:
 --
---   SELECT TOOMISC.MISCKEY            AS hotelkey
---     ,TOOMISC.MISCCODE             AS hotelcode
---     ,INV.TITLE                    AS hotelname
---     ,INV.DETAIL                   AS address1
---     ,''                           AS address2
---     ,TOOMISC.SUBREGION            AS city
---     ,TOOMISC.COUNTRY              AS country
---     ,TOOMISC.COUNTRYISOCODE       AS countrycode
---     ,TOOMISC.DESTINATIONCODE      AS code
---     ,'4.0'                        AS category
---     ,TOOMISC.MISCKEY              AS roomkey
---     ,TOOMISC.MISCCODE             AS roomcode
---     ,'EX'                         AS roomtypede
---     ,ITIN.TITLE                   AS descriptionde
---     ,TOOMISC.MISCITEMCODE         AS mealdescriptionde
---     ,TOOMISC.MISCITEMCODE         AS mealcode
---     ,TOOMISC.MAXIMUMPERSONS       AS maxadults
---     ,0                            AS extrabedchildren
---     ,TOOMISC.MINIMUMPERSONS       AS normaloccupancy
---     ,TOOMISC.MINIMUMPERSONS       AS minimaloccupancy
---     ,TOOMISC.MAXIMUMPERSONS       AS maximaloccupancy
---     ,coalesce(x.TOTAL, 0)         AS price
---     ,coalesce(x.STATUS, 'XX')     AS STATUS
+--   SELECT TOOMISC.MISCKEY                 AS hotelkey
+--     ,TOOMISC.MISCCODE                    AS hotelcode
+--     ,INV.TITLE                           AS hotelname
+--     ,INV.DETAIL                          AS address1
+--     ,''                                  AS address2
+--     ,TOOMISC.SUBREGION                   AS city
+--     ,TOOMISC.COUNTRY                     AS country
+--     ,TOOMISC.COUNTRYISOCODE              AS countrycode
+--     ,TOOMISC.DESTINATIONCODE             AS code
+--     ,'4.0'                               AS category
+--     ,TOOMISC.MISCKEY                     AS roomkey
+--     ,TOOMISC.MISCCODE                    AS roomcode
+--     ,'EX'                                AS roomtypede
+--     ,ITIN.TITLE                          AS descriptionde
+--     ,TOOMISC.MISCITEMCODE                AS mealdescriptionde
+--     ,TOOMISC.MISCITEMCODE                AS mealcode
+--     ,TOOMISC.MAXIMUMPERSONS              AS maxadults
+--     ,0                                   AS extrabedchildren
+--     ,TOOMISC.MINIMUMPERSONS              AS normaloccupancy
+--     ,TOOMISC.MINIMUMPERSONS              AS minimaloccupancy
+--     ,TOOMISC.MAXIMUMPERSONS              AS maximaloccupancy
+--     ,cast(coalesce(x.TOTAL, 0) as FLOAT) AS price
+--     ,coalesce(x.STATUS, 'XX')            AS STATUS
 --   FROM TOOMISC
 --   INNER JOIN TABLE (func_miscpriceav2('TSOL', 'BKK', '2017-05-01', '2017-05-01', 2, '', '', '', '', '', '', 1, 0, 1, '', '')) AS x ON x.MISCKEY = TOOMISC.MISCKEY
 --   LEFT OUTER JOIN TOOMISCTEXT AS INV ON TOOMISC.MISCKEY = INV.MISCKEY
@@ -303,8 +303,6 @@ DROP FUNCTION func_miscpriceav2 @
 --     AND ITIN.type = 'ITIN'
 --     AND ITIN.LANG = 'DE';
 --
-
-
 --
 CREATE FUNCTION func_miscpriceav2 (
   IN_TOCODE VARCHAR(5) DEFAULT ''
@@ -407,7 +405,8 @@ BEGIN
     ,coalesce(x.STATUS, 'XX') AS STATUS
   FROM TOOMISC
   LEFT OUTER JOIN tmptable3 x ON x.MISCKEY = TOOMISC.MISCKEY
-  WHERE TOOMISC.DESTINATIONCODE = coalesce(nullif(IN_DESTINATIONCODE, ''), TOOMISC.DESTINATIONCODE)
+  WHERE TOOMISC.TOCODE = IN_TOCODE
+    AND TOOMISC.DESTINATIONCODE = coalesce(nullif(IN_DESTINATIONCODE, ''), TOOMISC.DESTINATIONCODE)
     AND TOOMISC.MISCCODE = coalesce(nullif(IN_MISCCODE, ''), TOOMISC.MISCCODE)
     AND TOOMISC.MISCITEMCODE = coalesce(nullif(IN_MISCITEMCODE, ''), TOOMISC.MISCITEMCODE)
     AND TOOMISC.MISCKEY = coalesce(nullif(IN_MISCKEY, ''), TOOMISC.MISCKEY)
