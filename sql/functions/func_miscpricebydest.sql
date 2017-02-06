@@ -237,6 +237,75 @@ DROP FUNCTION func_miscpriceav2 @
 --
 -- Setting these parameters only really makes sense when searching for products by destination.
 --
+-- Here an example of a more complex usage:
+--   SELECT TOOMISC.MISCKEY AS MISCKEY
+--   	,INV.TITLE AS INVTITLE
+--   	,INV.DETAIL AS INVDETAIL
+--   	,ITIN.TITLE AS ITINTITLE
+--   	,ITIN.DETAIL AS ITINDETAIL
+--   	,TOOMISC.REGION AS REGION
+--   	,TOOMISC.SUBREGION AS SUBREGION
+--   	,TOOMISC.COUNTRY AS COUNTRY
+--   	,TOOMISC.COUNTRYISOCODE AS COUNTRYCODE
+--   	,TOOMISC.DESTINATIONCODE AS DESTINATIONCODE
+--   	,TOOMISC.MISCCODE AS MISCCODE
+--   	,TOOMISC.MISCITEMCODE AS MISCITEMCODE
+--   	,TOOMISC.MINIMUMPERSONS AS MINIMUMPERSONS
+--   	,TOOMISC.MAXIMUMPERSONS AS MAXIMUMPERSONS
+--   	,coalesce(x.TOTAL, 0) AS TOTAL
+--   	,coalesce(x.STATUS, 'XX') AS STATUS
+--   FROM TOOMISC
+--   INNER JOIN TABLE (func_miscpriceav2('', 'BKK', '2017-04-01', '2017-04-01', 2, '', '', '', '', '', '', 1, 0, 1, '', '')) AS x ON x.MISCKEY = TOOMISC.MISCKEY
+--   LEFT OUTER JOIN TOOMISCTEXT AS INV ON TOOMISC.MISCKEY = INV.MISCKEY
+--   	AND TOOMISC.TOCODE = INV.TOCODE
+--   	AND INV.type = 'INV'
+--   	AND INV.LANG = 'DE'
+--   LEFT OUTER JOIN TOOMISCTEXT AS ITIN ON TOOMISC.MISCKEY = ITIN.MISCKEY
+--   	AND TOOMISC.TOCODE = ITIN.TOCODE
+--   	AND ITIN.type = 'ITIN'
+--   	AND ITIN.LANG = 'DE'
+--   WHERE x.MISCKEY = TOOMISC.MISCKEY;
+--
+--
+-- Here an example as used by the data center:
+--
+--   SELECT TOOMISC.MISCKEY            AS hotelkey
+--   	,TOOMISC.MISCCODE             AS hotelcode
+--   	,INV.TITLE                    AS hotelname
+--   	,INV.DETAIL                   AS address1
+--   	,''                           AS address2
+--   	,TOOMISC.SUBREGION            AS city
+--   	,TOOMISC.COUNTRY              AS country
+--   	,TOOMISC.COUNTRYISOCODE       AS countrycode
+--   	,TOOMISC.DESTINATIONCODE      AS code
+--   	,'4.0'                        AS category
+--   	,TOOMISC.MISCKEY              AS roomkey
+--   	,TOOMISC.MISCCODE             AS roomcode
+--   	,'EX'                         AS roomtypede
+--   	,ITIN.TITLE                   AS descriptionde
+--   	,TOOMISC.MISCITEMCODE         AS mealdescriptionde
+--   	,TOOMISC.MISCITEMCODE         AS mealcode
+--   	,TOOMISC.MAXIMUMPERSONS       AS maxadults
+--   	,0                            AS extrabedchildren
+--   	,TOOMISC.MINIMUMPERSONS       AS normaloccupancy
+--   	,TOOMISC.MINIMUMPERSONS       AS minimaloccupancy
+--   	,TOOMISC.MAXIMUMPERSONS       AS maximaloccupancy
+--   	,coalesce(x.TOTAL, 0)         AS price
+--   	,coalesce(x.STATUS, 'XX')     AS STATUS
+--   FROM TOOMISC
+--   INNER JOIN TABLE (func_miscpriceav2('TSOL', 'BKK', '2017-05-01', '2017-05-01', 2, '', '', '', '', '', '', 1, 0, 1, '', '')) AS x ON x.MISCKEY = TOOMISC.MISCKEY
+--   LEFT OUTER JOIN TOOMISCTEXT AS INV ON TOOMISC.MISCKEY = INV.MISCKEY
+--   	AND TOOMISC.TOCODE = INV.TOCODE
+--   	AND INV.type = 'INV'
+--   	AND INV.LANG = 'DE'
+--   LEFT OUTER JOIN TOOMISCTEXT AS ITIN ON TOOMISC.MISCKEY = ITIN.MISCKEY
+--   	AND TOOMISC.TOCODE = ITIN.TOCODE
+--   	AND ITIN.type = 'ITIN'
+--   	AND ITIN.LANG = 'DE';
+--
+
+
+--
 CREATE FUNCTION func_miscpriceav2 (
 	IN_TOCODE VARCHAR(5) DEFAULT ''
 	,IN_DESTINATIONCODE VARCHAR(5) DEFAULT ''
