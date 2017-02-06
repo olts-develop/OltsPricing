@@ -366,6 +366,156 @@ END @
 -- select func_pricingch( '', 'STOGVA61793', '2015-10-03', '2015-10-12', '', 1, '', '' ) as TOTAL from sysibm.sysdummy1
 
 
+
+drop function func_hotelpriceav @
+
+create function func_hotelpriceav
+(
+   IN_TOCODE VARCHAR(5) DEFAULT ''
+  ,IN_DESTINATIONCODE VARCHAR(5) DEFAULT ''
+  ,IN_PRICEDATEFROM VARCHAR(10)
+  ,IN_PRICEDATETO VARCHAR(10)
+  ,IN_NORMALOCCUPANCY INTEGER DEFAULT 2
+  ,IN_HOTELCODE VARCHAR(30) DEFAULT ''
+  ,IN_ROOMCODE VARCHAR(20) DEFAULT ''
+  ,IN_TOURBOMEALCODE VARCHAR(5) DEFAULT ''
+  ,IN_CHDDOB1 VARCHAR(10) DEFAULT ''
+  ,IN_CHDDOB2 VARCHAR(10) DEFAULT ''
+  ,IN_CHDDOB3 VARCHAR(10) DEFAULT ''
+  ,IN_CHDDOB4 VARCHAR(10) DEFAULT ''
+  ,IN_IGNORE_XX INTEGER DEFAULT 0
+  ,IN_IGNORE_RQ INTEGER DEFAULT 0
+  ,IN_IGNORE_PRICE0 INTEGER DEFAULT 1
+  ,IN_CURRENTDATE VARCHAR(10) DEFAULT ''
+  ,IN_ROOMKEY VARCHAR(20) DEFAULT ''
+  ,IN_HOTELKEY VARCHAR(20) DEFAULT ''
+)
+RETURNS
+  TABLE
+  (
+     TOCODE VARCHAR(5)
+    ,ROOMKEY VARCHAR(20)
+    ,TOTAL FLOAT
+    ,STATUS VARCHAR(2)
+  ) NOT DETERMINISTIC LANGUAGE SQL
+
+BEGIN
+  ATOMIC
+
+  DECLARE pricedatefrom DATE;
+  DECLARE pricedateto DATE;
+  DECLARE childbirthdate1 DATE;
+  DECLARE childbirthdate2 DATE;
+  DECLARE childbirthdate3 DATE;
+  DECLARE childbirthdate4 DATE;
+  DECLARE currentdate DATE;
+
+  SET pricedatefrom = cast(nullif(IN_PRICEDATEFROM, '') as date);
+  SET pricedateto = cast(nullif(IN_PRICEDATETO, '') as date);
+  SET childbirthdate1 = cast(nullif(IN_CHDDOB1, '') as date);
+  SET childbirthdate2 = cast(nullif(IN_CHDDOB2, '') as date);
+  SET childbirthdate3 = cast(nullif(IN_CHDDOB3, '') as date);
+  SET childbirthdate4 = cast(nullif(IN_CHDDOB4, '') as date);
+  SET currentdate = coalesce(cast(nullif(IN_CURRENTDATE, '') as date), CURRENT DATE);
+
+RETURN
+
+    -- #######################################################################
+    -- # Returns sum of price for specific hotel item
+    --
+    --   Parameters for "func_pricing":
+    --    p_tocode VARCHAR(5) DEFAULT ''
+    --   ,p_itemkey VARCHAR(20) DEFAULT ''
+    --   ,p_startdate DATE DEFAULT NULL -- start of booking period
+    --   ,p_returndate DATE DEFAULT NULL -- end of booking period (this is the departure date of the room, not the last date relevant for pricing)
+    --   ,p_currentdate DATE DEFAULT CURRENT DATE
+    --   ,p_nradults INTEGER DEFAULT 0
+    --   ,p_childbirthdate1 DATE DEFAULT NULL
+    --   ,p_childbirthdate2 DATE DEFAULT NULL
+    --   ,p_childbirthdate3 DATE DEFAULT NULL
+    --   ,p_childbirthdate4 DATE DEFAULT NULL
+    --     
+    --   Parameters for func_get_allotment2:
+    --    p_tocode VARCHAR(5) DEFAULT ''
+    --   ,p_itemkey VARCHAR(20) DEFAULT ''
+    --   ,p_itemtype VARCHAR(1) DEFAULT ''
+    --   ,p_startdate DATE DEFAULT NULL
+    --   ,p_returndate DATE DEFAULT NULL
+    --   ,p_currentdate DATE DEFAULT CURRENT DATE
+    -- #######################################################################
+    with tmptble (
+      XHOTELKEY
+      ,XROOMKEY
+      ,XPRICE
+      ,XALLTOMENTCODE
+      )
+    as (
+      (
+        select h.HOTELKEY
+          ,r.ROOMKEY
+          ,cast(func_pricing(IN_TOCODE, r.ROOMKEY, pricedatefrom, pricedateto, currentdate, IN_NORMALOCCUPANCY, childbirthdate1, childbirthdate2, childbirthdate3, childbirthdate4) as FLOAT) as price
+          ,func_get_allotment2(IN_TOCODE, r.ROOMKEY, 'H', pricedatefrom, pricedateto, currentdate) as status
+        from TOOHOTEL h
+        INNER JOIN TOOROOMS r on h.HOTELKEY = r.HOTELKEY
+        where h.DESTINATIONCODE = coalesce(nullif(IN_DESTINATIONCODE, ''), h.DESTINATIONCODE)
+          and h.HOTELCODE = coalesce(nullif(IN_HOTELCODE, ''), h.HOTELCODE)
+          and r.TOURBOCODE = coalesce(nullif(IN_ROOMCODE, ''), r.TOURBOCODE)
+          and r.TOURBOMEALCODE = coalesce(nullif(IN_TOURBOMEALCODE, ''), r.TOURBOMEALCODE)
+          and r.ROOMKEY = coalesce(nullif(IN_ROOMKEY, ''), r.ROOMKEY)
+          and h.HOTELKEY = coalesce(nullif(IN_HOTELKEY, ''), h.HOTELKEY)
+          and r.NORMALOCCUPANCY = IN_NORMALOCCUPANCY
+          and (
+            coalesce(r.PASSIVE, 0) = 0
+            or (
+              r.PASSIVE = 1
+              and coalesce(r.FROMDATE, current date) > current date
+              )
+            )
+        )
+      )
+    select
+       r.TOCODE as TOCODE
+      ,r.ROOMKEY as ROOMKEY
+      ,coalesce (XPRICE,0) as PRICE
+      ,coalesce (XALLTOMENTCODE,'XX') as STATUS
+    from
+      TOOHOTEL h
+      INNER JOIN TOOROOMS r on h.HOTELKEY = r.HOTELKEY
+      LEFT OUTER JOIN tmptble on h.HOTELKEY = XHOTELKEY
+      and r.ROOMKEY = XROOMKEY
+    where
+      r.TOCODE = IN_TOCODE
+      and h.TOCODE = IN_TOCODE
+      and h.DESTINATIONCODE = coalesce (nullif(IN_DESTINATIONCODE, ''),h.DESTINATIONCODE)
+      and h.HOTELCODE = coalesce (nullif(IN_HOTELCODE, ''),h.HOTELCODE)
+      and r.TOURBOCODE = coalesce (nullif(IN_ROOMCODE, ''),r.TOURBOCODE)
+      and r.TOURBOMEALCODE = coalesce (nullif(IN_TOURBOMEALCODE, ''),r.TOURBOMEALCODE)
+      and r.ROOMKEY = coalesce (nullif(IN_ROOMKEY, ''),r.ROOMKEY)
+      and h.HOTELKEY = coalesce (nullif(IN_HOTELKEY, ''),h.HOTELKEY)
+      and r.NORMALOCCUPANCY = IN_NORMALOCCUPANCY
+      and (
+            (IN_IGNORE_PRICE0 = 1 and XPRICE > 0)
+           or IN_IGNORE_PRICE0 = 0
+      )
+      and coalesce (XALLTOMENTCODE,'XX') <>
+            (
+            case 
+              when IN_IGNORE_XX = 1
+                then 'XX'
+              else '..'
+              end
+            )
+      and coalesce (XALLTOMENTCODE,'XX') <> 
+            (
+            case 
+              when IN_IGNORE_RQ = 1
+                then 'RQ'
+              else '..'
+              end
+            )
+;
+END @
+
 -- -----------------------------------------------------------------------------
 -- EOF
 -- -----------------------------------------------------------------------------
