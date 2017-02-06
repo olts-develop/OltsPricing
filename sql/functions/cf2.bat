@@ -47,6 +47,9 @@ call cf3.bat func_roompricebydest.sql
 call cf3.bat func_miscpricebydest.sql
 call cf3.bat func_get_allotment2.sql
 
+call cf3.bat SP_PRICING_AV_HOTEL.sql
+call cf3.bat SP_PRICING_AV_MISC.sql
+
 db2 connect reset>>createfunctions.log
 
 echo Start: %STARTDATETIME%>>createfunctions.log
