@@ -2,12 +2,25 @@
 -- Zuerst die Funktionen löschen
 -- -----------------------------------------------------------------------------
 
+DROP PROCEDURE SP_PRICING_AV_HOTEL_TBL @
+DROP PROCEDURE SP_PRICING_AV_HOTEL @
+DROP PROCEDURE SP_PRICING_AV_MISC_TBL @
+DROP PROCEDURE SP_PRICING_AV_MISC @
+
+DROP FUNCTION func_miscpriceav2_tbl @
+DROP FUNCTION func_miscpriceav2 @
+DROP FUNCTION func_miscpriceav_ch @
+DROP FUNCTION func_miscpriceav @
 DROP FUNCTION func_miscpricebydest_ch @
 DROP FUNCTION func_miscpricebydest @
 DROP FUNCTION func_miscpricing @
 DROP FUNCTION func_miscpricingch @
 DROP FUNCTION func_miscpricing_tbl @
 DROP FUNCTION func_miscpricing_tblch @
+
+DROP FUNCTION func_hotelpriceav_tbl @
+DROP FUNCTION func_pricing_tbl2 @
+DROP FUNCTION func_hotelpriceav @
 
 DROP FUNCTION func_roompricebydest_ch @
 DROP FUNCTION func_roompricebydest @
@@ -674,6 +687,55 @@ create table TOOMISCTEXT
   ,title VARCHAR(120) not null with default ''
   ,detail VARCHAR(3600) not null with default ''
   ,PRIMARY key(id)
+)
+@
+
+-- -----------------------------------------------------------------------------
+-- TOOARRANGEMENT
+-- -----------------------------------------------------------------------------
+
+drop table TOOARRANGEMENT @
+
+create table TOOARRANGEMENT
+(
+  arrkey VARCHAR(20) not null with default ''
+  ,tocode VARCHAR(5) not null with default ''
+  ,arrlang VARCHAR(2) not null with default ''
+  ,shorttitle VARCHAR(100) not null with default ''
+  ,destinationcode VARCHAR(50) not null with default ''
+  ,arrcode VARCHAR(10) not null with default ''
+  ,arritemcode VARCHAR(10) not null with default ''
+  ,country VARCHAR(50) not null with default ''
+  ,countryisocode VARCHAR(50) not null with default ''
+  ,region VARCHAR(50) not null with default ''
+  ,subregion VARCHAR(50) not null with default ''
+--  ,suppliername VARCHAR(100) not null with default ''
+--  ,suppliercode VARCHAR(30) not null with default ''
+--  ,suppliernr INTEGER not null with default 0
+--  ,vouchersuppliername VARCHAR(100) not null with default ''
+--  ,vouchersuppliercode VARCHAR(30) not null with default ''
+--  ,vouchersuppliernr INTEGER not null with default 0
+--  ,paysuppliername VARCHAR(100) not null with default ''
+--  ,paysuppliercode VARCHAR(30) not null with default ''
+--  ,paysuppliernr INTEGER not null with default 0
+  ,normaloccupancy integer with default 0
+  ,extrabedadults integer with default 0
+  ,extrabedchildren integer with default 0
+  ,invtitle VARCHAR(100) not null with default ''
+  ,invtext VARCHAR(3000) not null with default ''
+  ,passive INTEGER not null with default 0
+  ,passivefromdate DATE
+  ,PRIMARY key(arrkey, tocode)
+)
+@
+
+drop table TOOARRANGEMENT2 @
+
+create table TOOARRANGEMENT2
+(
+  arrkey varchar(20) not null with default ''
+  ,tocode varchar(5) not null with default ''
+  , PRIMARY key(arrkey, tocode)
 )
 @
 
