@@ -10,43 +10,51 @@
 
 drop function func_getposdatedesc @
 
-create function func_getposdatedesc
-(
+--WARNING! ERRORS ENCOUNTERED DURING SQL PARSING!
+CREATE FUNCTION func_getposdatedesc (
   p_ignorenr INTEGER DEFAULT 0
   ,p_getposition INTEGER DEFAULT 1
   ,p_bd1 VARCHAR(10) DEFAULT '' -- first date
   ,p_bd2 VARCHAR(10) DEFAULT '' -- second date
   ,p_bd3 VARCHAR(10) DEFAULT '' -- third date
   ,p_bd4 VARCHAR(10) DEFAULT '' -- fourth date
-)
-RETURNS
-  DATE
-DETERMINISTIC
-LANGUAGE SQL
-BEGIN ATOMIC
+  )
+RETURNS DATE DETERMINISTIC LANGUAGE SQL
 
-DECLARE offset INTEGER;
-SET offset = p_ignorenr + p_getposition;
+BEGIN
+  ATOMIC
 
-IF ( p_bd1 = '' and p_bd2 = '' and p_bd3 = '' and p_bd4 = '' ) THEN
-  RETURN cast(NULL as DATE);
-ELSE
-  RETURN
-    SELECT
-      bd
-    FROM
-    (
-      SELECT
-        bd
-        ,ROW_NUMBER() OVER(ORDER BY bd DESC NULLS LAST) AS rownum
-      FROM
-        ( values cast(p_bd1 as DATE) , cast(p_bd2 as DATE), cast(p_bd3 as DATE), cast(p_bd4 as DATE) ) as x (bd)
-    ) AS y (bd,rownum)
-    WHERE
-      rownum = offset
-  ;
-  END IF;
+  DECLARE offset INTEGER;
+
+  SET offset = p_ignorenr + p_getposition;
+
+  IF (
+      p_bd1 = ''
+      AND p_bd2 = ''
+      AND p_bd3 = ''
+      AND p_bd4 = ''
+      ) THEN
+    RETURN cast(NULL AS DATE);
+  ELSE
+    RETURN
+
+  SELECT bd
+  FROM (
+    SELECT bd
+      ,ROW_NUMBER() OVER (
+        ORDER BY bd DESC NULLS LAST
+        ) AS rownum
+    FROM (
+      VALUES cast (p_bd1 AS DATE)
+        ,cast (p_bd2 AS DATE)
+        ,cast (p_bd3 AS DATE)
+        ,cast (p_bd4 AS DATE)
+      ) AS x(bd)
+    ) AS y(bd, rownum)
+  WHERE rownum = offset;
 END
+
+IF ;END
 @
 
 --

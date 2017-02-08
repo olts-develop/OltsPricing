@@ -8,46 +8,47 @@
 DROP FUNCTION func_arrpricing_tbl @
 
 CREATE FUNCTION func_arrpricing_tbl (
-	p_tocode VARCHAR(5) DEFAULT ''
-	,p_itemkey VARCHAR(20) DEFAULT ''
-	,p_startdate DATE DEFAULT NULL
-	,p_returndate DATE DEFAULT NULL
-	,p_currentdate DATE DEFAULT CURRENT DATE
-	,p_nradults INTEGER DEFAULT 0
-	,p_childbirthdate1 DATE DEFAULT NULL
-	,p_childbirthdate2 DATE DEFAULT NULL
-	,p_childbirthdate3 DATE DEFAULT NULL
-	,p_childbirthdate4 DATE DEFAULT NULL
-	)
+  p_tocode VARCHAR(5) DEFAULT ''
+  ,p_itemkey VARCHAR(20) DEFAULT ''
+  ,p_startdate DATE DEFAULT NULL
+  ,p_returndate DATE DEFAULT NULL
+  ,p_currentdate DATE DEFAULT CURRENT DATE
+  ,p_nradults INTEGER DEFAULT 0
+  ,p_childbirthdate1 DATE DEFAULT NULL
+  ,p_childbirthdate2 DATE DEFAULT NULL
+  ,p_childbirthdate3 DATE DEFAULT NULL
+  ,p_childbirthdate4 DATE DEFAULT NULL
+  ,p_currency VARCHAR(3) DEFAULT 'CHF'
+  )
 RETURNS TABLE (
-	NR INTEGER
-	,PRICE DECIMAL(10, 2)
-	,TOTAL DECIMAL(10, 2)
-	,TYPE1 VARCHAR(20) -- PDP, APDP, OT, SO, EB
-	,TYPE2 VARCHAR(20) -- ADT, CHD1, CHD2, CHD3, CHD4
-	,FROMDATE DATE
-	,TODATE DATE
-	,DESCID INTEGER
-	,P_SEQ VARCHAR(20)
-	) NOT DETERMINISTIC LANGUAGE SQL
+  NR INTEGER
+  ,PRICE DECIMAL(10, 2)
+  ,TOTAL DECIMAL(10, 2)
+  ,TYPE1 VARCHAR(20) -- PDP, APDP, OT, SO, EB
+  ,TYPE2 VARCHAR(20) -- ADT, CHD1, CHD2, CHD3, CHD4
+  ,FROMDATE DATE
+  ,TODATE DATE
+  ,DESCID INTEGER
+  ,P_SEQ VARCHAR(20)
+  ) NOT DETERMINISTIC LANGUAGE SQL
 
 BEGIN
-	ATOMIC
+  ATOMIC
 
-	RETURN
+  RETURN
 
-	SELECT nr
-		,price
-		,total
-		,type1
-		,type2
-		,fromdate
-		,todate
-		,descid
-		,p_seq
-	FROM TABLE (func_arrvalid(p_tocode, p_itemkey, p_startdate, p_returndate, p_nradults, p_childbirthdate1, p_childbirthdate2, p_childbirthdate3, p_childbirthdate4)) AS x
-		,TABLE (func_pricing2_tbl(p_tocode, p_itemkey, 'A', p_startdate, x.PRICEENDDATE, p_currentdate, x.NRADULTS, x.CHILDBIRTHDATE1, x.CHILDBIRTHDATE2, x.CHILDBIRTHDATE3, x.CHILDBIRTHDATE4)) AS pricing
-	WHERE func_test_price(p_tocode, p_itemkey, 'A', p_startdate, x.PRICEENDDATE, x.NRADULTS, x.CHILDBIRTHDATE1, x.CHILDBIRTHDATE2, x.CHILDBIRTHDATE3, x.CHILDBIRTHDATE4) = 'OK';
+  SELECT nr
+    ,price
+    ,total
+    ,type1
+    ,type2
+    ,fromdate
+    ,todate
+    ,descid
+    ,p_seq
+  FROM TABLE (func_arrvalid(p_tocode, p_itemkey, p_startdate, p_returndate, p_nradults, p_childbirthdate1, p_childbirthdate2, p_childbirthdate3, p_childbirthdate4, p_currency)) AS x
+    ,TABLE (func_pricing2_tbl(p_tocode, p_itemkey, 'A', p_startdate, x.PRICEENDDATE, p_currentdate, x.NRADULTS, x.CHILDBIRTHDATE1, x.CHILDBIRTHDATE2, x.CHILDBIRTHDATE3, x.CHILDBIRTHDATE4, p_currency)) AS pricing
+  WHERE func_test_price(p_tocode, p_itemkey, 'A', p_startdate, x.PRICEENDDATE, x.NRADULTS, x.CHILDBIRTHDATE1, x.CHILDBIRTHDATE2, x.CHILDBIRTHDATE3, x.CHILDBIRTHDATE4, p_currency) = 'OK';
 END
  @
 
@@ -63,7 +64,7 @@ END
 --
 -- NR  PRICE    TOTAL    TYPE1  TYPE2  FROMDATE    TODATE     DESCID  P_SEQ
 -- --  -------  -------  -----  -----  ----------  ---------- ------  -------
---  1	 149.00	   149.00	   PDP	  ADT	 2015-11-12	 2015-11-12	     1	9684803
+--  1   149.00     149.00     PDP    ADT   2015-11-12   2015-11-12       1  9684803
 --
 
 
@@ -71,62 +72,63 @@ END
 DROP FUNCTION func_arrpricing_tblch @
 
 CREATE FUNCTION func_arrpricing_tblch (
-	p_tocode VARCHAR(5) DEFAULT ''
-	,p_itemkey VARCHAR(20) DEFAULT ''
-	,p_startdate VARCHAR(10) DEFAULT ''
-	,p_returndate VARCHAR(10) DEFAULT ''
-	,p_currentdate VARCHAR(10) DEFAULT ''
-	,p_nradults INTEGER DEFAULT 0
-	,p_childbirthdate1 VARCHAR(10) DEFAULT ''
-	,p_childbirthdate2 VARCHAR(10) DEFAULT ''
-	,p_childbirthdate3 VARCHAR(10) DEFAULT ''
-	,p_childbirthdate4 VARCHAR(10) DEFAULT ''
-	)
+  p_tocode VARCHAR(5) DEFAULT ''
+  ,p_itemkey VARCHAR(20) DEFAULT ''
+  ,p_startdate VARCHAR(10) DEFAULT ''
+  ,p_returndate VARCHAR(10) DEFAULT ''
+  ,p_currentdate VARCHAR(10) DEFAULT ''
+  ,p_nradults INTEGER DEFAULT 0
+  ,p_childbirthdate1 VARCHAR(10) DEFAULT ''
+  ,p_childbirthdate2 VARCHAR(10) DEFAULT ''
+  ,p_childbirthdate3 VARCHAR(10) DEFAULT ''
+  ,p_childbirthdate4 VARCHAR(10) DEFAULT ''
+  ,p_currency VARCHAR(3) DEFAULT 'CHF'
+  )
 RETURNS TABLE (
-	NR INTEGER
-	,PRICE DECIMAL(10, 2)
-	,TOTAL DECIMAL(10, 2)
-	,TYPE1 VARCHAR(20) -- PDP, APDP, OT, SO, EB
-	,TYPE2 VARCHAR(20) -- ADULT, CHD1, CHD2
-	,FROMDATE DATE
-	,TODATE DATE
-	,DESCID INTEGER
-	,P_SEQ VARCHAR(20)
-	) NOT DETERMINISTIC LANGUAGE SQL
+  NR INTEGER
+  ,PRICE DECIMAL(10, 2)
+  ,TOTAL DECIMAL(10, 2)
+  ,TYPE1 VARCHAR(20) -- PDP, APDP, OT, SO, EB
+  ,TYPE2 VARCHAR(20) -- ADULT, CHD1, CHD2
+  ,FROMDATE DATE
+  ,TODATE DATE
+  ,DESCID INTEGER
+  ,P_SEQ VARCHAR(20)
+  ) NOT DETERMINISTIC LANGUAGE SQL
 
 BEGIN
-	ATOMIC
+  ATOMIC
 
-	DECLARE startdate DATE;
-	DECLARE returndate DATE;
-	DECLARE currentdate DATE;
-	DECLARE childbirthdate1 DATE;
-	DECLARE childbirthdate2 DATE;
-	DECLARE childbirthdate3 DATE;
-	DECLARE childbirthdate4 DATE;
+  DECLARE startdate DATE;
+  DECLARE returndate DATE;
+  DECLARE currentdate DATE;
+  DECLARE childbirthdate1 DATE;
+  DECLARE childbirthdate2 DATE;
+  DECLARE childbirthdate3 DATE;
+  DECLARE childbirthdate4 DATE;
 
-	SET startdate = cast(nullif(p_startdate, '') AS DATE);
-	SET returndate = cast(nullif(p_returndate, '') AS DATE);
-	SET currentdate = coalesce(cast(nullif(p_currentdate, '') AS DATE), CURRENT DATE);
-	SET childbirthdate1 = cast(nullif(p_childbirthdate1, '') AS DATE);
-	SET childbirthdate2 = cast(nullif(p_childbirthdate2, '') AS DATE);
-	SET childbirthdate3 = cast(nullif(p_childbirthdate3, '') AS DATE);
-	SET childbirthdate4 = cast(nullif(p_childbirthdate4, '') AS DATE);
+  SET startdate = cast(nullif(p_startdate, '') AS DATE);
+  SET returndate = cast(nullif(p_returndate, '') AS DATE);
+  SET currentdate = coalesce(cast(nullif(p_currentdate, '') AS DATE), CURRENT DATE);
+  SET childbirthdate1 = cast(nullif(p_childbirthdate1, '') AS DATE);
+  SET childbirthdate2 = cast(nullif(p_childbirthdate2, '') AS DATE);
+  SET childbirthdate3 = cast(nullif(p_childbirthdate3, '') AS DATE);
+  SET childbirthdate4 = cast(nullif(p_childbirthdate4, '') AS DATE);
 
-	RETURN
+  RETURN
 
-	SELECT nr
-		,price
-		,total
-		,type1
-		,type2
-		,fromdate
-		,todate
-		,descid
-		,p_seq
-	FROM TABLE (func_arrvalid(p_tocode, p_itemkey, startdate, returndate, p_nradults, childbirthdate1, childbirthdate2, childbirthdate3, childbirthdate4)) AS x
-		,TABLE (func_pricing2_tbl(p_tocode, p_itemkey, 'A', startdate, x.PRICEENDDATE, currentdate, x.NRADULTS, x.CHILDBIRTHDATE1, x.CHILDBIRTHDATE2, x.CHILDBIRTHDATE3, x.CHILDBIRTHDATE4)) AS pricing
-	WHERE func_test_price(p_tocode, p_itemkey, 'A', startdate, x.PRICEENDDATE, x.NRADULTS, x.CHILDBIRTHDATE1, x.CHILDBIRTHDATE2, x.CHILDBIRTHDATE3, x.CHILDBIRTHDATE4) = 'OK';
+  SELECT nr
+    ,price
+    ,total
+    ,type1
+    ,type2
+    ,fromdate
+    ,todate
+    ,descid
+    ,p_seq
+  FROM TABLE (func_arrvalid(p_tocode, p_itemkey, startdate, returndate, p_nradults, childbirthdate1, childbirthdate2, childbirthdate3, childbirthdate4, p_currency)) AS x
+    ,TABLE (func_pricing2_tbl(p_tocode, p_itemkey, 'A', startdate, x.PRICEENDDATE, currentdate, x.NRADULTS, x.CHILDBIRTHDATE1, x.CHILDBIRTHDATE2, x.CHILDBIRTHDATE3, x.CHILDBIRTHDATE4, p_currency)) AS pricing
+  WHERE func_test_price(p_tocode, p_itemkey, 'A', startdate, x.PRICEENDDATE, x.NRADULTS, x.CHILDBIRTHDATE1, x.CHILDBIRTHDATE2, x.CHILDBIRTHDATE3, x.CHILDBIRTHDATE4, p_currency) = 'OK';
 END
 @
 
@@ -155,26 +157,27 @@ END
 DROP FUNCTION func_arrpricing @
 
 CREATE FUNCTION func_arrpricing (
-	p_tocode VARCHAR(5) DEFAULT ''
-	,p_itemkey VARCHAR(20) DEFAULT ''
-	,p_startdate DATE DEFAULT NULL
-	,p_returndate DATE DEFAULT NULL
-	,p_currentdate DATE DEFAULT CURRENT DATE
-	,p_nradults INTEGER DEFAULT 0
-	,p_childbirthdate1 DATE DEFAULT NULL
-	,p_childbirthdate2 DATE DEFAULT NULL
-	,p_childbirthdate3 DATE DEFAULT NULL
-	,p_childbirthdate4 DATE DEFAULT NULL
-	)
+  p_tocode VARCHAR(5) DEFAULT ''
+  ,p_itemkey VARCHAR(20) DEFAULT ''
+  ,p_startdate DATE DEFAULT NULL
+  ,p_returndate DATE DEFAULT NULL
+  ,p_currentdate DATE DEFAULT CURRENT DATE
+  ,p_nradults INTEGER DEFAULT 0
+  ,p_childbirthdate1 DATE DEFAULT NULL
+  ,p_childbirthdate2 DATE DEFAULT NULL
+  ,p_childbirthdate3 DATE DEFAULT NULL
+  ,p_childbirthdate4 DATE DEFAULT NULL
+  ,p_currency VARCHAR(3) DEFAULT 'CHF'
+  )
 RETURNS DECIMAL(10, 2) NOT DETERMINISTIC LANGUAGE SQL
 
 BEGIN
-	ATOMIC
+  ATOMIC
 
-	RETURN
+  RETURN
 
-	SELECT coalesce(sum(x.TOTAL), 0)
-	FROM TABLE (func_arrpricing_tbl(p_tocode, p_itemkey, p_startdate, p_returndate, p_currentdate, p_nradults, p_childbirthdate1, p_childbirthdate2, p_childbirthdate3, p_childbirthdate4)) AS x;
+  SELECT coalesce(sum(x.TOTAL), 0)
+  FROM TABLE (func_arrpricing_tbl(p_tocode, p_itemkey, p_startdate, p_returndate, p_currentdate, p_nradults, p_childbirthdate1, p_childbirthdate2, p_childbirthdate3, p_childbirthdate4, p_currency)) AS x;
 END
 @
 
@@ -194,38 +197,39 @@ END
 DROP FUNCTION func_arrpricingch @
 
 CREATE FUNCTION func_arrpricingch (
-	p_tocode VARCHAR(5) DEFAULT ''
-	,p_itemkey VARCHAR(20) DEFAULT ''
-	,p_startdate VARCHAR(10) DEFAULT ''
-	,p_returndate VARCHAR(10) DEFAULT ''
-	,p_currentdate VARCHAR(10) DEFAULT ''
-	,p_nradults INTEGER DEFAULT 0
-	,p_childbirthdate1 VARCHAR(10) DEFAULT ''
-	,p_childbirthdate2 VARCHAR(10) DEFAULT ''
-	,p_childbirthdate3 VARCHAR(10) DEFAULT ''
-	,p_childbirthdate4 VARCHAR(10) DEFAULT ''
-	)
+  p_tocode VARCHAR(5) DEFAULT ''
+  ,p_itemkey VARCHAR(20) DEFAULT ''
+  ,p_startdate VARCHAR(10) DEFAULT ''
+  ,p_returndate VARCHAR(10) DEFAULT ''
+  ,p_currentdate VARCHAR(10) DEFAULT ''
+  ,p_nradults INTEGER DEFAULT 0
+  ,p_childbirthdate1 VARCHAR(10) DEFAULT ''
+  ,p_childbirthdate2 VARCHAR(10) DEFAULT ''
+  ,p_childbirthdate3 VARCHAR(10) DEFAULT ''
+  ,p_childbirthdate4 VARCHAR(10) DEFAULT ''
+  ,p_currency VARCHAR(3) DEFAULT 'CHF'
+  )
 RETURNS DECIMAL(10, 2) NOT DETERMINISTIC LANGUAGE SQL
 
 BEGIN
-	ATOMIC
+  ATOMIC
 
-	DECLARE childbirthdate1 DATE;
-	DECLARE childbirthdate2 DATE;
-	DECLARE childbirthdate3 DATE;
-	DECLARE childbirthdate4 DATE;
-	DECLARE currentdate DATE;
+  DECLARE childbirthdate1 DATE;
+  DECLARE childbirthdate2 DATE;
+  DECLARE childbirthdate3 DATE;
+  DECLARE childbirthdate4 DATE;
+  DECLARE currentdate DATE;
 
-	SET childbirthdate1 = cast(nullif(p_childbirthdate1, '') AS DATE);
-	SET childbirthdate2 = cast(nullif(p_childbirthdate2, '') AS DATE);
-	SET childbirthdate3 = cast(nullif(p_childbirthdate3, '') AS DATE);
-	SET childbirthdate4 = cast(nullif(p_childbirthdate4, '') AS DATE);
-	SET currentdate = coalesce(cast(nullif(p_currentdate, '') AS DATE), CURRENT DATE);
+  SET childbirthdate1 = cast(nullif(p_childbirthdate1, '') AS DATE);
+  SET childbirthdate2 = cast(nullif(p_childbirthdate2, '') AS DATE);
+  SET childbirthdate3 = cast(nullif(p_childbirthdate3, '') AS DATE);
+  SET childbirthdate4 = cast(nullif(p_childbirthdate4, '') AS DATE);
+  SET currentdate = coalesce(cast(nullif(p_currentdate, '') AS DATE), CURRENT DATE);
 
-	RETURN
+  RETURN
 
-	SELECT coalesce(sum(x.TOTAL), 0)
-	FROM TABLE (func_arrpricing_tbl(p_tocode, p_itemkey, cast(nullif(p_startdate, '') AS DATE), cast(nullif(p_returndate, '') AS DATE), currentdate, p_nradults, childbirthdate1, childbirthdate2, childbirthdate3, childbirthdate4)) AS x;
+  SELECT coalesce(sum(x.TOTAL), 0)
+  FROM TABLE (func_arrpricing_tbl(p_tocode, p_itemkey, cast(nullif(p_startdate, '') AS DATE), cast(nullif(p_returndate, '') AS DATE), currentdate, p_nradults, childbirthdate1, childbirthdate2, childbirthdate3, childbirthdate4, p_currency)) AS x;
 END
 @
 

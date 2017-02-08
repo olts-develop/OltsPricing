@@ -22,6 +22,7 @@ create function func_test_price
   ,p_childbirthdate2 DATE DEFAULT NULL
   ,p_childbirthdate3 DATE DEFAULT NULL
   ,p_childbirthdate4 DATE DEFAULT NULL
+  ,p_currency VARCHAR(3) DEFAULT 'CHF'
 )
 RETURNS
   VARCHAR(2)
@@ -49,7 +50,7 @@ SET counter =
     FROM
       TOOTMPDAY
 --      ,TABLE (FUNC_ALL_TBL(p_tocode, p_itemkey, p_itemtype, p_startdate, p_returndate, p_adultnr, childbirthdate1, childbirthdate2, childbirthdate3, childbirthdate4)) AS x
-      ,TABLE (FUNC_ALL_TBL(p_tocode, p_itemkey,p_itemtype , p_startdate, p_returndate, p_adultnr, p_childbirthdate1, p_childbirthdate2, p_childbirthdate3, p_childbirthdate4)) AS x
+      ,TABLE (FUNC_ALL_TBL(p_tocode, p_itemkey,p_itemtype , p_startdate, p_returndate, p_adultnr, p_childbirthdate1, p_childbirthdate2, p_childbirthdate3, p_childbirthdate4, p_currency)) AS x
     WHERE
       X.TYPE1 in ('PDP','PP','APP')
       AND TMPDAY BETWEEN x.fromdate AND x.todate

@@ -16,6 +16,7 @@ CREATE FUNCTION func_miscpricebydest (
   ,p_childbirthdate2 DATE DEFAULT NULL
   ,p_childbirthdate3 DATE DEFAULT NULL
   ,p_childbirthdate4 DATE DEFAULT NULL
+  ,p_currency VARCHAR(3) DEFAULT 'CHF'
   )
 RETURNS TABLE (
   TOCODE VARCHAR(20)
@@ -36,18 +37,20 @@ BEGIN
 
   SELECT p_tocode
     ,toomisc.misckey
-    ,func_miscpricing(p_tocode, toomisc.misckey, p_startdate, p_enddate, p_currentdate, p_nradults, p_childbirthdate1, p_childbirthdate2, p_childbirthdate3, p_childbirthdate4) AS pricetotal
+    ,func_miscpricing(p_tocode, toomisc.misckey, p_startdate, p_enddate, p_currentdate, p_nradults, p_childbirthdate1, p_childbirthdate2, p_childbirthdate3, p_childbirthdate4, p_currency) AS pricetotal
     ,destinationcode
     ,misccode
     ,miscitemcode
     ,func_get_allotment2(p_tocode, toomisc.misckey, 'M', p_startdate, x.ALLOTMENTENDDATE, p_currentdate )
   FROM toomisc
-    , TABLE (func_miscvalid(p_tocode, toomisc.misckey, p_startdate, p_enddate, p_nradults, p_childbirthdate1, p_childbirthdate2, p_childbirthdate3, p_childbirthdate4)) AS x
+    , TABLE (func_miscvalid(p_tocode, toomisc.misckey, p_startdate, p_enddate, p_nradults, p_childbirthdate1, p_childbirthdate2, p_childbirthdate3, p_childbirthdate4, p_currency)) AS x
   WHERE toomisc.tocode = p_tocode
     AND toomisc.destinationcode = p_destcode
 ;
 END
 @
+
+
 
 DROP FUNCTION func_miscpricebydest_ch @
 
@@ -64,6 +67,7 @@ CREATE FUNCTION func_miscpricebydest_ch (
   ,p_childbirthdate2 VARCHAR(10) DEFAULT ''
   ,p_childbirthdate3 VARCHAR(10) DEFAULT ''
   ,p_childbirthdate4 VARCHAR(10) DEFAULT ''
+  ,p_currency VARCHAR(3) DEFAULT 'CHF'
   )
 RETURNS TABLE (
   TOCODE VARCHAR(20)
@@ -105,7 +109,7 @@ BEGIN
     ,MISCCODE
     ,TOURBOCODE
     ,STATUS
-  FROM TABLE ( func_miscpricebydest(p_tocode, p_destcode, startdate, enddate, currentdate, p_nradults, childbirthdate1, childbirthdate2, childbirthdate3, childbirthdate4) )
+  FROM TABLE ( func_miscpricebydest(p_tocode, p_destcode, startdate, enddate, currentdate, p_nradults, childbirthdate1, childbirthdate2, childbirthdate3, childbirthdate4, p_currency) )
 ;
 END
 @
@@ -125,6 +129,7 @@ CREATE FUNCTION func_miscpriceav (
   ,p_childbirthdate2 DATE DEFAULT NULL
   ,p_childbirthdate3 DATE DEFAULT NULL
   ,p_childbirthdate4 DATE DEFAULT NULL
+  ,p_currency VARCHAR(3) DEFAULT 'CHF'
   )
 RETURNS TABLE (
   TOCODE VARCHAR(20)
@@ -145,13 +150,13 @@ BEGIN
 
   SELECT p_tocode
     ,toomisc.misckey
-    ,func_miscpricing(p_tocode, toomisc.misckey, p_startdate, p_enddate, p_currentdate, p_nradults, p_childbirthdate1, p_childbirthdate2, p_childbirthdate3, p_childbirthdate4) AS pricetotal
+    ,func_miscpricing(p_tocode, toomisc.misckey, p_startdate, p_enddate, p_currentdate, p_nradults, p_childbirthdate1, p_childbirthdate2, p_childbirthdate3, p_childbirthdate4, p_currency) AS pricetotal
     ,destinationcode
     ,misccode
     ,miscitemcode
     ,func_get_allotment2(p_tocode, toomisc.misckey, 'M', p_startdate, x.ALLOTMENTENDDATE, p_currentdate )
   FROM toomisc
-    , TABLE (func_miscvalid(p_tocode, toomisc.misckey, p_startdate, p_enddate, p_nradults, p_childbirthdate1, p_childbirthdate2, p_childbirthdate3, p_childbirthdate4)) AS x
+    , TABLE (func_miscvalid(p_tocode, toomisc.misckey, p_startdate, p_enddate, p_nradults, p_childbirthdate1, p_childbirthdate2, p_childbirthdate3, p_childbirthdate4, p_currency)) AS x
   WHERE toomisc.tocode = p_tocode
 ;
 END
@@ -171,6 +176,7 @@ CREATE FUNCTION func_miscpriceav_ch (
   ,p_childbirthdate2 VARCHAR(10) DEFAULT ''
   ,p_childbirthdate3 VARCHAR(10) DEFAULT ''
   ,p_childbirthdate4 VARCHAR(10) DEFAULT ''
+  ,p_currency VARCHAR(3) DEFAULT 'CHF'
   )
 RETURNS TABLE (
   TOCODE VARCHAR(20)
@@ -212,10 +218,12 @@ BEGIN
     ,MISCCODE
     ,TOURBOCODE
     ,STATUS
-  FROM TABLE ( func_miscpriceav(p_tocode, startdate, enddate, currentdate, p_nradults, childbirthdate1, childbirthdate2, childbirthdate3, childbirthdate4) )
+  FROM TABLE ( func_miscpriceav(p_tocode, startdate, enddate, currentdate, p_nradults, childbirthdate1, childbirthdate2, childbirthdate3, childbirthdate4, p_currency) )
 ;
 END
 @
+
+
 
 DROP FUNCTION func_miscpriceav2 @
 
@@ -321,6 +329,7 @@ CREATE FUNCTION func_miscpriceav2 (
   ,IN_IGNORE_PRICE0 INTEGER DEFAULT 1
   ,IN_CURRENTDATE VARCHAR(10) DEFAULT ''
   ,IN_MISCKEY VARCHAR(20) DEFAULT ''
+  ,IN_CURRENCY VARCHAR(3) DEFAULT 'CHF'
   )
 RETURNS TABLE (
    TOCODE VARCHAR(5)
@@ -359,7 +368,7 @@ BEGIN
         ,x.PRICEENDDATE
         ,x.ALLOTMENTENDDATE
       FROM TOOMISC TOOMISC
-        ,TABLE (func_miscvalid(IN_TOCODE, TOOMISC.MISCKEY, startdate, enddate, IN_NRADULTS, p_childbirthdate1, p_childbirthdate2, p_childbirthdate3, p_childbirthdate4)) AS x
+        ,TABLE (func_miscvalid(IN_TOCODE, TOOMISC.MISCKEY, startdate, enddate, IN_NRADULTS, p_childbirthdate1, p_childbirthdate2, p_childbirthdate3, p_childbirthdate4, IN_CURRENCY)) AS x
       WHERE TOOMISC.DESTINATIONCODE = coalesce(nullif(IN_DESTINATIONCODE, ''), TOOMISC.DESTINATIONCODE)
         AND TOOMISC.MISCCODE = coalesce(nullif(IN_MISCCODE, ''), TOOMISC.MISCCODE)
         AND TOOMISC.MISCITEMCODE = coalesce(nullif(IN_MISCITEMCODE, ''), TOOMISC.MISCITEMCODE)
@@ -395,7 +404,7 @@ BEGIN
         ,max(x.STATUS) AS STATUS
         ,sum(cast(pricing.TOTAL AS FLOAT)) AS TOTAL
       FROM tmptable2 x
-        ,TABLE (func_pricing2_tbl(IN_TOCODE, x.MISCKEY, 'M', startdate, x.PRICEENDDATE, currentdate, x.NRADULTS, x.CHDDOB1, x.CHDDOB2, x.CHDDOB3, x.CHDDOB4)) AS pricing
+        ,TABLE (func_pricing2_tbl(IN_TOCODE, x.MISCKEY, 'M', startdate, x.PRICEENDDATE, currentdate, x.NRADULTS, x.CHDDOB1, x.CHDDOB2, x.CHDDOB3, x.CHDDOB4, IN_CURRENCY)) AS pricing
       GROUP BY x.MISCKEY
       )
 
@@ -433,6 +442,8 @@ BEGIN
       );
 END
 @
+
+
 
 DROP FUNCTION func_miscpriceav2_tbl @
 
@@ -508,6 +519,7 @@ CREATE FUNCTION func_miscpriceav2_tbl (
   ,IN_IGNORE_PRICE0 INTEGER DEFAULT 1
   ,IN_CURRENTDATE VARCHAR(10) DEFAULT ''
   ,IN_MISCKEY VARCHAR(20) DEFAULT ''
+  ,IN_CURRENCY VARCHAR(3) DEFAULT 'CHF'
   )
 RETURNS TABLE (
   TOCODE VARCHAR(5)
@@ -554,7 +566,7 @@ BEGIN
         ,x.PRICEENDDATE
         ,x.ALLOTMENTENDDATE
       FROM TOOMISC TOOMISC
-        ,TABLE (func_miscvalid(IN_TOCODE, TOOMISC.MISCKEY, startdate, enddate, IN_NRADULTS, p_childbirthdate1, p_childbirthdate2, p_childbirthdate3, p_childbirthdate4)) AS x
+        ,TABLE (func_miscvalid(IN_TOCODE, TOOMISC.MISCKEY, startdate, enddate, IN_NRADULTS, p_childbirthdate1, p_childbirthdate2, p_childbirthdate3, p_childbirthdate4, IN_CURRENCY)) AS x
       WHERE TOOMISC.DESTINATIONCODE = coalesce(nullif(IN_DESTINATIONCODE, ''), TOOMISC.DESTINATIONCODE)
         AND TOOMISC.MISCCODE = coalesce(nullif(IN_MISCCODE, ''), TOOMISC.MISCCODE)
         AND TOOMISC.MISCITEMCODE = coalesce(nullif(IN_MISCITEMCODE, ''), TOOMISC.MISCITEMCODE)
@@ -590,7 +602,7 @@ BEGIN
         ,max(x.STATUS) AS STATUS
         ,sum(cast(pricing.TOTAL AS FLOAT)) AS TOTAL
       FROM tmptable2 x
-        ,TABLE (func_pricing2_tbl(IN_TOCODE, x.MISCKEY, 'M', startdate, x.PRICEENDDATE, currentdate, x.NRADULTS, x.CHDDOB1, x.CHDDOB2, x.CHDDOB3, x.CHDDOB4)) AS pricing
+        ,TABLE (func_pricing2_tbl(IN_TOCODE, x.MISCKEY, 'M', startdate, x.PRICEENDDATE, currentdate, x.NRADULTS, x.CHDDOB1, x.CHDDOB2, x.CHDDOB3, x.CHDDOB4, IN_CURRENCY)) AS pricing
       GROUP BY x.MISCKEY
       )
     ,tmptable4(MISCKEY, STATUS, NR, PRICE, TOTAL, TYPE1, TYPE2, FROMDATE, TODATE, DESCID, P_SEQ) AS (
@@ -606,7 +618,7 @@ BEGIN
         ,pricing.DESCID AS DESCID
         ,pricing.P_SEQ AS P_SEQ
       FROM tmptable2 x
-        ,TABLE (func_pricing2_tbl(IN_TOCODE, x.MISCKEY, 'M', startdate, x.PRICEENDDATE, currentdate, x.NRADULTS, x.CHDDOB1, x.CHDDOB2, x.CHDDOB3, x.CHDDOB4)) AS pricing
+        ,TABLE (func_pricing2_tbl(IN_TOCODE, x.MISCKEY, 'M', startdate, x.PRICEENDDATE, currentdate, x.NRADULTS, x.CHDDOB1, x.CHDDOB2, x.CHDDOB3, x.CHDDOB4, IN_CURRENCY)) AS pricing
       )
 
   SELECT TOOMISC.TOCODE AS TOCODE

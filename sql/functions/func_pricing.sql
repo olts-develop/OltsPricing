@@ -10,9 +10,8 @@
 
 drop function func_pricing_tbl @
 
-create function func_pricing_tbl
-(
-   p_tocode VARCHAR(5) DEFAULT ''
+CREATE FUNCTION func_pricing_tbl (
+  p_tocode VARCHAR(5) DEFAULT ''
   ,p_itemkey VARCHAR(20) DEFAULT ''
   ,p_startdate DATE DEFAULT NULL
   ,p_returndate DATE DEFAULT NULL -- end of booking period (this is the departure date of the room, not the last date relevant for pricing)
@@ -22,54 +21,48 @@ create function func_pricing_tbl
   ,p_childbirthdate2 DATE DEFAULT NULL
   ,p_childbirthdate3 DATE DEFAULT NULL
   ,p_childbirthdate4 DATE DEFAULT NULL
-)
-RETURNS
-  TABLE
-  (
-     NR INTEGER
-    ,PRICE DECIMAL(10,2)
-    ,TOTAL DECIMAL(10,2)
-    ,TYPE1 VARCHAR(20) -- PDP, APDP, OT, SO, EB
-    ,TYPE2 VARCHAR(20) -- ADT, CHD1, CHD2, CHD3, CHD4
-    ,FROMDATE DATE
-    ,TODATE DATE
-    ,DESCID INTEGER
-    ,P_SEQ VARCHAR(20)
+  ,p_currency VARCHAR(3) DEFAULT 'CHF'
   )
-NOT DETERMINISTIC
-LANGUAGE SQL
-BEGIN ATOMIC
+RETURNS TABLE (
+  NR INTEGER
+  ,PRICE DECIMAL(10, 2)
+  ,TOTAL DECIMAL(10, 2)
+  ,TYPE1 VARCHAR(20) -- PDP, APDP, OT, SO, EB
+  ,TYPE2 VARCHAR(20) -- ADT, CHD1, CHD2, CHD3, CHD4
+  ,FROMDATE DATE
+  ,TODATE DATE
+  ,DESCID INTEGER
+  ,P_SEQ VARCHAR(20)
+  ) NOT DETERMINISTIC LANGUAGE SQL
 
---  DECLARE childbirthdate1 DATE;
---  DECLARE childbirthdate2 DATE;
---  DECLARE childbirthdate3 DATE;
---  DECLARE childbirthdate4 DATE;
+BEGIN
+  ATOMIC
 
---  SET childbirthdate1 = p_childbirthdate1 ;
---  SET childbirthdate2 = p_childbirthdate2 ;
---  SET childbirthdate3 = p_childbirthdate3 ;
---  SET childbirthdate4 = p_childbirthdate4 ;
+  --  DECLARE childbirthdate1 DATE;
+  --  DECLARE childbirthdate2 DATE;
+  --  DECLARE childbirthdate3 DATE;
+  --  DECLARE childbirthdate4 DATE;
+  --  SET childbirthdate1 = p_childbirthdate1 ;
+  --  SET childbirthdate2 = p_childbirthdate2 ;
+  --  SET childbirthdate3 = p_childbirthdate3 ;
+  --  SET childbirthdate4 = p_childbirthdate4 ;
+  RETURN
 
-RETURN
+  SELECT nr
+    ,price
+    ,total
+    ,type1
+    ,type2
+    ,fromdate
+    ,todate
+    ,descid
+    ,p_seq
+  FROM TABLE (func_roomvalid(p_tocode, p_itemkey, p_nradults, p_childbirthdate1, p_childbirthdate2, p_childbirthdate3, p_childbirthdate4, p_currency)) AS x
+    ,TABLE (func_pricing2_tbl(p_tocode, p_itemkey, 'H', p_startdate, p_returndate, p_currentdate, x.NRADULTS, x.CHILDBIRTHDATE1, x.CHILDBIRTHDATE2, x.CHILDBIRTHDATE3, x.CHILDBIRTHDATE4, p_currency)) AS pricing
+  WHERE func_test_price(p_tocode, p_itemkey, 'H', p_startdate, p_returndate, x.NRADULTS, x.CHILDBIRTHDATE1, x.CHILDBIRTHDATE2, x.CHILDBIRTHDATE3, x.CHILDBIRTHDATE4, p_currency) = 'OK';
+END
+@
 
-SELECT
-   nr
-  ,price
-  ,total
-  ,type1
-  ,type2
-  ,fromdate
-  ,todate
-  ,descid
-  ,p_seq
-FROM
-   TABLE( func_roomvalid( p_tocode, p_itemkey, p_nradults, p_childbirthdate1, p_childbirthdate2, p_childbirthdate3, p_childbirthdate4 ) ) AS x
-  ,TABLE( func_pricing2_tbl( p_tocode, p_itemkey, 'H', p_startdate, p_returndate, p_currentdate, x.NRADULTS, x.CHILDBIRTHDATE1, x.CHILDBIRTHDATE2, x.CHILDBIRTHDATE3, x.CHILDBIRTHDATE4 ) ) as pricing
-WHERE
-  func_test_price( p_tocode, p_itemkey, 'H', p_startdate, p_returndate, x.NRADULTS, x.CHILDBIRTHDATE1, x.CHILDBIRTHDATE2, x.CHILDBIRTHDATE3, x.CHILDBIRTHDATE4 ) = 'OK'
-;
-
-END @
 
 --
 -- select * from TABLE( func_pricing_tbl( '', '13800', date('2015-09-12'), date('2015-09-19'), current date, 2 ) ) as pricing order by (case TYPE1 when 'PP' then 1 when 'APP' then 2 when 'PDP' then 3 when 'APDP' then 4 when 'OT' then 5 when 'SO' then 6 when 'EB' then 7 else 8 end) asc, TYPE2 asc, FROMDATE asc
@@ -120,9 +113,8 @@ END @
 
 drop function func_pricing_tblch @
 
-create function func_pricing_tblch
-(
-   p_tocode VARCHAR(5) DEFAULT ''
+CREATE FUNCTION func_pricing_tblch (
+  p_tocode VARCHAR(5) DEFAULT ''
   ,p_itemkey VARCHAR(20) DEFAULT ''
   ,p_startdate VARCHAR(10) DEFAULT ''
   ,p_returndate VARCHAR(10) DEFAULT '' -- end of booking period (this is the departure date of the room, not the last date relevant for pricing)
@@ -132,23 +124,22 @@ create function func_pricing_tblch
   ,p_childbirthdate2 VARCHAR(10) DEFAULT ''
   ,p_childbirthdate3 VARCHAR(10) DEFAULT ''
   ,p_childbirthdate4 VARCHAR(10) DEFAULT ''
-)
-RETURNS
-  TABLE
-  (
-     NR INTEGER
-    ,PRICE DECIMAL(10,2)
-    ,TOTAL DECIMAL(10,2)
-    ,TYPE1 VARCHAR(20) -- PDP, APDP, OT, SO, EB
-    ,TYPE2 VARCHAR(20) -- ADULT, CHD1, CHD2
-    ,FROMDATE DATE
-    ,TODATE DATE
-    ,DESCID INTEGER
-    ,P_SEQ VARCHAR(20)
+  ,p_currency VARCHAR(3) DEFAULT 'CHF'
   )
-NOT DETERMINISTIC
-LANGUAGE SQL
-BEGIN ATOMIC
+RETURNS TABLE (
+  NR INTEGER
+  ,PRICE DECIMAL(10, 2)
+  ,TOTAL DECIMAL(10, 2)
+  ,TYPE1 VARCHAR(20) -- PDP, APDP, OT, SO, EB
+  ,TYPE2 VARCHAR(20) -- ADULT, CHD1, CHD2
+  ,FROMDATE DATE
+  ,TODATE DATE
+  ,DESCID INTEGER
+  ,P_SEQ VARCHAR(20)
+  ) NOT DETERMINISTIC LANGUAGE SQL
+
+BEGIN
+  ATOMIC
 
   DECLARE startdate DATE;
   DECLARE returndate DATE;
@@ -158,34 +149,31 @@ BEGIN ATOMIC
   DECLARE childbirthdate3 DATE;
   DECLARE childbirthdate4 DATE;
 
-  SET startdate = cast(nullif(p_startdate,'') as date) ;
-  SET returndate = cast(nullif(p_returndate,'') as date) ;
-  SET currentdate = coalesce(cast(nullif(p_currentdate,'') as date), CURRENT DATE) ;
-  SET childbirthdate1 = cast(nullif(p_childbirthdate1,'') as date) ;
-  SET childbirthdate2 = cast(nullif(p_childbirthdate2,'') as date) ;
-  SET childbirthdate3 = cast(nullif(p_childbirthdate3,'') as date) ;
-  SET childbirthdate4 = cast(nullif(p_childbirthdate4,'') as date) ;
+  SET startdate = cast(nullif(p_startdate, '') AS DATE);
+  SET returndate = cast(nullif(p_returndate, '') AS DATE);
+  SET currentdate = coalesce(cast(nullif(p_currentdate, '') AS DATE), CURRENT DATE);
+  SET childbirthdate1 = cast(nullif(p_childbirthdate1, '') AS DATE);
+  SET childbirthdate2 = cast(nullif(p_childbirthdate2, '') AS DATE);
+  SET childbirthdate3 = cast(nullif(p_childbirthdate3, '') AS DATE);
+  SET childbirthdate4 = cast(nullif(p_childbirthdate4, '') AS DATE);
 
-RETURN
+  RETURN
 
-SELECT
-   nr
-  ,price
-  ,total
-  ,type1
-  ,type2
-  ,fromdate
-  ,todate
-  ,descid
-  ,p_seq
-FROM
-   TABLE( func_roomvalid( p_tocode, p_itemkey, p_nradults, childbirthdate1, childbirthdate2, childbirthdate3, childbirthdate4 ) ) AS x
-  ,TABLE( func_pricing2_tbl( p_tocode, p_itemkey, 'H', startdate, returndate, currentdate, x.NRADULTS, x.CHILDBIRTHDATE1, x.CHILDBIRTHDATE2, x.CHILDBIRTHDATE3, x.CHILDBIRTHDATE4 ) ) as pricing
-WHERE
-  func_test_price( p_tocode, p_itemkey, 'H', p_startdate, p_returndate, x.NRADULTS, x.CHILDBIRTHDATE1, x.CHILDBIRTHDATE2, x.CHILDBIRTHDATE3, x.CHILDBIRTHDATE4 ) = 'OK'
-;
+  SELECT nr
+    ,price
+    ,total
+    ,type1
+    ,type2
+    ,fromdate
+    ,todate
+    ,descid
+    ,p_seq
+  FROM TABLE (func_roomvalid(p_tocode, p_itemkey, p_nradults, childbirthdate1, childbirthdate2, childbirthdate3, childbirthdate4, p_currency)) AS x
+    ,TABLE (func_pricing2_tbl(p_tocode, p_itemkey, 'H', startdate, returndate, currentdate, x.NRADULTS, x.CHILDBIRTHDATE1, x.CHILDBIRTHDATE2, x.CHILDBIRTHDATE3, x.CHILDBIRTHDATE4, p_currency)) AS pricing
+  WHERE func_test_price(p_tocode, p_itemkey, 'H', p_startdate, p_returndate, x.NRADULTS, x.CHILDBIRTHDATE1, x.CHILDBIRTHDATE2, x.CHILDBIRTHDATE3, x.CHILDBIRTHDATE4, p_currency) = 'OK';
+END
+@
 
-END @
 
 --
 -- select * from TABLE( func_pricing_tblch( 'IMHO', 'TUIXYA192344', '2016-10-03', '2016-10-12', '', 2, '', '' ) ) as pricing
@@ -222,8 +210,7 @@ END @
 
 drop function func_pricing @
 
-create function func_pricing
-(
+CREATE FUNCTION func_pricing (
   p_tocode VARCHAR(5) DEFAULT ''
   ,p_itemkey VARCHAR(20) DEFAULT ''
   ,p_startdate DATE DEFAULT NULL -- start of booking period
@@ -234,46 +221,28 @@ create function func_pricing
   ,p_childbirthdate2 DATE DEFAULT NULL
   ,p_childbirthdate3 DATE DEFAULT NULL
   ,p_childbirthdate4 DATE DEFAULT NULL
-)
-RETURNS
-  DECIMAL (10,2)
-NOT DETERMINISTIC
-LANGUAGE SQL
-BEGIN ATOMIC
-
---  DECLARE childbirthdate1 DATE;
---  DECLARE childbirthdate2 DATE;
---  DECLARE childbirthdate3 DATE;
---  DECLARE childbirthdate4 DATE;
-
---  SET childbirthdate1 = p_childbirthdate1 ;
---  SET childbirthdate2 = p_childbirthdate2 ;
---  SET childbirthdate3 = p_childbirthdate3 ;
---  SET childbirthdate4 = p_childbirthdate4 ;
-
-RETURN
-
-select
-  coalesce(sum(x.TOTAL),0)
-from
-TABLE(
-  func_pricing_tbl
-  (
-    p_tocode
-    ,p_itemkey
-    ,p_startdate
-    ,p_returndate
-    ,p_currentdate
-    ,p_nradults
-    ,p_childbirthdate1
-    ,p_childbirthdate2
-    ,p_childbirthdate3
-    ,p_childbirthdate4
+  ,p_currency VARCHAR(3) DEFAULT 'CHF'
   )
-) as x
+RETURNS DECIMAL(10, 2) NOT DETERMINISTIC LANGUAGE SQL
 
-;
-END @
+BEGIN
+  ATOMIC
+
+  --  DECLARE childbirthdate1 DATE;
+  --  DECLARE childbirthdate2 DATE;
+  --  DECLARE childbirthdate3 DATE;
+  --  DECLARE childbirthdate4 DATE;
+  --  SET childbirthdate1 = p_childbirthdate1 ;
+  --  SET childbirthdate2 = p_childbirthdate2 ;
+  --  SET childbirthdate3 = p_childbirthdate3 ;
+  --  SET childbirthdate4 = p_childbirthdate4 ;
+  RETURN
+
+  SELECT coalesce(sum(x.TOTAL), 0)
+  FROM TABLE (func_pricing_tbl(p_tocode, p_itemkey, p_startdate, p_returndate, p_currentdate, p_nradults, p_childbirthdate1, p_childbirthdate2, p_childbirthdate3, p_childbirthdate4, p_currency)) AS x;
+END
+@
+
 
 --
 -- select
@@ -289,8 +258,7 @@ END @
 
 drop function func_pricingch @
 
-create function func_pricingch
-(
+CREATE FUNCTION func_pricingch (
   p_tocode VARCHAR(5) DEFAULT ''
   ,p_itemkey VARCHAR(20) DEFAULT ''
   ,p_startdate VARCHAR(10) DEFAULT '' -- start of booking period
@@ -301,12 +269,12 @@ create function func_pricingch
   ,p_childbirthdate2 VARCHAR(10) DEFAULT ''
   ,p_childbirthdate3 VARCHAR(10) DEFAULT ''
   ,p_childbirthdate4 VARCHAR(10) DEFAULT ''
-)
-RETURNS
-  DECIMAL (10,2)
-NOT DETERMINISTIC
-LANGUAGE SQL
-BEGIN ATOMIC
+  ,p_currency VARCHAR(3) DEFAULT 'CHF'
+  )
+RETURNS DECIMAL(10, 2) NOT DETERMINISTIC LANGUAGE SQL
+
+BEGIN
+  ATOMIC
 
   DECLARE childbirthdate1 DATE;
   DECLARE childbirthdate2 DATE;
@@ -314,35 +282,19 @@ BEGIN ATOMIC
   DECLARE childbirthdate4 DATE;
   DECLARE currentdate DATE;
 
-  SET childbirthdate1 = cast(nullif(p_childbirthdate1,'') as date) ;
-  SET childbirthdate2 = cast(nullif(p_childbirthdate2,'') as date) ;
-  SET childbirthdate3 = cast(nullif(p_childbirthdate3,'') as date) ;
-  SET childbirthdate4 = cast(nullif(p_childbirthdate4,'') as date) ;
-  SET currentdate = coalesce(cast(nullif(p_currentdate,'') as date), CURRENT DATE) ;
+  SET childbirthdate1 = cast(nullif(p_childbirthdate1, '') AS DATE);
+  SET childbirthdate2 = cast(nullif(p_childbirthdate2, '') AS DATE);
+  SET childbirthdate3 = cast(nullif(p_childbirthdate3, '') AS DATE);
+  SET childbirthdate4 = cast(nullif(p_childbirthdate4, '') AS DATE);
+  SET currentdate = coalesce(cast(nullif(p_currentdate, '') AS DATE), CURRENT DATE);
 
-RETURN
+  RETURN
 
-select
-  coalesce(sum(x.TOTAL),0)
-from
-TABLE(
-  func_pricing_tbl
-  (
-    p_tocode
-    ,p_itemkey
-    ,cast(nullif(p_startdate,'') as date)
-    ,cast(nullif(p_returndate,'') as date)
-    ,currentdate
-    ,p_nradults
-    ,childbirthdate1
-    ,childbirthdate2
-    ,childbirthdate3
-    ,childbirthdate4
-  )
-) as x
+  SELECT coalesce(sum(x.TOTAL), 0)
+  FROM TABLE (func_pricing_tbl(p_tocode, p_itemkey, cast(nullif(p_startdate, '') AS DATE), cast(nullif(p_returndate, '') AS DATE), currentdate, p_nradults, childbirthdate1, childbirthdate2, childbirthdate3, childbirthdate4, p_currency)) AS x;
+END
+@
 
-;
-END @
 
 
 
@@ -369,9 +321,8 @@ END @
 
 drop function func_hotelpriceav @
 
-create function func_hotelpriceav
-(
-   IN_TOCODE VARCHAR(5) DEFAULT ''
+CREATE FUNCTION func_hotelpriceav (
+  IN_TOCODE VARCHAR(5) DEFAULT ''
   ,IN_DESTINATIONCODE VARCHAR(5) DEFAULT ''
   ,IN_PRICEDATEFROM VARCHAR(10)
   ,IN_PRICEDATETO VARCHAR(10)
@@ -389,14 +340,13 @@ create function func_hotelpriceav
   ,IN_CURRENTDATE VARCHAR(10) DEFAULT ''
   ,IN_ROOMKEY VARCHAR(20) DEFAULT ''
   ,IN_HOTELKEY VARCHAR(20) DEFAULT ''
-)
-RETURNS
-  TABLE
-  (
-     TOCODE VARCHAR(5)
-    ,ROOMKEY VARCHAR(20)
-    ,TOTAL FLOAT
-    ,STATUS VARCHAR(2)
+  ,IN_CURRENCY VARCHAR(3) DEFAULT 'CHF'
+  )
+RETURNS TABLE (
+  TOCODE VARCHAR(5)
+  ,ROOMKEY VARCHAR(20)
+  ,TOTAL FLOAT
+  ,STATUS VARCHAR(2)
   ) NOT DETERMINISTIC LANGUAGE SQL
 
 BEGIN
@@ -410,120 +360,113 @@ BEGIN
   DECLARE childbirthdate4 DATE;
   DECLARE currentdate DATE;
 
-  SET pricedatefrom = cast(nullif(IN_PRICEDATEFROM, '') as date);
-  SET pricedateto = cast(nullif(IN_PRICEDATETO, '') as date);
-  SET childbirthdate1 = cast(nullif(IN_CHDDOB1, '') as date);
-  SET childbirthdate2 = cast(nullif(IN_CHDDOB2, '') as date);
-  SET childbirthdate3 = cast(nullif(IN_CHDDOB3, '') as date);
-  SET childbirthdate4 = cast(nullif(IN_CHDDOB4, '') as date);
-  SET currentdate = coalesce(cast(nullif(IN_CURRENTDATE, '') as date), CURRENT DATE);
+  SET pricedatefrom = cast(nullif(IN_PRICEDATEFROM, '') AS DATE);
+  SET pricedateto = cast(nullif(IN_PRICEDATETO, '') AS DATE);
+  SET childbirthdate1 = cast(nullif(IN_CHDDOB1, '') AS DATE);
+  SET childbirthdate2 = cast(nullif(IN_CHDDOB2, '') AS DATE);
+  SET childbirthdate3 = cast(nullif(IN_CHDDOB3, '') AS DATE);
+  SET childbirthdate4 = cast(nullif(IN_CHDDOB4, '') AS DATE);
+  SET currentdate = coalesce(cast(nullif(IN_CURRENTDATE, '') AS DATE), CURRENT DATE);
 
-RETURN
-
-    -- #######################################################################
-    -- # Returns sum of price for specific hotel item
-    --
-    --   Parameters for "func_pricing":
-    --    p_tocode VARCHAR(5) DEFAULT ''
-    --   ,p_itemkey VARCHAR(20) DEFAULT ''
-    --   ,p_startdate DATE DEFAULT NULL -- start of booking period
-    --   ,p_returndate DATE DEFAULT NULL -- end of booking period (this is the departure date of the room, not the last date relevant for pricing)
-    --   ,p_currentdate DATE DEFAULT CURRENT DATE
-    --   ,p_nradults INTEGER DEFAULT 0
-    --   ,p_childbirthdate1 DATE DEFAULT NULL
-    --   ,p_childbirthdate2 DATE DEFAULT NULL
-    --   ,p_childbirthdate3 DATE DEFAULT NULL
-    --   ,p_childbirthdate4 DATE DEFAULT NULL
-    --     
-    --   Parameters for func_get_allotment2:
-    --    p_tocode VARCHAR(5) DEFAULT ''
-    --   ,p_itemkey VARCHAR(20) DEFAULT ''
-    --   ,p_itemtype VARCHAR(1) DEFAULT ''
-    --   ,p_startdate DATE DEFAULT NULL
-    --   ,p_returndate DATE DEFAULT NULL
-    --   ,p_currentdate DATE DEFAULT CURRENT DATE
-    -- #######################################################################
-    with tmptble (
-      XHOTELKEY
-      ,XROOMKEY
-      ,XPRICE
-      ,XALLTOMENTCODE
-      )
-    as (
+  RETURN
+  -- #######################################################################
+  -- # Returns sum of price for specific hotel item
+  --
+  --   Parameters for "func_pricing":
+  --    p_tocode VARCHAR(5) DEFAULT ''
+  --   ,p_itemkey VARCHAR(20) DEFAULT ''
+  --   ,p_startdate DATE DEFAULT NULL -- start of booking period
+  --   ,p_returndate DATE DEFAULT NULL -- end of booking period (this is the departure date of the room, not the last date relevant for pricing)
+  --   ,p_currentdate DATE DEFAULT CURRENT DATE
+  --   ,p_nradults INTEGER DEFAULT 0
+  --   ,p_childbirthdate1 DATE DEFAULT NULL
+  --   ,p_childbirthdate2 DATE DEFAULT NULL
+  --   ,p_childbirthdate3 DATE DEFAULT NULL
+  --   ,p_childbirthdate4 DATE DEFAULT NULL
+  --     
+  --   Parameters for func_get_allotment2:
+  --    p_tocode VARCHAR(5) DEFAULT ''
+  --   ,p_itemkey VARCHAR(20) DEFAULT ''
+  --   ,p_itemtype VARCHAR(1) DEFAULT ''
+  --   ,p_startdate DATE DEFAULT NULL
+  --   ,p_returndate DATE DEFAULT NULL
+  --   ,p_currentdate DATE DEFAULT CURRENT DATE
+  -- #######################################################################
+  WITH tmptble(XHOTELKEY, XROOMKEY, XPRICE, XALLTOMENTCODE) AS (
       (
-        select h.HOTELKEY
+        SELECT h.HOTELKEY
           ,r.ROOMKEY
-          ,cast(func_pricing(IN_TOCODE, r.ROOMKEY, pricedatefrom, pricedateto, currentdate, IN_NORMALOCCUPANCY, childbirthdate1, childbirthdate2, childbirthdate3, childbirthdate4) as FLOAT) as price
-          ,func_get_allotment2(IN_TOCODE, r.ROOMKEY, 'H', pricedatefrom, pricedateto, currentdate) as status
-        from TOOHOTEL h
-        INNER JOIN TOOROOMS r on h.HOTELKEY = r.HOTELKEY and h.TOCODE = r.TOCODE
-        where h.DESTINATIONCODE = coalesce(nullif(IN_DESTINATIONCODE, ''), h.DESTINATIONCODE)
-          and h.HOTELCODE = coalesce(nullif(IN_HOTELCODE, ''), h.HOTELCODE)
-          and r.TOURBOCODE = coalesce(nullif(IN_ROOMCODE, ''), r.TOURBOCODE)
-          and r.TOURBOMEALCODE = coalesce(nullif(IN_TOURBOMEALCODE, ''), r.TOURBOMEALCODE)
-          and r.ROOMKEY = coalesce(nullif(IN_ROOMKEY, ''), r.ROOMKEY)
-          and h.HOTELKEY = coalesce(nullif(IN_HOTELKEY, ''), h.HOTELKEY)
-          and r.NORMALOCCUPANCY = IN_NORMALOCCUPANCY
-          and r.TOCODE = IN_TOCODE
-          and h.TOCODE = IN_TOCODE
-          and (
+          ,cast(func_pricing(IN_TOCODE, r.ROOMKEY, pricedatefrom, pricedateto, currentdate, IN_NORMALOCCUPANCY, childbirthdate1, childbirthdate2, childbirthdate3, childbirthdate4, IN_CURRENCY) AS FLOAT) AS price
+          ,func_get_allotment2(IN_TOCODE, r.ROOMKEY, 'H', pricedatefrom, pricedateto, currentdate) AS STATUS
+        FROM TOOHOTEL h
+        INNER JOIN TOOROOMS r ON h.HOTELKEY = r.HOTELKEY
+          AND h.TOCODE = r.TOCODE
+        WHERE h.DESTINATIONCODE = coalesce(nullif(IN_DESTINATIONCODE, ''), h.DESTINATIONCODE)
+          AND h.HOTELCODE = coalesce(nullif(IN_HOTELCODE, ''), h.HOTELCODE)
+          AND r.TOURBOCODE = coalesce(nullif(IN_ROOMCODE, ''), r.TOURBOCODE)
+          AND r.TOURBOMEALCODE = coalesce(nullif(IN_TOURBOMEALCODE, ''), r.TOURBOMEALCODE)
+          AND r.ROOMKEY = coalesce(nullif(IN_ROOMKEY, ''), r.ROOMKEY)
+          AND h.HOTELKEY = coalesce(nullif(IN_HOTELKEY, ''), h.HOTELKEY)
+          AND r.NORMALOCCUPANCY = IN_NORMALOCCUPANCY
+          AND r.TOCODE = IN_TOCODE
+          AND h.TOCODE = IN_TOCODE
+          AND (
             coalesce(r.PASSIVE, 0) = 0
-            or (
+            OR (
               r.PASSIVE = 1
-              and coalesce(r.FROMDATE, current date) > current date
+              AND coalesce(r.FROMDATE, CURRENT DATE) > CURRENT DATE
               )
             )
         )
       )
-    select
-       r.TOCODE as TOCODE
-      ,r.ROOMKEY as ROOMKEY
-      ,coalesce (XPRICE,0) as PRICE
-      ,coalesce (XALLTOMENTCODE,'XX') as STATUS
-    from
-      TOOHOTEL h
-      INNER JOIN TOOROOMS r on h.HOTELKEY = r.HOTELKEY and r.TOCODE = h.TOCODE
-      LEFT OUTER JOIN tmptble on h.HOTELKEY = XHOTELKEY
-      and r.ROOMKEY = XROOMKEY
-    where
-      h.DESTINATIONCODE = coalesce (nullif(IN_DESTINATIONCODE, ''),h.DESTINATIONCODE)
-      and h.HOTELCODE = coalesce (nullif(IN_HOTELCODE, ''),h.HOTELCODE)
-      and r.TOURBOCODE = coalesce (nullif(IN_ROOMCODE, ''),r.TOURBOCODE)
-      and r.TOURBOMEALCODE = coalesce (nullif(IN_TOURBOMEALCODE, ''),r.TOURBOMEALCODE)
-      and r.ROOMKEY = coalesce (nullif(IN_ROOMKEY, ''),r.ROOMKEY)
-      and h.HOTELKEY = coalesce (nullif(IN_HOTELKEY, ''),h.HOTELKEY)
-      and r.TOCODE = IN_TOCODE
-      and h.TOCODE = IN_TOCODE
-      and r.NORMALOCCUPANCY = IN_NORMALOCCUPANCY
-      and (
-            (IN_IGNORE_PRICE0 = 1 and XPRICE > 0)
-           or IN_IGNORE_PRICE0 = 0
+
+  SELECT r.TOCODE AS TOCODE
+    ,r.ROOMKEY AS ROOMKEY
+    ,coalesce(XPRICE, 0) AS PRICE
+    ,coalesce(XALLTOMENTCODE, 'XX') AS STATUS
+  FROM TOOHOTEL h
+  INNER JOIN TOOROOMS r ON h.HOTELKEY = r.HOTELKEY
+    AND r.TOCODE = h.TOCODE
+  LEFT OUTER JOIN tmptble ON h.HOTELKEY = XHOTELKEY
+    AND r.ROOMKEY = XROOMKEY
+  WHERE h.DESTINATIONCODE = coalesce(nullif(IN_DESTINATIONCODE, ''), h.DESTINATIONCODE)
+    AND h.HOTELCODE = coalesce(nullif(IN_HOTELCODE, ''), h.HOTELCODE)
+    AND r.TOURBOCODE = coalesce(nullif(IN_ROOMCODE, ''), r.TOURBOCODE)
+    AND r.TOURBOMEALCODE = coalesce(nullif(IN_TOURBOMEALCODE, ''), r.TOURBOMEALCODE)
+    AND r.ROOMKEY = coalesce(nullif(IN_ROOMKEY, ''), r.ROOMKEY)
+    AND h.HOTELKEY = coalesce(nullif(IN_HOTELKEY, ''), h.HOTELKEY)
+    AND r.TOCODE = IN_TOCODE
+    AND h.TOCODE = IN_TOCODE
+    AND r.NORMALOCCUPANCY = IN_NORMALOCCUPANCY
+    AND (
+      (
+        IN_IGNORE_PRICE0 = 1
+        AND XPRICE > 0
+        )
+      OR IN_IGNORE_PRICE0 = 0
       )
-      and coalesce (XALLTOMENTCODE,'XX') <>
-            (
-            case 
-              when IN_IGNORE_XX = 1
-                then 'XX'
-              else '..'
-              end
-            )
-      and coalesce (XALLTOMENTCODE,'XX') <> 
-            (
-            case 
-              when IN_IGNORE_RQ = 1
-                then 'RQ'
-              else '..'
-              end
-            )
-;
+    AND coalesce(XALLTOMENTCODE, 'XX') <> (
+      CASE 
+        WHEN IN_IGNORE_XX = 1
+          THEN 'XX'
+        ELSE '..'
+        END
+      )
+    AND coalesce(XALLTOMENTCODE, 'XX') <> (
+      CASE 
+        WHEN IN_IGNORE_RQ = 1
+          THEN 'RQ'
+        ELSE '..'
+        END
+      );
 END
 @
 
+
 drop function func_pricing_tbl2 @
 
-create function func_pricing_tbl2
-(
-   p_tocode VARCHAR(5) DEFAULT ''
+CREATE FUNCTION func_pricing_tbl2 (
+  p_tocode VARCHAR(5) DEFAULT ''
   ,p_itemkey VARCHAR(20) DEFAULT ''
   ,p_startdate DATE DEFAULT NULL
   ,p_returndate DATE DEFAULT NULL -- end of booking period (this is the departure date of the room, not the last date relevant for pricing)
@@ -533,58 +476,52 @@ create function func_pricing_tbl2
   ,p_childbirthdate2 DATE DEFAULT NULL
   ,p_childbirthdate3 DATE DEFAULT NULL
   ,p_childbirthdate4 DATE DEFAULT NULL
-)
-RETURNS
-  TABLE
-  (
-     TOCODE VARCHAR(5)
-    ,ROOMKEY VARCHAR(20)
-    ,NR INTEGER
-    ,PRICE DECIMAL(10,2)
-    ,TOTAL DECIMAL(10,2)
-    ,TYPE1 VARCHAR(20) -- PDP, APDP, OT, SO, EB
-    ,TYPE2 VARCHAR(20) -- ADT, CHD1, CHD2, CHD3, CHD4
-    ,FROMDATE DATE
-    ,TODATE DATE
-    ,DESCID INTEGER
-    ,P_SEQ VARCHAR(20)
+  ,p_currency VARCHAR(3) DEFAULT 'CHF'
   )
-NOT DETERMINISTIC
-LANGUAGE SQL
-BEGIN ATOMIC
+RETURNS TABLE (
+  TOCODE VARCHAR(5)
+  ,ROOMKEY VARCHAR(20)
+  ,NR INTEGER
+  ,PRICE DECIMAL(10, 2)
+  ,TOTAL DECIMAL(10, 2)
+  ,TYPE1 VARCHAR(20) -- PDP, APDP, OT, SO, EB
+  ,TYPE2 VARCHAR(20) -- ADT, CHD1, CHD2, CHD3, CHD4
+  ,FROMDATE DATE
+  ,TODATE DATE
+  ,DESCID INTEGER
+  ,P_SEQ VARCHAR(20)
+  ) NOT DETERMINISTIC LANGUAGE SQL
 
---  DECLARE childbirthdate1 DATE;
---  DECLARE childbirthdate2 DATE;
---  DECLARE childbirthdate3 DATE;
---  DECLARE childbirthdate4 DATE;
+BEGIN
+  ATOMIC
 
---  SET childbirthdate1 = p_childbirthdate1 ;
---  SET childbirthdate2 = p_childbirthdate2 ;
---  SET childbirthdate3 = p_childbirthdate3 ;
---  SET childbirthdate4 = p_childbirthdate4 ;
+  --  DECLARE childbirthdate1 DATE;
+  --  DECLARE childbirthdate2 DATE;
+  --  DECLARE childbirthdate3 DATE;
+  --  DECLARE childbirthdate4 DATE;
+  --  SET childbirthdate1 = p_childbirthdate1 ;
+  --  SET childbirthdate2 = p_childbirthdate2 ;
+  --  SET childbirthdate3 = p_childbirthdate3 ;
+  --  SET childbirthdate4 = p_childbirthdate4 ;
+  RETURN
 
-RETURN
+  SELECT p_tocode
+    ,p_itemkey
+    ,nr
+    ,price
+    ,total
+    ,type1
+    ,type2
+    ,fromdate
+    ,todate
+    ,descid
+    ,p_seq
+  FROM TABLE (func_roomvalid(p_tocode, p_itemkey, p_nradults, p_childbirthdate1, p_childbirthdate2, p_childbirthdate3, p_childbirthdate4, p_currency)) AS x
+    ,TABLE (func_pricing2_tbl(p_tocode, p_itemkey, 'H', p_startdate, p_returndate, p_currentdate, x.NRADULTS, x.CHILDBIRTHDATE1, x.CHILDBIRTHDATE2, x.CHILDBIRTHDATE3, x.CHILDBIRTHDATE4, p_currency)) AS pricing
+  WHERE func_test_price(p_tocode, p_itemkey, 'H', p_startdate, p_returndate, x.NRADULTS, x.CHILDBIRTHDATE1, x.CHILDBIRTHDATE2, x.CHILDBIRTHDATE3, x.CHILDBIRTHDATE4, p_currency) = 'OK';
+END
+@
 
-SELECT
-   p_tocode
-  ,p_itemkey
-  ,nr
-  ,price
-  ,total
-  ,type1
-  ,type2
-  ,fromdate
-  ,todate
-  ,descid
-  ,p_seq
-FROM
-   TABLE( func_roomvalid( p_tocode, p_itemkey, p_nradults, p_childbirthdate1, p_childbirthdate2, p_childbirthdate3, p_childbirthdate4 ) ) AS x
-  ,TABLE( func_pricing2_tbl( p_tocode, p_itemkey, 'H', p_startdate, p_returndate, p_currentdate, x.NRADULTS, x.CHILDBIRTHDATE1, x.CHILDBIRTHDATE2, x.CHILDBIRTHDATE3, x.CHILDBIRTHDATE4 ) ) as pricing
-WHERE
-  func_test_price( p_tocode, p_itemkey, 'H', p_startdate, p_returndate, x.NRADULTS, x.CHILDBIRTHDATE1, x.CHILDBIRTHDATE2, x.CHILDBIRTHDATE3, x.CHILDBIRTHDATE4 ) = 'OK'
-;
-
-END @
 
 
 drop function func_hotelpriceav_tbl @
@@ -656,6 +593,7 @@ CREATE FUNCTION func_hotelpriceav_tbl (
   ,IN_CURRENTDATE VARCHAR(10) DEFAULT ''
   ,IN_ROOMKEY VARCHAR(20) DEFAULT ''
   ,IN_HOTELKEY VARCHAR(20) DEFAULT ''
+  ,IN_CURRENCY VARCHAR(3) DEFAULT 'CHF'
   )
 RETURNS TABLE (
   TOCODE VARCHAR(5)
@@ -719,7 +657,7 @@ BEGIN
       (
         SELECT h.HOTELKEY
           ,r.ROOMKEY
-          ,cast(func_pricing(IN_TOCODE, r.ROOMKEY, pricedatefrom, pricedateto, currentdate, IN_NORMALOCCUPANCY, childbirthdate1, childbirthdate2, childbirthdate3, childbirthdate4) AS FLOAT) AS price
+          ,cast(func_pricing(IN_TOCODE, r.ROOMKEY, pricedatefrom, pricedateto, currentdate, IN_NORMALOCCUPANCY, childbirthdate1, childbirthdate2, childbirthdate3, childbirthdate4, IN_CURRENCY) AS FLOAT) AS price
           ,func_get_allotment2(IN_TOCODE, r.ROOMKEY, 'H', pricedatefrom, pricedateto, currentdate) AS STATUS
         FROM TOOHOTEL h
         INNER JOIN TOOROOMS r ON h.HOTELKEY = r.HOTELKEY
@@ -759,7 +697,7 @@ BEGIN
         FROM TOOHOTEL h
         INNER JOIN TOOROOMS r ON h.HOTELKEY = r.HOTELKEY
           AND h.TOCODE = r.TOCODE
-        INNER JOIN TABLE (func_pricing_tbl2(IN_TOCODE, r.ROOMKEY, pricedatefrom, pricedateto, currentdate, IN_NORMALOCCUPANCY, childbirthdate1, childbirthdate2, childbirthdate3, childbirthdate4)) AS pricing ON pricing.TOCODE = r.TOCODE
+        INNER JOIN TABLE (func_pricing_tbl2(IN_TOCODE, r.ROOMKEY, pricedatefrom, pricedateto, currentdate, IN_NORMALOCCUPANCY, childbirthdate1, childbirthdate2, childbirthdate3, childbirthdate4, IN_CURRENCY)) AS pricing ON pricing.TOCODE = r.TOCODE
           AND pricing.ROOMKEY = r.ROOMKEY
         WHERE h.DESTINATIONCODE = coalesce(nullif(IN_DESTINATIONCODE, ''), h.DESTINATIONCODE)
           AND h.HOTELCODE = coalesce(nullif(IN_HOTELCODE, ''), h.HOTELCODE)
@@ -853,8 +791,8 @@ BEGIN
     ,pricing2.TYPE2 ASC
     ,pricing2.FROMDATE ASC;
 END
-
 @
+
 
 -- -----------------------------------------------------------------------------
 -- EOF

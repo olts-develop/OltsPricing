@@ -16,6 +16,7 @@ CREATE FUNCTION func_arrvalid (
   ,p_childbirthdate2 DATE DEFAULT NULL
   ,p_childbirthdate3 DATE DEFAULT NULL
   ,p_childbirthdate4 DATE DEFAULT NULL
+  ,p_currency VARCHAR(3) DEFAULT 'CHF'
   )
 RETURNS TABLE (
   NRADULTS INTEGER
@@ -89,10 +90,18 @@ BEGIN
         WHEN (
             SELECT count(ID)
             FROM TOOADDPERDAYPRICE
-            WHERE ITEMKEY = p_arrkey
-              AND ITEMTYPE = 'A'
-              AND TOCODE = p_tocode
-              AND DAY = p_startdate
+            WHERE (
+                ITEMKEY
+                ,ITEMTYPE
+                ,TOCODE
+                ,CURRENCY
+                ) = (
+                p_arrkey
+                ,'A'
+                ,p_tocode
+                ,p_currency
+                )
+              AND TOOADDPERDAYPRICE.DAY = p_startdate
               AND AGEFROM <= childage1
               AND AGETO >= childage1
               AND CHILDIDXNR > 0 FETCH first 1 row ONLY
@@ -100,9 +109,17 @@ BEGIN
           OR (
             SELECT count(ID)
             FROM TOOADDPERIODPRICE
-            WHERE ITEMKEY = p_arrkey
-              AND ITEMTYPE = 'A'
-              AND TOCODE = p_tocode
+            WHERE (
+                ITEMKEY
+                ,ITEMTYPE
+                ,TOCODE
+                ,CURRENCY
+                ) = (
+                p_arrkey
+                ,'A'
+                ,p_tocode
+                ,p_currency
+                )
               AND DATEFROM <= p_startdate
               AND DATETO >= p_startdate
               AND AGEFROM <= childage1
@@ -112,9 +129,17 @@ BEGIN
           OR (
             SELECT count(ID)
             FROM TOOONETIME
-            WHERE ITEMKEY = p_arrkey
-              AND ITEMTYPE = 'A'
-              AND TOCODE = p_tocode
+            WHERE (
+                ITEMKEY
+                ,ITEMTYPE
+                ,TOCODE
+                ,CURRENCY
+                ) = (
+                p_arrkey
+                ,'A'
+                ,p_tocode
+                ,p_currency
+                )
               AND DATEFROM <= p_startdate
               AND DATETO >= p_startdate
               AND AGEFROM <= childage1
@@ -124,9 +149,17 @@ BEGIN
           OR (
             SELECT count(ID)
             FROM TOOPERDAYPRICE
-            WHERE ITEMKEY = p_arrkey
-              AND ITEMTYPE = 'A'
-              AND TOCODE = p_tocode
+            WHERE (
+                ITEMKEY
+                ,ITEMTYPE
+                ,TOCODE
+                ,CURRENCY
+                ) = (
+                p_arrkey
+                ,'A'
+                ,p_tocode
+                ,p_currency
+                )
               AND DAY = p_startdate
               AND AGEFROM <= childage1
               AND AGETO >= childage1
@@ -135,9 +168,17 @@ BEGIN
           OR (
             SELECT count(ID)
             FROM TOOPERIODPRICE
-            WHERE ITEMKEY = p_arrkey
-              AND ITEMTYPE = 'A'
-              AND TOCODE = p_tocode
+            WHERE (
+                ITEMKEY
+                ,ITEMTYPE
+                ,TOCODE
+                ,CURRENCY
+                ) = (
+                p_arrkey
+                ,'A'
+                ,p_tocode
+                ,p_currency
+                )
               AND DATEFROM <= p_startdate
               AND DATETO >= p_startdate
               AND AGEFROM <= childage1
@@ -155,10 +196,18 @@ BEGIN
         WHEN (
             SELECT count(ID)
             FROM TOOADDPERDAYPRICE
-            WHERE ITEMKEY = p_arrkey
-              AND ITEMTYPE = 'A'
-              AND TOCODE = p_tocode
-              AND DAY = p_startdate
+            WHERE (
+                ITEMKEY
+                ,ITEMTYPE
+                ,TOCODE
+                ,CURRENCY
+                ) = (
+                p_arrkey
+                ,'A'
+                ,p_tocode
+                ,p_currency
+                )
+              AND TOOADDPERDAYPRICE.DAY = p_startdate
               AND AGEFROM <= childage2
               AND AGETO >= childage2
               AND CHILDIDXNR > 0 FETCH first 1 row ONLY
@@ -166,9 +215,17 @@ BEGIN
           OR (
             SELECT count(ID)
             FROM TOOADDPERIODPRICE
-            WHERE ITEMKEY = p_arrkey
-              AND ITEMTYPE = 'A'
-              AND TOCODE = p_tocode
+            WHERE (
+                ITEMKEY
+                ,ITEMTYPE
+                ,TOCODE
+                ,CURRENCY
+                ) = (
+                p_arrkey
+                ,'A'
+                ,p_tocode
+                ,p_currency
+                )
               AND DATEFROM <= p_startdate
               AND DATETO >= p_startdate
               AND AGEFROM <= childage2
@@ -178,9 +235,17 @@ BEGIN
           OR (
             SELECT count(ID)
             FROM TOOONETIME
-            WHERE ITEMKEY = p_arrkey
-              AND ITEMTYPE = 'A'
-              AND TOCODE = p_tocode
+            WHERE (
+                ITEMKEY
+                ,ITEMTYPE
+                ,TOCODE
+                ,CURRENCY
+                ) = (
+                p_arrkey
+                ,'A'
+                ,p_tocode
+                ,p_currency
+                )
               AND DATEFROM <= p_startdate
               AND DATETO >= p_startdate
               AND AGEFROM <= childage2
@@ -190,9 +255,17 @@ BEGIN
           OR (
             SELECT count(ID)
             FROM TOOPERDAYPRICE
-            WHERE ITEMKEY = p_arrkey
-              AND ITEMTYPE = 'A'
-              AND TOCODE = p_tocode
+            WHERE (
+                ITEMKEY
+                ,ITEMTYPE
+                ,TOCODE
+                ,CURRENCY
+                ) = (
+                p_arrkey
+                ,'A'
+                ,p_tocode
+                ,p_currency
+                )
               AND DAY = p_startdate
               AND AGEFROM <= childage2
               AND AGETO >= childage2
@@ -201,9 +274,17 @@ BEGIN
           OR (
             SELECT count(ID)
             FROM TOOPERIODPRICE
-            WHERE ITEMKEY = p_arrkey
-              AND ITEMTYPE = 'A'
-              AND TOCODE = p_tocode
+            WHERE (
+                ITEMKEY
+                ,ITEMTYPE
+                ,TOCODE
+                ,CURRENCY
+                ) = (
+                p_arrkey
+                ,'A'
+                ,p_tocode
+                ,p_currency
+                )
               AND DATEFROM <= p_startdate
               AND DATETO >= p_startdate
               AND AGEFROM <= childage2
@@ -221,10 +302,18 @@ BEGIN
         WHEN (
             SELECT count(ID)
             FROM TOOADDPERDAYPRICE
-            WHERE ITEMKEY = p_arrkey
-              AND ITEMTYPE = 'A'
-              AND TOCODE = p_tocode
-              AND DAY = p_startdate
+            WHERE (
+                ITEMKEY
+                ,ITEMTYPE
+                ,TOCODE
+                ,CURRENCY
+                ) = (
+                p_arrkey
+                ,'A'
+                ,p_tocode
+                ,p_currency
+                )
+              AND TOOADDPERDAYPRICE.DAY = p_startdate
               AND AGEFROM <= childage3
               AND AGETO >= childage3
               AND CHILDIDXNR > 0 FETCH first 1 row ONLY
@@ -232,9 +321,17 @@ BEGIN
           OR (
             SELECT count(ID)
             FROM TOOADDPERIODPRICE
-            WHERE ITEMKEY = p_arrkey
-              AND ITEMTYPE = 'A'
-              AND TOCODE = p_tocode
+            WHERE (
+                ITEMKEY
+                ,ITEMTYPE
+                ,TOCODE
+                ,CURRENCY
+                ) = (
+                p_arrkey
+                ,'A'
+                ,p_tocode
+                ,p_currency
+                )
               AND DATEFROM <= p_startdate
               AND DATETO >= p_startdate
               AND AGEFROM <= childage3
@@ -244,9 +341,17 @@ BEGIN
           OR (
             SELECT count(ID)
             FROM TOOONETIME
-            WHERE ITEMKEY = p_arrkey
-              AND ITEMTYPE = 'A'
-              AND TOCODE = p_tocode
+            WHERE (
+                ITEMKEY
+                ,ITEMTYPE
+                ,TOCODE
+                ,CURRENCY
+                ) = (
+                p_arrkey
+                ,'A'
+                ,p_tocode
+                ,p_currency
+                )
               AND DATEFROM <= p_startdate
               AND DATETO >= p_startdate
               AND AGEFROM <= childage3
@@ -256,10 +361,18 @@ BEGIN
           OR (
             SELECT count(ID)
             FROM TOOPERDAYPRICE
-            WHERE ITEMKEY = p_arrkey
-              AND ITEMTYPE = 'A'
-              AND TOCODE = p_tocode
-              AND DAY = p_startdate
+            WHERE (
+                ITEMKEY
+                ,ITEMTYPE
+                ,TOCODE
+                ,CURRENCY
+                ) = (
+                p_arrkey
+                ,'A'
+                ,p_tocode
+                ,p_currency
+                )
+              AND TOOPERDAYPRICE.DAY = p_startdate
               AND AGEFROM <= childage3
               AND AGETO >= childage3
               AND CHILDIDXNR > 0 FETCH first 1 row ONLY
@@ -267,9 +380,17 @@ BEGIN
           OR (
             SELECT count(ID)
             FROM TOOPERIODPRICE
-            WHERE ITEMKEY = p_arrkey
-              AND ITEMTYPE = 'A'
-              AND TOCODE = p_tocode
+            WHERE (
+                ITEMKEY
+                ,ITEMTYPE
+                ,TOCODE
+                ,CURRENCY
+                ) = (
+                p_arrkey
+                ,'A'
+                ,p_tocode
+                ,p_currency
+                )
               AND DATEFROM <= p_startdate
               AND DATETO >= p_startdate
               AND AGEFROM <= childage3
@@ -287,9 +408,17 @@ BEGIN
         WHEN (
             SELECT count(ID)
             FROM TOOADDPERDAYPRICE
-            WHERE ITEMKEY = p_arrkey
-              AND ITEMTYPE = 'A'
-              AND TOCODE = p_tocode
+            WHERE (
+                ITEMKEY
+                ,ITEMTYPE
+                ,TOCODE
+                ,CURRENCY
+                ) = (
+                p_arrkey
+                ,'A'
+                ,p_tocode
+                ,p_currency
+                )
               AND TOOADDPERDAYPRICE.DAY = p_startdate
               AND AGEFROM <= childage4
               AND AGETO >= childage4
@@ -298,9 +427,17 @@ BEGIN
           OR (
             SELECT count(ID)
             FROM TOOADDPERIODPRICE
-            WHERE ITEMKEY = p_arrkey
-              AND ITEMTYPE = 'A'
-              AND TOCODE = p_tocode
+            WHERE (
+                ITEMKEY
+                ,ITEMTYPE
+                ,TOCODE
+                ,CURRENCY
+                ) = (
+                p_arrkey
+                ,'A'
+                ,p_tocode
+                ,p_currency
+                )
               AND DATEFROM <= p_startdate
               AND DATETO >= p_startdate
               AND AGEFROM <= childage4
@@ -310,9 +447,17 @@ BEGIN
           OR (
             SELECT count(ID)
             FROM TOOONETIME
-            WHERE ITEMKEY = p_arrkey
-              AND ITEMTYPE = 'A'
-              AND TOCODE = p_tocode
+            WHERE (
+                ITEMKEY
+                ,ITEMTYPE
+                ,TOCODE
+                ,CURRENCY
+                ) = (
+                p_arrkey
+                ,'A'
+                ,p_tocode
+                ,p_currency
+                )
               AND DATEFROM <= p_startdate
               AND DATETO >= p_startdate
               AND AGEFROM <= childage4
@@ -322,10 +467,18 @@ BEGIN
           OR (
             SELECT count(ID)
             FROM TOOPERDAYPRICE
-            WHERE ITEMKEY = p_arrkey
-              AND ITEMTYPE = 'A'
-              AND TOCODE = p_tocode
-              AND DAY = p_startdate
+            WHERE (
+                ITEMKEY
+                ,ITEMTYPE
+                ,TOCODE
+                ,CURRENCY
+                ) = (
+                p_arrkey
+                ,'A'
+                ,p_tocode
+                ,p_currency
+                )
+              AND TOOPERDAYPRICE.DAY = p_startdate
               AND AGEFROM <= childage4
               AND AGETO >= childage4
               AND CHILDIDXNR > 0 FETCH first 1 row ONLY
@@ -333,9 +486,17 @@ BEGIN
           OR (
             SELECT count(ID)
             FROM TOOPERIODPRICE
-            WHERE ITEMKEY = p_arrkey
-              AND ITEMTYPE = 'A'
-              AND TOCODE = p_tocode
+            WHERE (
+                ITEMKEY
+                ,ITEMTYPE
+                ,TOCODE
+                ,CURRENCY
+                ) = (
+                p_arrkey
+                ,'A'
+                ,p_tocode
+                ,p_currency
+                )
               AND DATEFROM <= p_startdate
               AND DATETO >= p_startdate
               AND AGEFROM <= childage4
@@ -493,6 +654,7 @@ CREATE FUNCTION func_arrvalid_ch (
   ,p_childbirthdate2 VARCHAR(10) DEFAULT ''
   ,p_childbirthdate3 VARCHAR(10) DEFAULT ''
   ,p_childbirthdate4 VARCHAR(10) DEFAULT ''
+  ,p_currency VARCHAR(3) DEFAULT 'CHF'
   )
 RETURNS TABLE (
   NRADULTS INTEGER
@@ -532,7 +694,7 @@ BEGIN
     ,x.CHILDBIRTHDATE4
     ,x.PRICEENDDATE
     ,x.ALLOTMENTENDDATE
-  FROM TABLE (func_arrvalid(p_tocode, p_arrkey, startdate, enddate, p_nradults, childbirthdate1, childbirthdate2, childbirthdate3, childbirthdate4)) AS x;
+  FROM TABLE (func_arrvalid(p_tocode, p_arrkey, startdate, enddate, p_nradults, childbirthdate1, childbirthdate2, childbirthdate3, childbirthdate4, p_currency)) AS x;
 END
 @
   -- -----------------------------------------------------------------------------

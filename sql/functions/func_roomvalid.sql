@@ -13,8 +13,7 @@
 
 drop function func_roomvalid @
 
-create function func_roomvalid
-(
+CREATE FUNCTION func_roomvalid (
   p_tocode VARCHAR(5) DEFAULT ''
   ,p_roomkey VARCHAR(20) DEFAULT ''
   ,p_nradults INTEGER DEFAULT 0
@@ -22,48 +21,116 @@ create function func_roomvalid
   ,p_childbirthdate2 DATE DEFAULT NULL
   ,p_childbirthdate3 DATE DEFAULT NULL
   ,p_childbirthdate4 DATE DEFAULT NULL
-)
-RETURNS
-  TABLE
-  (
-    NRADULTS INTEGER
-    ,CHILDBIRTHDATE1 DATE
-    ,CHILDBIRTHDATE2 DATE
-    ,CHILDBIRTHDATE3 DATE
-    ,CHILDBIRTHDATE4 DATE
+  ,p_currency VARCHAR(3) DEFAULT 'CHF'
   )
-NOT DETERMINISTIC
-LANGUAGE SQL
-BEGIN ATOMIC
-RETURN
+RETURNS TABLE (
+  NRADULTS INTEGER
+  ,CHILDBIRTHDATE1 DATE
+  ,CHILDBIRTHDATE2 DATE
+  ,CHILDBIRTHDATE3 DATE
+  ,CHILDBIRTHDATE4 DATE
+  ) NOT DETERMINISTIC LANGUAGE SQL
 
-SELECT
-   ( case when normaloccupancy > p_nradults then normaloccupancy else p_nradults end )
-  ,func_getposdatedesc( ( case when normaloccupancy > p_nradults then normaloccupancy - p_nradults else 0 end ), 1, p_childbirthdate1, p_childbirthdate2, p_childbirthdate3, p_childbirthdate4 )
-  ,func_getposdatedesc( ( case when normaloccupancy > p_nradults then normaloccupancy - p_nradults else 0 end ), 2, p_childbirthdate1, p_childbirthdate2, p_childbirthdate3, p_childbirthdate4 )
-  ,func_getposdatedesc( ( case when normaloccupancy > p_nradults then normaloccupancy - p_nradults else 0 end ), 3, p_childbirthdate1, p_childbirthdate2, p_childbirthdate3, p_childbirthdate4 )
-  ,func_getposdatedesc( ( case when normaloccupancy > p_nradults then normaloccupancy - p_nradults else 0 end ), 4, p_childbirthdate1, p_childbirthdate2, p_childbirthdate3, p_childbirthdate4 )
-FROM
-  toorooms
-WHERE
-  (roomkey, tocode) = (p_roomkey, p_tocode)
-  AND p_nradults <= normaloccupancy + extrabedadults
-  AND p_nradults > 0
-  AND normaloccupancy
-      + extrabedadults
-      + extrabedchildren
-      >= p_nradults
-           + ( case when p_childbirthdate1 is not null then 1 else 0 end )
-           + ( case when p_childbirthdate2 is not null then 1 else 0 end )
-           + ( case when p_childbirthdate3 is not null then 1 else 0 end )
-           + ( case when p_childbirthdate4 is not null then 1 else 0 end )
-  AND normaloccupancy
-      <= p_nradults
-         + ( case when p_childbirthdate1 is not null then 1 else 0 end )
-         + ( case when p_childbirthdate2 is not null then 1 else 0 end )
-         + ( case when p_childbirthdate3 is not null then 1 else 0 end )
-         + ( case when p_childbirthdate4 is not null then 1 else 0 end )
-;
+BEGIN
+  ATOMIC
+
+  RETURN
+
+  SELECT (
+      CASE 
+        WHEN normaloccupancy > p_nradults
+          THEN normaloccupancy
+        ELSE p_nradults
+        END
+      )
+    ,func_getposdatedesc((
+        CASE 
+          WHEN normaloccupancy > p_nradults
+            THEN normaloccupancy - p_nradults
+          ELSE 0
+          END
+        ), 1, p_childbirthdate1, p_childbirthdate2, p_childbirthdate3, p_childbirthdate4)
+    ,func_getposdatedesc((
+        CASE 
+          WHEN normaloccupancy > p_nradults
+            THEN normaloccupancy - p_nradults
+          ELSE 0
+          END
+        ), 2, p_childbirthdate1, p_childbirthdate2, p_childbirthdate3, p_childbirthdate4)
+    ,func_getposdatedesc((
+        CASE 
+          WHEN normaloccupancy > p_nradults
+            THEN normaloccupancy - p_nradults
+          ELSE 0
+          END
+        ), 3, p_childbirthdate1, p_childbirthdate2, p_childbirthdate3, p_childbirthdate4)
+    ,func_getposdatedesc((
+        CASE 
+          WHEN normaloccupancy > p_nradults
+            THEN normaloccupancy - p_nradults
+          ELSE 0
+          END
+        ), 4, p_childbirthdate1, p_childbirthdate2, p_childbirthdate3, p_childbirthdate4)
+  FROM toorooms
+  WHERE (
+      roomkey
+      ,tocode
+      ) = (
+      p_roomkey
+      ,p_tocode
+      )
+    AND p_nradults <= normaloccupancy + extrabedadults
+    AND p_nradults > 0
+    AND normaloccupancy + extrabedadults + extrabedchildren >= p_nradults + (
+      CASE 
+        WHEN p_childbirthdate1 IS NOT NULL
+          THEN 1
+        ELSE 0
+        END
+      ) + (
+      CASE 
+        WHEN p_childbirthdate2 IS NOT NULL
+          THEN 1
+        ELSE 0
+        END
+      ) + (
+      CASE 
+        WHEN p_childbirthdate3 IS NOT NULL
+          THEN 1
+        ELSE 0
+        END
+      ) + (
+      CASE 
+        WHEN p_childbirthdate4 IS NOT NULL
+          THEN 1
+        ELSE 0
+        END
+      )
+    AND normaloccupancy <= p_nradults + (
+      CASE 
+        WHEN p_childbirthdate1 IS NOT NULL
+          THEN 1
+        ELSE 0
+        END
+      ) + (
+      CASE 
+        WHEN p_childbirthdate2 IS NOT NULL
+          THEN 1
+        ELSE 0
+        END
+      ) + (
+      CASE 
+        WHEN p_childbirthdate3 IS NOT NULL
+          THEN 1
+        ELSE 0
+        END
+      ) + (
+      CASE 
+        WHEN p_childbirthdate4 IS NOT NULL
+          THEN 1
+        ELSE 0
+        END
+      );
 END
 @
 

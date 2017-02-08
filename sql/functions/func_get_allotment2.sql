@@ -79,34 +79,23 @@ END
 
 drop function func_get_allotment2ch @
 
-create function func_get_allotment2ch
-(
+CREATE FUNCTION func_get_allotment2ch (
   p_tocode VARCHAR(5) DEFAULT ''
   ,p_itemkey VARCHAR(20) DEFAULT ''
   ,p_itemtype VARCHAR(20) DEFAULT ''
   ,p_startdate VARCHAR(10) DEFAULT ''
   ,p_returndate VARCHAR(10) DEFAULT ''
   ,p_currentdate VARCHAR(10) DEFAULT ''
-)
-RETURNS
-  VARCHAR(4)
-NOT DETERMINISTIC
-LANGUAGE SQL
-BEGIN ATOMIC
-RETURN
-
-select
-  func_get_allotment2(
-    p_tocode
-    ,p_itemkey
-    ,p_itemtype
-    ,cast( NULLIF(p_startdate, '') AS DATE )
-    ,cast( NULLIF(p_returndate, '') AS DATE )
-    ,coalesce( cast( NULLIF(p_currentdate, '') AS DATE ), CURRENT DATE )
   )
-FROM
-  sysibm.sysdummy1 ;
+RETURNS VARCHAR(4) NOT DETERMINISTIC LANGUAGE SQL
 
+BEGIN
+  ATOMIC
+
+  RETURN
+
+  SELECT func_get_allotment2(p_tocode, p_itemkey, p_itemtype, cast(NULLIF(p_startdate, '') AS DATE), cast(NULLIF(p_returndate, '') AS DATE), coalesce(cast(NULLIF(p_currentdate, '') AS DATE), CURRENT DATE))
+  FROM sysibm.sysdummy1;
 END
 @
 

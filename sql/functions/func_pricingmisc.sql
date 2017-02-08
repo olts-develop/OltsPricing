@@ -9,9 +9,8 @@
 
 drop function func_pricingmisc_tbl @
 
-create function func_pricingmisc_tbl
-(
-   p_tocode VARCHAR(5) DEFAULT ''
+CREATE FUNCTION func_pricingmisc_tbl (
+  p_tocode VARCHAR(5) DEFAULT ''
   ,p_misckey VARCHAR(20) DEFAULT ''
   ,p_startdate DATE DEFAULT NULL
   ,p_returndate DATE DEFAULT NULL -- end of booking period (this is the departure date of the room, not the last date relevant for pricing)
@@ -21,54 +20,48 @@ create function func_pricingmisc_tbl
   ,p_childbirthdate2 DATE DEFAULT NULL
   ,p_childbirthdate3 DATE DEFAULT NULL
   ,p_childbirthdate4 DATE DEFAULT NULL
-)
-RETURNS
-  TABLE
-  (
-     NR INTEGER
-    ,PRICE DECIMAL(10,2)
-    ,TOTAL DECIMAL(10,2)
-    ,TYPE1 VARCHAR(20) -- PDP, APDP, OT, SO, EB
-    ,TYPE2 VARCHAR(20) -- ADT, CHD1, CHD2, CHD3, CHD4
-    ,FROMDATE DATE
-    ,TODATE DATE
-    ,DESCID INTEGER
-    ,P_SEQ VARCHAR(20)
+  ,p_currency VARCHAR(3) DEFAULT 'CHF'
   )
-NOT DETERMINISTIC
-LANGUAGE SQL
-BEGIN ATOMIC
+RETURNS TABLE (
+  NR INTEGER
+  ,PRICE DECIMAL(10, 2)
+  ,TOTAL DECIMAL(10, 2)
+  ,TYPE1 VARCHAR(20) -- PDP, APDP, OT, SO, EB
+  ,TYPE2 VARCHAR(20) -- ADT, CHD1, CHD2, CHD3, CHD4
+  ,FROMDATE DATE
+  ,TODATE DATE
+  ,DESCID INTEGER
+  ,P_SEQ VARCHAR(20)
+  ) NOT DETERMINISTIC LANGUAGE SQL
 
---  DECLARE childbirthdate1 DATE;
---  DECLARE childbirthdate2 DATE;
---  DECLARE childbirthdate3 DATE;
---  DECLARE childbirthdate4 DATE;
+BEGIN
+  ATOMIC
 
---  SET childbirthdate1 = p_childbirthdate1 ;
---  SET childbirthdate2 = p_childbirthdate2 ;
---  SET childbirthdate3 = p_childbirthdate3 ;
---  SET childbirthdate4 = p_childbirthdate4 ;
+  --  DECLARE childbirthdate1 DATE;
+  --  DECLARE childbirthdate2 DATE;
+  --  DECLARE childbirthdate3 DATE;
+  --  DECLARE childbirthdate4 DATE;
+  --  SET childbirthdate1 = p_childbirthdate1 ;
+  --  SET childbirthdate2 = p_childbirthdate2 ;
+  --  SET childbirthdate3 = p_childbirthdate3 ;
+  --  SET childbirthdate4 = p_childbirthdate4 ;
+  RETURN
 
-RETURN
+  SELECT nr
+    ,price
+    ,total
+    ,type1
+    ,type2
+    ,fromdate
+    ,todate
+    ,descid
+    ,p_seq
+  FROM TABLE (func_miscvalid(p_tocode, p_misckey, p_nradults, p_childbirthdate1, p_childbirthdate2, p_childbirthdate3, p_childbirthdate4, p_currency)) AS x
+    ,TABLE (func_pricing2_tbl(p_tocode, p_misckey, 'M', p_startdate, p_returndate, p_currentdate, x.NRADULTS, x.CHILDBIRTHDATE1, x.CHILDBIRTHDATE2, x.CHILDBIRTHDATE3, x.CHILDBIRTHDATE4, p_currency)) AS pricing
+  WHERE func_test_price(p_tocode, p_misckey, p_startdate, p_returndate, x.NRADULTS, x.CHILDBIRTHDATE1, x.CHILDBIRTHDATE2, x.CHILDBIRTHDATE3, x.CHILDBIRTHDATE4, p_currency) = 'OK';
+END
+@
 
-SELECT
-   nr
-  ,price
-  ,total
-  ,type1
-  ,type2
-  ,fromdate
-  ,todate
-  ,descid
-  ,p_seq
-FROM
-   TABLE( func_miscvalid( p_tocode, p_misckey, p_nradults, p_childbirthdate1, p_childbirthdate2, p_childbirthdate3, p_childbirthdate4 ) ) AS x
-  ,TABLE( func_pricing2_tbl( p_tocode, p_misckey, 'M', p_startdate, p_returndate, p_currentdate, x.NRADULTS, x.CHILDBIRTHDATE1, x.CHILDBIRTHDATE2, x.CHILDBIRTHDATE3, x.CHILDBIRTHDATE4 ) ) as pricing
-WHERE
-  func_test_price( p_tocode, p_misckey, p_startdate, p_returndate, x.NRADULTS, x.CHILDBIRTHDATE1, x.CHILDBIRTHDATE2, x.CHILDBIRTHDATE3, x.CHILDBIRTHDATE4 ) = 'OK'
-;
-
-END @
 
 --
 -- select * from TABLE( func_pricing_tbl( '', '13800', date('2015-09-12'), date('2015-09-19'), current date, 2 ) ) as pricing order by (case TYPE1 when 'PP' then 1 when 'APP' then 2 when 'PDP' then 3 when 'APDP' then 4 when 'OT' then 5 when 'SO' then 6 when 'EB' then 7 else 8 end) asc, TYPE2 asc, FROMDATE asc
@@ -119,9 +112,8 @@ END @
 
 drop function func_pricingmisc_tblch @
 
-create function func_pricingmisc_tblch
-(
-   p_tocode VARCHAR(5) DEFAULT ''
+CREATE FUNCTION func_pricingmisc_tblch (
+  p_tocode VARCHAR(5) DEFAULT ''
   ,p_misckey VARCHAR(20) DEFAULT ''
   ,p_startdate VARCHAR(10) DEFAULT ''
   ,p_returndate VARCHAR(10) DEFAULT '' -- end of booking period (this is the departure date of the room, not the last date relevant for pricing)
@@ -131,23 +123,22 @@ create function func_pricingmisc_tblch
   ,p_childbirthdate2 VARCHAR(10) DEFAULT ''
   ,p_childbirthdate3 VARCHAR(10) DEFAULT ''
   ,p_childbirthdate4 VARCHAR(10) DEFAULT ''
-)
-RETURNS
-  TABLE
-  (
-     NR INTEGER
-    ,PRICE DECIMAL(10,2)
-    ,TOTAL DECIMAL(10,2)
-    ,TYPE1 VARCHAR(20) -- PDP, APDP, OT, SO, EB
-    ,TYPE2 VARCHAR(20) -- ADULT, CHD1, CHD2
-    ,FROMDATE DATE
-    ,TODATE DATE
-    ,DESCID INTEGER
-    ,P_SEQ VARCHAR(20)
+  ,p_currency VARCHAR(3) DEFAULT 'CHF'
   )
-NOT DETERMINISTIC
-LANGUAGE SQL
-BEGIN ATOMIC
+RETURNS TABLE (
+  NR INTEGER
+  ,PRICE DECIMAL(10, 2)
+  ,TOTAL DECIMAL(10, 2)
+  ,TYPE1 VARCHAR(20) -- PDP, APDP, OT, SO, EB
+  ,TYPE2 VARCHAR(20) -- ADULT, CHD1, CHD2
+  ,FROMDATE DATE
+  ,TODATE DATE
+  ,DESCID INTEGER
+  ,P_SEQ VARCHAR(20)
+  ) NOT DETERMINISTIC LANGUAGE SQL
+
+BEGIN
+  ATOMIC
 
   DECLARE startdate DATE;
   DECLARE returndate DATE;
@@ -157,33 +148,30 @@ BEGIN ATOMIC
   DECLARE childbirthdate3 DATE;
   DECLARE childbirthdate4 DATE;
 
-  SET startdate = cast(nullif(p_startdate,'') as date) ;
-  SET returndate = cast(nullif(p_returndate,'') as date) ;
-  SET currentdate = cast(nullif(p_currentdate,'') as date) ;
-  SET childbirthdate1 = cast(nullif(p_childbirthdate1,'') as date) ;
-  SET childbirthdate2 = cast(nullif(p_childbirthdate2,'') as date) ;
-  SET childbirthdate3 = cast(nullif(p_childbirthdate3,'') as date) ;
-  SET childbirthdate4 = cast(nullif(p_childbirthdate4,'') as date) ;
+  SET startdate = cast(nullif(p_startdate, '') AS DATE);
+  SET returndate = cast(nullif(p_returndate, '') AS DATE);
+  SET currentdate = cast(nullif(p_currentdate, '') AS DATE);
+  SET childbirthdate1 = cast(nullif(p_childbirthdate1, '') AS DATE);
+  SET childbirthdate2 = cast(nullif(p_childbirthdate2, '') AS DATE);
+  SET childbirthdate3 = cast(nullif(p_childbirthdate3, '') AS DATE);
+  SET childbirthdate4 = cast(nullif(p_childbirthdate4, '') AS DATE);
 
-RETURN
+  RETURN
 
-SELECT
-   nr
-  ,price
-  ,total
-  ,type1
-  ,type2
-  ,fromdate
-  ,todate
-  ,descid
-  ,p_seq
-FROM
-   TABLE( func_miscvalid( p_tocode, p_misckey, p_nradults, childbirthdate1, childbirthdate2, childbirthdate3, childbirthdate4 ) ) AS x
-  ,TABLE( func_pricing2_tbl( p_tocode, p_misckey, 'M', startdate, returndate, currentdate, x.NRADULTS, x.CHILDBIRTHDATE1, x.CHILDBIRTHDATE2, x.CHILDBIRTHDATE3, x.CHILDBIRTHDATE4 ) ) as pricing
+  SELECT nr
+    ,price
+    ,total
+    ,type1
+    ,type2
+    ,fromdate
+    ,todate
+    ,descid
+    ,p_seq
+  FROM TABLE (func_miscvalid(p_tocode, p_misckey, p_nradults, childbirthdate1, childbirthdate2, childbirthdate3, childbirthdate4, p_currency)) AS x
+    ,TABLE (func_pricing2_tbl(p_tocode, p_misckey, 'M', startdate, returndate, currentdate, x.NRADULTS, x.CHILDBIRTHDATE1, x.CHILDBIRTHDATE2, x.CHILDBIRTHDATE3, x.CHILDBIRTHDATE4, p_currency)) AS pricing;
+END
+@
 
-;
-
-END @
 
 --
 -- select * from TABLE( func_pricing_tblch( 'IMHO', 'TUIXYA192344', '2016-10-03', '2016-10-12', '', 2, '', '' ) ) as pricing
@@ -220,8 +208,7 @@ END @
 
 drop function func_pricingmisc @
 
-create function func_pricingmisc
-(
+CREATE FUNCTION func_pricingmisc (
   p_tocode VARCHAR(5) DEFAULT ''
   ,p_misckey VARCHAR(20) DEFAULT ''
   ,p_startdate DATE DEFAULT NULL -- start of booking period
@@ -232,46 +219,28 @@ create function func_pricingmisc
   ,p_childbirthdate2 DATE DEFAULT NULL
   ,p_childbirthdate3 DATE DEFAULT NULL
   ,p_childbirthdate4 DATE DEFAULT NULL
-)
-RETURNS
-  DECIMAL (10,2)
-NOT DETERMINISTIC
-LANGUAGE SQL
-BEGIN ATOMIC
-
---  DECLARE childbirthdate1 DATE;
---  DECLARE childbirthdate2 DATE;
---  DECLARE childbirthdate3 DATE;
---  DECLARE childbirthdate4 DATE;
-
---  SET childbirthdate1 = p_childbirthdate1 ;
---  SET childbirthdate2 = p_childbirthdate2 ;
---  SET childbirthdate3 = p_childbirthdate3 ;
---  SET childbirthdate4 = p_childbirthdate4 ;
-
-RETURN
-
-select
-  coalesce(sum(x.TOTAL),0)
-from
-TABLE(
-  func_pricingmisc_tbl
-  (
-    p_tocode
-    ,p_misckey
-    ,p_startdate
-    ,p_returndate
-    ,p_currentdate
-    ,p_nradults
-    ,p_childbirthdate1
-    ,p_childbirthdate2
-    ,p_childbirthdate3
-    ,p_childbirthdate4
+  ,p_currency VARCHAR(3) DEFAULT 'CHF'
   )
-) as x
+RETURNS DECIMAL(10, 2) NOT DETERMINISTIC LANGUAGE SQL
 
-;
-END @
+BEGIN
+  ATOMIC
+
+  --  DECLARE childbirthdate1 DATE;
+  --  DECLARE childbirthdate2 DATE;
+  --  DECLARE childbirthdate3 DATE;
+  --  DECLARE childbirthdate4 DATE;
+  --  SET childbirthdate1 = p_childbirthdate1 ;
+  --  SET childbirthdate2 = p_childbirthdate2 ;
+  --  SET childbirthdate3 = p_childbirthdate3 ;
+  --  SET childbirthdate4 = p_childbirthdate4 ;
+  RETURN
+
+  SELECT coalesce(sum(x.TOTAL), 0)
+  FROM TABLE (func_pricingmisc_tbl(p_tocode, p_misckey, p_startdate, p_returndate, p_currentdate, p_nradults, p_childbirthdate1, p_childbirthdate2, p_childbirthdate3, p_childbirthdate4, p_currency)) AS x;
+END
+@
+
 
 --
 -- select
@@ -287,8 +256,7 @@ END @
 
 drop function func_pricingmiscch @
 
-create function func_pricingmiscch
-(
+CREATE FUNCTION func_pricingmiscch (
   p_tocode VARCHAR(5) DEFAULT ''
   ,p_misckey VARCHAR(20) DEFAULT ''
   ,p_startdate VARCHAR(10) DEFAULT '' -- start of booking period
@@ -299,48 +267,32 @@ create function func_pricingmiscch
   ,p_childbirthdate2 VARCHAR(10) DEFAULT ''
   ,p_childbirthdate3 VARCHAR(10) DEFAULT ''
   ,p_childbirthdate4 VARCHAR(10) DEFAULT ''
-)
-RETURNS
-  DECIMAL (10,2)
-NOT DETERMINISTIC
-LANGUAGE SQL
-BEGIN ATOMIC
+  ,p_currency VARCHAR(3) DEFAULT 'CHF'
+  )
+RETURNS DECIMAL(10, 2) NOT DETERMINISTIC LANGUAGE SQL
+
+BEGIN
+  ATOMIC
 
   DECLARE childbirthdate1 DATE;
   DECLARE childbirthdate2 DATE;
   DECLARE childbirthdate3 DATE;
   DECLARE childbirthdate4 DATE;
 
-  SET childbirthdate1 = cast(nullif(p_childbirthdate1,'') as date) ;
-  SET childbirthdate2 = cast(nullif(p_childbirthdate2,'') as date) ;
-  SET childbirthdate3 = cast(nullif(p_childbirthdate3,'') as date) ;
-  SET childbirthdate4 = cast(nullif(p_childbirthdate4,'') as date) ;
---  SET childbirthdate3 = cast(NULL as date) ;
---  SET childbirthdate4 = cast(NULL as date) ;
+  SET childbirthdate1 = cast(nullif(p_childbirthdate1, '') AS DATE);
+  SET childbirthdate2 = cast(nullif(p_childbirthdate2, '') AS DATE);
+  SET childbirthdate3 = cast(nullif(p_childbirthdate3, '') AS DATE);
+  SET childbirthdate4 = cast(nullif(p_childbirthdate4, '') AS DATE);
 
-RETURN
+  --  SET childbirthdate3 = cast(NULL as date) ;
+  --  SET childbirthdate4 = cast(NULL as date) ;
+  RETURN
 
-select
-  coalesce(sum(x.TOTAL),0)
-from
-TABLE(
-  func_pricingmisc_tbl
-  (
-    p_tocode
-    ,p_misckey
-    ,cast(nullif(p_startdate,'') as date)
-    ,cast(nullif(p_returndate,'') as date)
-    ,cast(nullif(p_currentdate,'') as date)
-    ,p_nradults
-    ,childbirthdate1
-    ,childbirthdate2
-    ,childbirthdate3
-    ,childbirthdate4
-  )
-) as x
+  SELECT coalesce(sum(x.TOTAL), 0)
+  FROM TABLE (func_pricingmisc_tbl(p_tocode, p_misckey, cast(nullif(p_startdate, '') AS DATE), cast(nullif(p_returndate, '') AS DATE), cast(nullif(p_currentdate, '') AS DATE), p_nradults, childbirthdate1, childbirthdate2, childbirthdate3, childbirthdate4, p_currency)) AS x;
+END
+@
 
-;
-END @
 
 
 
