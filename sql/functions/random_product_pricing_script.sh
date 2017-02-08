@@ -1,5 +1,4 @@
 db2 "connect to HOTEL user db2inst1 using ibmdb2"
-
 db2 -x "with tmpcodedest (tmptocode,tmpdestcode) as (
     select distinct s1.TOCODE,s1.DESTINATIONCODE from TOOHOTEL s1 tablesample bernoulli(10) where s1.TOCODE in ('','TSOL','KNE','STOH') and coalesce(s1.DESTINATIONCODE,'')<>''
     )
@@ -40,7 +39,7 @@ db2 -x "with tmpcodedest (tmptocode,tmpdestcode) as (
     h.hotelkey
     , r.roomkey
     , func_pricingch($tmptocode, r.roomkey, $tmpstartdate, $tmpenddate, '', 2, '', '', '', '') AS price
-    , func_get_allotment2ch($tmptocode, r.roomkey, $tmpstartdate, $tmpenddate, '') AS status
+    , func_get_allotment2ch($tmptocode, r.roomkey, 'H', $tmpstartdate, $tmpenddate, '') AS status
     FROM toohotel h
     INNER JOIN toorooms r ON h.hotelkey = r.hotelkey and r.TOCODE=$tmptocode
     WHERE
@@ -80,7 +79,7 @@ db2 -x "with tmpcodedest (tmptocode,tmpdestcode) as (
     , toorooms
     WHERE
     xprice > 0 
-    AND xalltomentcode <> 'AX' 
+    AND xalltomentcode <> 'XX' 
     AND toohotel.hotelkey = xhotelkey 
     AND toorooms.roomkey = xroomkey
     "

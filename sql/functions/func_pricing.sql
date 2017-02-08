@@ -321,6 +321,12 @@ END
 
 drop function func_hotelpriceav @
 
+--   db2 "SELECT * FROM TABLE (func_hotelpriceav('TSOL', 'BKK', '2017-05-22', '2017-05-29', 2, '', '', '', '', '', '', '', 0, 0, 0, '', '', '')) AS x"
+--   
+--   db2 "SELECT * FROM TABLE (func_hotelpriceav('TSOL', 'BKK', '2017-05-22', '2017-05-29', 2, 'ANASIA', 'DDV', 'BB', '', '', '', '', 0, 0, 0, '', '', '')) AS x"
+--   
+--   db2 "SELECT * FROM TABLE (func_hotelpriceav('TSOL', 'BKK', '2017-05-22', '2017-05-29', 2, '', '', '', '', '', '', '', 0, 0, 0, '', 'TOUWAL37281', '')) AS x"
+
 CREATE FUNCTION func_hotelpriceav (
   IN_TOCODE VARCHAR(5) DEFAULT ''
   ,IN_DESTINATIONCODE VARCHAR(5) DEFAULT ''
