@@ -200,10 +200,10 @@ create table TOODESCRIPTIONS
   ,descid integer not null with default 0
   ,parentkey varchar(20) not null with default ''
   ,itemkey varchar(20) not null with default ''
-  ,descde varchar(100) with default ''
-  ,descen varchar(100) with default ''
-  ,descfr varchar(100) with default ''
-  ,descit varchar(100) with default ''
+  ,descde varchar(140) with default ''
+  ,descen varchar(140) with default ''
+  ,descfr varchar(140) with default ''
+  ,descit varchar(140) with default ''
   ,tocode varchar(5) not null with default ''
   ,itemtype varchar(1) with default ''
   ,PRIMARY key(id)
