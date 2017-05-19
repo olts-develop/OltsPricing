@@ -39,6 +39,7 @@ call cf3.bat func_all.sql
 call cf3.bat func_spof3.sql
 call cf3.bat func_pricing3.sql
 call cf3.bat func_eb2.sql
+call cf3.bat func_eb3.sql
 call cf3.bat func_pricing2.sql
 call cf3.bat func_test_price.sql
 call cf3.bat func_pricing.sql

@@ -791,7 +791,9 @@ BEGIN
           THEN 6
         WHEN 'EB'
           THEN 7
-        ELSE 8
+        WHEN 'EBPCT0'
+          THEN 8
+        ELSE 9
         END
       ) ASC
     ,pricing2.TYPE2 ASC

@@ -56,6 +56,7 @@ BEGIN
   
   UNION ALL
   
+  -- Percent <> 0 EarlyBooking
   SELECT NR
     ,PRICE
     ,TOTAL
@@ -65,7 +66,22 @@ BEGIN
     ,TODATE
     ,DESCID
     ,P_SEQ
-  FROM TABLE (func_eb2_tbl(p_tocode, p_itemkey, p_itemtype, p_startdate, p_returndate, p_currentdate, p_nradults, p_childbirthdate1, p_childbirthdate2, p_childbirthdate3, p_childbirthdate4, p_currency)) AS pricing;
+  FROM TABLE (func_eb2_tbl(p_tocode, p_itemkey, p_itemtype, p_startdate, p_returndate, p_currentdate, p_nradults, p_childbirthdate1, p_childbirthdate2, p_childbirthdate3, p_childbirthdate4, p_currency)) AS pricing
+  
+  UNION ALL
+  
+  -- Percent = 0 EarlyBooking (currently only for adults, and one time EB)
+  SELECT NR
+    ,PRICE
+    ,TOTAL
+    ,'EBPCT0'
+    ,TYPE2
+    ,FROMDATE
+    ,TODATE
+    ,DESCID
+    ,P_SEQ
+  FROM TABLE (func_eb3_tbl(p_tocode, p_itemkey, p_itemtype, p_startdate, p_returndate, p_currentdate, p_nradults, p_childbirthdate1, p_childbirthdate2, p_childbirthdate3, p_childbirthdate4, p_currency)) AS pricing
+;
 END
 @
 
