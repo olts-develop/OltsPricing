@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?><ns1:SP_PRICING_AV_MISCResponse xmlns:ns1="urn:example" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><rowset><row><TOCODE/><MISCKEY>TOUWAL12828</MISCKEY><DESTINATIONCODE>BKK</DESTINATIONCODE><MISCCODE>EXCCIT</MISCCODE><MISCITEMCODE>2</MISCITEMCODE><INVTITLE>City und Tempel, Privat</INVTITLE><INVDETAIL>Basis 2 Personen&#13;
+Dauer: 09:00-13:00 Uhr&#13;
+mit deutsch-/englischsprechender Reiseleitung</INVDETAIL><ITINTITLE>City und Tempel, Privat</ITINTITLE><ITINDETAIL>Dauer: 09:00-13:00 Uhr&#13;
+mit deutsch-/englischsprechender Reiseleitung&#13;
+&#13;
+Wir besuchen eher unbekannte und weniger besuchte Tempelanlagen, die nicht minder interessant und sehenswert sind. Rattanakosin ist das historische Zentrum Bangkoks, wo Sie den für Thailand in einem ungewöhnlichen Stil erbauten Ratchanatda Tempel und den im thai-chinesischen Stil erbauten Thepthidaram Tempel, welcher durch die mit chinesischem Porzellan dekorierten Giebel auffällt. Zum Schluss besuchen Sie den bekannten Wat Saket (Golden Mount Tempel), wo Sie eine schöne Aussicht auf die Altstadt Bangkoks geniessen können.</ITINDETAIL><REGION>ALLE</REGION><SUBREGION>Bangkok</SUBREGION><COUNTRY>THAILAND</COUNTRY><COUNTRYCODE>TH</COUNTRYCODE><MINIMUMPERSONS>2</MINIMUMPERSONS><MAXIMUMPERSONS>2</MAXIMUMPERSONS><TOTAL>124.0</TOTAL><STATUS>99</STATUS></row></rowset></ns1:SP_PRICING_AV_MISCResponse>
+
+command:
+curl -s -o $key.txt -w @curl-format.txt "http://10.10.10.17:8080/OltDb2WebServicesOltDb2WebService/rest/OltDb2WebService/SP_PRICING_AV_MISC?IN_TOCODE=&IN_LANGCODE=DE&IN_DESTINATIONCODE=&IN_PRICEDATEFROM=${dateval}&IN_PRICEDATETO=${dateval}&IN_NRADULTS=2&IN_MISCCODE=&IN_MISCITEMCODE=&IN_CHDDOB1=&IN_CHDDOB2=&IN_CHDDOB3=&IN_CHDDOB4=&IN_IGNORE_XX=0&IN_IGNORE_RQ=0&IN_IGNORE_PRICE0=0&IN_CURRENTDATE=&IN_MISCKEY=${key}"
+
+key: TOUWAL12828
+date: 2017-07-15
+
+start: 2017-06-02 18:31:53:952866835
+end:   2017-06-02 18:31:54:089932932
+diff:  140.443 milliseconds

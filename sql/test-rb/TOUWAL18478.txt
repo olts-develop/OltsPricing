@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?><ns1:SP_PRICING_AV_MISCResponse xmlns:ns1="urn:example" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><rowset><row><TOCODE/><MISCKEY>TOUWAL18478</MISCKEY><DESTINATIONCODE>BKK</DESTINATIONCODE><MISCCODE>EXCFAH</MISCCODE><MISCITEMCODE>2</MISCITEMCODE><INVTITLE>Fahrradtour in Bangkok, Privat</INVTITLE><INVDETAIL>Basis 2 Personen&#13;
+Dauer: 4 1/2 Stunden&#13;
+mit englischsprechender Reiseleitung</INVDETAIL><ITINTITLE>Fahrradtour in Bangkok, Privat</ITINTITLE><ITINDETAIL>Dauer: 4 1/2 Stunden&#13;
+mit englischsprechender Reiseleitung&#13;
+&#13;
+Lernen Sie Bangkok mit dem Fahrrad kennen, wie es vor 40 Jahren noch üblich war! ... und haben Sie keine Angst vor dem Verkehr: Auf dieser Tour werden Sie nur wenige Autos sehen. Sie führt entlang der Klongs (Wasserstrassen) durch kleine Siedlungen, vorbei an Schulen, Märkten und imposanten Tempeln.</ITINDETAIL><REGION>ALLE</REGION><SUBREGION>Bangkok</SUBREGION><COUNTRY>THAILAND</COUNTRY><COUNTRYCODE>TH</COUNTRYCODE><MINIMUMPERSONS>2</MINIMUMPERSONS><MAXIMUMPERSONS>2</MAXIMUMPERSONS><TOTAL>166.0</TOTAL><STATUS>RQ</STATUS></row></rowset></ns1:SP_PRICING_AV_MISCResponse>
+
+command:
+curl -s -o $key.txt -w @curl-format.txt "http://10.10.10.17:8080/OltDb2WebServicesOltDb2WebService/rest/OltDb2WebService/SP_PRICING_AV_MISC?IN_TOCODE=&IN_LANGCODE=DE&IN_DESTINATIONCODE=&IN_PRICEDATEFROM=${dateval}&IN_PRICEDATETO=${dateval}&IN_NRADULTS=2&IN_MISCCODE=&IN_MISCITEMCODE=&IN_CHDDOB1=&IN_CHDDOB2=&IN_CHDDOB3=&IN_CHDDOB4=&IN_IGNORE_XX=0&IN_IGNORE_RQ=0&IN_IGNORE_PRICE0=0&IN_CURRENTDATE=&IN_MISCKEY=${key}"
+
+key: TOUWAL18478
+date: 2017-07-15
+
+start: 2017-06-02 18:31:53:904900209
+end:   2017-06-02 18:31:54:040839867
+diff:  138.914 milliseconds

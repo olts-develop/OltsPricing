@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?><ns1:SP_PRICING_AV_MISCResponse xmlns:ns1="urn:example" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><rowset><row><TOCODE/><MISCKEY>TOUWAL21978</MISCKEY><DESTINATIONCODE>BKK</DESTINATIONCODE><MISCCODE>TRADSK</MISCCODE><MISCITEMCODE>B</MISCITEMCODE><INVTITLE>Gruppentransfer Soneva Kiri - Bangkok Flughafen - mit Flugzeug</INVTITLE><INVDETAIL>ohne Reiseleitung</INVDETAIL><ITINTITLE>Gruppentransfer Soneva Kiri - Bangkok Flughafen - mit Flugzeug</ITINTITLE><ITINDETAIL>ohne Reiseleitung&#13;
+&#13;
+Eine Hotelvertretung wird Sie vor Ort über die genaue Abfahrtszeit sowie den Treffpunkt für Ihren gebuchten Transfer informieren. Alle Flüge gehen ab/bis Bangkok Suvarnabhumi Flughafen.&#13;
+&#13;
+Flugplan ( Cessna Grand Caravan) :&#13;
+Soneva Kiri (MSI) - Bangkok Suvarnabhumi Airport (BKK)&#13;
+07:00-08:30h, 09:50h-11:20h, 11:50-13:20h, 13:50-15:20h, 15:50-17:20h, 17:50-19:20h</ITINDETAIL><REGION>ALLE</REGION><SUBREGION>Trat - Ko Chang</SUBREGION><COUNTRY>THAILAND</COUNTRY><COUNTRYCODE>TH</COUNTRYCODE><MINIMUMPERSONS>1</MINIMUMPERSONS><MAXIMUMPERSONS>9</MAXIMUMPERSONS><TOTAL>0.0</TOTAL><STATUS>XX</STATUS></row></rowset></ns1:SP_PRICING_AV_MISCResponse>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?><ns1:SP_PRICING_AV_MISCResponse xmlns:ns1="urn:example" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><rowset><row><TOCODE/><MISCKEY>TOUWAL12896</MISCKEY><DESTINATIONCODE>BKK</DESTINATIONCODE><MISCCODE>EXCDAM</MISCCODE><MISCITEMCODE>2</MISCITEMCODE><INVTITLE>Schwimmender Markt, "Railway Market" &amp; typisches Dorfleben, Privat</INVTITLE><INVDETAIL>Basis 2 Personen&#13;
+Dauer: 07:00-16:00 Uhr&#13;
+mit deutsch-/englischsprechender Reiseleitung&#13;
+Mittagessen inbegriffen</INVDETAIL><ITINTITLE>Schwimmender Markt, "Railway Market" &amp; typisches Dorfleben, Privat</ITINTITLE><ITINDETAIL>Dauer: 07:00-16:00 Uhr&#13;
+mit deutsch-/englischsprechender Reiseleitung&#13;
+Mittagessen inbegriffen&#13;
+&#13;
+Auf dieser Tour entdecken sie den touristischen, aber auch sehr farbenfrohen schwimmenden Markt von Damnoen Saduak, inkl. Bootsfahrt und besuchen anschliessend den «Railway Market» (Beschreibung oben) In einem Bauerndorf erhalten Sie Einblicke in das lokale Leben und dürfen, wenn Sie mögen, frische Gewürze und Gemüse im Garten sammeln und dann bei der Zubereitung des Mittagessens mithelfen. Nach dem Mittagessen haben Sie Zeit das Dorf und die Umgebung zu Fuss oder mit dem Velo zu erkunden.&#13;
+Gesamtstrecke: ca. 240 km.</ITINDETAIL><REGION>ALLE</REGION><SUBREGION>Bangkok</SUBREGION><COUNTRY>THAILAND</COUNTRY><COUNTRYCODE>TH</COUNTRYCODE><MINIMUMPERSONS>2</MINIMUMPERSONS><MAXIMUMPERSONS>2</MAXIMUMPERSONS><TOTAL>274.0</TOTAL><STATUS>99</STATUS></row></rowset></ns1:SP_PRICING_AV_MISCResponse>
+
+command:
+curl -s -o $key.txt -w @curl-format.txt "http://10.10.10.17:8080/OltDb2WebServicesOltDb2WebService/rest/OltDb2WebService/SP_PRICING_AV_MISC?IN_TOCODE=&IN_LANGCODE=DE&IN_DESTINATIONCODE=&IN_PRICEDATEFROM=${dateval}&IN_PRICEDATETO=${dateval}&IN_NRADULTS=2&IN_MISCCODE=&IN_MISCITEMCODE=&IN_CHDDOB1=&IN_CHDDOB2=&IN_CHDDOB3=&IN_CHDDOB4=&IN_IGNORE_XX=0&IN_IGNORE_RQ=0&IN_IGNORE_PRICE0=0&IN_CURRENTDATE=&IN_MISCKEY=${key}"
+
+key: TOUWAL12896
+date: 2017-07-15
+
+start: 2017-06-02 18:31:53:954239086
+end:   2017-06-02 18:31:54:151093960
+diff:  211.696 milliseconds

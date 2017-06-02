@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?><ns1:SP_PRICING_AV_MISCResponse xmlns:ns1="urn:example" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><rowset><row><TOCODE/><MISCKEY>TOUWAL10006</MISCKEY><DESTINATIONCODE>BKK</DESTINATIONCODE><MISCCODE>TRAABL</MISCCODE><MISCITEMCODE>2</MISCITEMCODE><INVTITLE>Privattransfer Bangkok Flughafen - Bangkok Hotel</INVTITLE><INVDETAIL>Basis 2 Personen&#13;
+mit Reiseleitung</INVDETAIL><ITINTITLE>Privattransfer Bangkok Flughafen - Bangkok Hotel</ITINTITLE><ITINDETAIL>mit Reiseleitung&#13;
+&#13;
+Treffpunkt mit Ihrer Transfer-Reiseleitung am Suvarnabhumi Airport Bangkok:&#13;
+Nach der Gepäckentgegennahme verlassen Sie die Halle durch das Ausgangsgate.&#13;
+Ausgangsgate A-C: Begeben Sie sich nach der Zollkontrolle nach links.&#13;
+Ihre Reiseleitung erwartet Sie mit einer tourasia Tafel mit Ihrem Namen.&#13;
+&#13;
+Die Fahrzeit in die Stadt beträgt je nach Verkehrssituation 30 bis 60 Minuten.</ITINDETAIL><REGION>ALLE</REGION><SUBREGION>Bangkok</SUBREGION><COUNTRY>THAILAND</COUNTRY><COUNTRYCODE>TH</COUNTRYCODE><MINIMUMPERSONS>2</MINIMUMPERSONS><MAXIMUMPERSONS>2</MAXIMUMPERSONS><TOTAL>90.0</TOTAL><STATUS>98</STATUS></row></rowset></ns1:SP_PRICING_AV_MISCResponse>
+
+command:
+curl -s -o $key.txt -w @curl-format.txt "http://10.10.10.17:8080/OltDb2WebServicesOltDb2WebService/rest/OltDb2WebService/SP_PRICING_AV_MISC?IN_TOCODE=&IN_LANGCODE=DE&IN_DESTINATIONCODE=&IN_PRICEDATEFROM=${dateval}&IN_PRICEDATETO=${dateval}&IN_NRADULTS=2&IN_MISCCODE=&IN_MISCITEMCODE=&IN_CHDDOB1=&IN_CHDDOB2=&IN_CHDDOB3=&IN_CHDDOB4=&IN_IGNORE_XX=0&IN_IGNORE_RQ=0&IN_IGNORE_PRICE0=0&IN_CURRENTDATE=&IN_MISCKEY=${key}"
+
+key: TOUWAL10006
+date: 2017-07-15
+
+start: 2017-06-02 18:31:53:907144871
+end:   2017-06-02 18:31:54:073613951
+diff:  171.020 milliseconds
+
+
+command:
+curl -s -o $key.txt -w @curl-format.txt "http://10.10.10.17:8080/OltDb2WebServicesOltDb2WebService/rest/OltDb2WebService/SP_PRICING_AV_MISC?IN_TOCODE=&IN_LANGCODE=DE&IN_DESTINATIONCODE=&IN_PRICEDATEFROM=${dateval}&IN_PRICEDATETO=${dateval}&IN_NRADULTS=2&IN_MISCCODE=&IN_MISCITEMCODE=&IN_CHDDOB1=&IN_CHDDOB2=&IN_CHDDOB3=&IN_CHDDOB4=&IN_IGNORE_XX=0&IN_IGNORE_RQ=0&IN_IGNORE_PRICE0=0&IN_CURRENTDATE=&IN_MISCKEY=${key}"
+
+key: TOUWAL10006
+date: 2017-07-15
+
+start: 2017-06-02 18:31:53:937514161
+end:   2017-06-02 18:31:54:079343211
+diff:  154.280 milliseconds

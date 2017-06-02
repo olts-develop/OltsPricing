@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?><ns1:SP_PRICING_AV_MISCResponse xmlns:ns1="urn:example" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><rowset><row><TOCODE/><MISCKEY>TOUWAL26348</MISCKEY><DESTINATIONCODE>BKK</DESTINATIONCODE><MISCCODE>EXCRIV</MISCCODE><MISCITEMCODE>2</MISCITEMCODE><INVTITLE>River of Kings - zu Fuss, Tuk Tuk und Boot, Privat</INVTITLE><INVDETAIL>Basis 2 Personen&#13;
+Dauer: 09:00-16:00 Uhr&#13;
+mit deutsch-/englischsprechender Reiseleitung&#13;
+Mittagessen inbegriffen</INVDETAIL><ITINTITLE>River of Kings - zu Fuss, Tuk Tuk und Boot, Privat</ITINTITLE><ITINDETAIL>Dauer: 09:00-16:00 Uhr&#13;
+mit deutsch-/englischsprechender Reiseleitung&#13;
+Mittagessen inbegriffen&#13;
+&#13;
+Per Skytrain erreichen Sie den königlichen Chao-Phraya Fluss. Mit dem öffentlichen Boot erreichen Sie das geschäftige Chinatown. Sie schlendern durch die engen Gassen, bevor Sie mit einem der berühmten Tuk-Tuks (Thailands berühmte dreirädrige, offene Taxis) auf einer rasanten Fahrt zum exotischen, farbenfrohen Blumenmarkt gelangen. Mit dem Boot überqueren Sie den Fluss und besichtigen die Santa Cruz Kirche, welche auf die starke Präsenz der Portugiesen vergangener Tage hinweist. Nach Kaffee &amp; Kuchen besuchen Sie wiederum auf der anderen Flusseite den Wat Po, bekannt für seinen 45 m langen und 15 m hohen, ruhenden Buddha. Rückfahrt per Linienboot und Skytrain in Ihr Hotel, wobei Sie selbstverständlich auch noch einen Besuch beim beeindruckenden Wat Arun (Tempel der Morgenröte) abstatten.</ITINDETAIL><REGION>ALLE</REGION><SUBREGION>Bangkok</SUBREGION><COUNTRY>THAILAND</COUNTRY><COUNTRYCODE>TH</COUNTRYCODE><MINIMUMPERSONS>2</MINIMUMPERSONS><MAXIMUMPERSONS>2</MAXIMUMPERSONS><TOTAL>186.0</TOTAL><STATUS>99</STATUS></row></rowset></ns1:SP_PRICING_AV_MISCResponse>
+
+command:
+curl -s -o $key.txt -w @curl-format.txt "http://10.10.10.17:8080/OltDb2WebServicesOltDb2WebService/rest/OltDb2WebService/SP_PRICING_AV_MISC?IN_TOCODE=&IN_LANGCODE=DE&IN_DESTINATIONCODE=&IN_PRICEDATEFROM=${dateval}&IN_PRICEDATETO=${dateval}&IN_NRADULTS=2&IN_MISCCODE=&IN_MISCITEMCODE=&IN_CHDDOB1=&IN_CHDDOB2=&IN_CHDDOB3=&IN_CHDDOB4=&IN_IGNORE_XX=0&IN_IGNORE_RQ=0&IN_IGNORE_PRICE0=0&IN_CURRENTDATE=&IN_MISCKEY=${key}"
+
+key: TOUWAL26348
+date: 2017-07-15
+
+start: 2017-06-02 18:31:53:908910386
+end:   2017-06-02 18:31:54:086110476
+diff:  180.162 milliseconds

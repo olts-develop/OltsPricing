@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?><ns1:SP_PRICING_AV_MISCResponse xmlns:ns1="urn:example" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><rowset><row><TOCODE/><MISCKEY>TOUWAL12890</MISCKEY><DESTINATIONCODE>BKK</DESTINATIONCODE><MISCCODE>EXCUNB</MISCCODE><MISCITEMCODE>B</MISCITEMCODE><INVTITLE>Unbekanntes Bangkok, Gruppe</INVTITLE><INVDETAIL>Dauer: 09:00-13:00 Uhr&#13;
+mit deutschsprechender Reiseleitung</INVDETAIL><ITINTITLE>Unbekanntes Bangkok, Gruppe</ITINTITLE><ITINDETAIL>Dauer: 09:00-13:00 Uhr&#13;
+mit deutschsprechender Reiseleitung&#13;
+&#13;
+Auf einem Spaziergang erkunden Sie die engen Gassen in Chinatown. Ein Tuk-Tuk bringt Sie zum exotischen, farbenfrohen Blumenmarkt. Nach dem Besuch des letzten Handwerkbetriebes, welcher Messingschalen für die Mönche von Hand herstellt, besichtigen Sie den Wat Saket (Golden Mount), wo Sie eine schöne Aussicht auf die Altstadt Bangkoks geniessen können.</ITINDETAIL><REGION>ALLE</REGION><SUBREGION>Bangkok</SUBREGION><COUNTRY>THAILAND</COUNTRY><COUNTRYCODE>TH</COUNTRYCODE><MINIMUMPERSONS>1</MINIMUMPERSONS><MAXIMUMPERSONS>9</MAXIMUMPERSONS><TOTAL>116.0</TOTAL><STATUS>RQ</STATUS></row></rowset></ns1:SP_PRICING_AV_MISCResponse>
+
+command:
+curl -s -o $key.txt -w @curl-format.txt "http://10.10.10.17:8080/OltDb2WebServicesOltDb2WebService/rest/OltDb2WebService/SP_PRICING_AV_MISC?IN_TOCODE=&IN_LANGCODE=DE&IN_DESTINATIONCODE=&IN_PRICEDATEFROM=${dateval}&IN_PRICEDATETO=${dateval}&IN_NRADULTS=2&IN_MISCCODE=&IN_MISCITEMCODE=&IN_CHDDOB1=&IN_CHDDOB2=&IN_CHDDOB3=&IN_CHDDOB4=&IN_IGNORE_XX=0&IN_IGNORE_RQ=0&IN_IGNORE_PRICE0=0&IN_CURRENTDATE=&IN_MISCKEY=${key}"
+
+key: TOUWAL12890
+date: 2017-07-15
+
+start: 2017-06-02 18:31:53:952006550
+end:   2017-06-02 18:31:54:100106058
+diff:  170.874 milliseconds
