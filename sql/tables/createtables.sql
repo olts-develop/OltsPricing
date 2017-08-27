@@ -352,6 +352,12 @@ create table TOOSPECIALOFFERS
   ,tocode varchar(5) not null with default ''
   ,p_seq varchar(20) with default '' -- FK to TO Online price row
   ,itemtype varchar(1) with default ''
+  ,combcode varchar (10) with default ''
+  ,comblevel integer with default 0
+  ,combindex integer with default 0
+  ,notandcombcode varchar (10) with default ''
+  ,notandcombminindex integer with default 0
+  ,notandcombmaxindex integer with default 0
   ,PRIMARY key(id)
 )
 @
@@ -396,6 +402,12 @@ create table TOOEARLYBOOKINGS
   ,tocode varchar(5) not null with default ''
   ,p_seq varchar(20) with default '' -- FK to TO Online price row
   ,itemtype varchar(1) with default ''
+  ,combcode varchar (10) with default ''
+  ,comblevel integer with default 0
+  ,combindex integer with default 0
+  ,notandcombcode varchar (10) with default ''
+  ,notandcombminindex integer with default 0
+  ,notandcombmaxindex integer with default 0
   ,PRIMARY key(id)
 )
 @
