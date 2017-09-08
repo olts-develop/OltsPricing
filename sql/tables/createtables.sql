@@ -779,6 +779,7 @@ create table TOOFLIGHT
   ,DESTINATIONCODE VARCHAR(50) with default ''
   ,PASSIVE INTEGER with default 0
   ,PASSIVEFROMDATE DATE
+  ,MULTILEG INTEGER with default 0
   ,PRIMARY key(FLIGHTKEY, TOCODE)
 )
 @
