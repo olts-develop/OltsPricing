@@ -237,6 +237,7 @@ create table TOOPERDAYPRICE
   ,tocode varchar(5) not null with default ''
   ,p_seq varchar(20) with default '' -- FK to TO Online price row
   ,itemtype varchar(1) with default ''
+  ,pricetype varchar(10) with default ''
   ,PRIMARY key(id)
 )
 @
@@ -268,6 +269,7 @@ create table TOOADDPERDAYPRICE
   ,tocode varchar(5) not null with default ''
   ,p_seq varchar(20) with default '' -- FK to TO Online price row
   ,itemtype varchar(1) with default ''
+  ,pricetype varchar(10) with default ''
   ,PRIMARY key(id)
 )
 @
@@ -305,6 +307,7 @@ create table TOOONETIME
   ,tocode varchar(5) with default '' not null
   ,p_seq varchar(20) with default '' -- FK to TO Online price row
   ,itemtype varchar(1) with default ''
+  ,pricetype varchar(10) with default ''
   ,PRIMARY key(id)
 )
 @
@@ -358,6 +361,7 @@ create table TOOSPECIALOFFERS
   ,notandcombcode varchar (10) with default ''
   ,notandcombminindex integer with default 0
   ,notandcombmaxindex integer with default 0
+  ,pricetype varchar(10) with default ''
   ,PRIMARY key(id)
 )
 @
@@ -408,6 +412,7 @@ create table TOOEARLYBOOKINGS
   ,notandcombcode varchar (10) with default ''
   ,notandcombminindex integer with default 0
   ,notandcombmaxindex integer with default 0
+  ,pricetype varchar(10) with default ''
   ,PRIMARY key(id)
 )
 @
@@ -538,6 +543,7 @@ create table TOOPERIODPRICE
   ,tocode varchar(5) not null with default ''
   ,p_seq varchar(20) with default '' -- FK to TO Online price row
   ,itemtype varchar(1) with default ''
+  ,pricetype varchar(10) with default ''
   ,PRIMARY KEY(id)
 )
 @
@@ -578,6 +584,7 @@ create table TOOADDPERIODPRICE
   ,tocode varchar(5) not null with default ''
   ,p_seq varchar(20) with default '' -- FK to TO Online price row
   ,itemtype varchar(1) with default ''
+  ,pricetype varchar(10) with default ''
   ,PRIMARY key(id)
 )
 @
@@ -748,6 +755,54 @@ create table TOOARRANGEMENT2
   arrkey varchar(20) not null with default ''
   ,tocode varchar(5) not null with default ''
   , PRIMARY key(arrkey, tocode)
+)
+@
+
+-- -----------------------------------------------------------------------------
+-- TOOFLIGHT
+-- -----------------------------------------------------------------------------
+
+drop table TOOFLIGHT @
+
+create table TOOFLIGHT
+(
+   FLIGHTKEY VARCHAR(20) with default ''
+  ,TOCODE VARCHAR(5) with default ''
+  ,DEP VARCHAR(5) with default ''
+  ,ARR VARCHAR(5) with default ''
+  ,CARRIER VARCHAR(30) with default ''
+  ,FLIGHTNR VARCHAR(30) with default ''
+  ,CLASS VARCHAR(30) with default ''
+  ,CLASSDESC VARCHAR(100) with default ''
+  ,SEATCLASS VARCHAR(30) with default ''
+  ,SEATCLASSNR INTEGER with default 0
+  ,DESTINATIONCODE VARCHAR(50) with default ''
+  ,PASSIVE INTEGER with default 0
+  ,PASSIVEFROMDATE DATE
+  ,PRIMARY key(FLIGHTKEY, TOCODE)
+)
+@
+
+drop table TOOFLIGHTLEG @
+
+create table TOOFLIGHTLEG
+(
+  LEGKEY VARCHAR(20) with default ''
+  ,FLIGHTKEY VARCHAR(20) with default ''
+  ,TOCODE VARCHAR(5) with default ''
+  ,DEP VARCHAR(5) with default ''
+  ,ARR VARCHAR(5) with default ''
+  ,CARRIER VARCHAR(30) with default ''
+  ,FLIGHTNR VARCHAR(30) with default ''
+  ,CLASS VARCHAR(30) with default ''
+  ,CLASSDESC VARCHAR(100) with default ''
+  ,SEATCLASS VARCHAR(30) with default ''
+  ,SEATCLASSNR INTEGER with default 0
+  ,CHECKINMINBEFOREDEP INTEGER with default 0
+  ,CHECKINTIMEDEV INTEGER with default 0
+  ,FEEDER INTEGER with default 0
+  ,POS INTEGER with default 0
+  ,PRIMARY key(LEGKEY, TOCODE)
 )
 @
 

@@ -30,6 +30,7 @@ RETURNS TABLE (
   ,TODATE DATE
   ,DESCID INTEGER
   ,P_SEQ VARCHAR(20)
+  ,PRICETYPE VARCHAR(10)
   ) NOT DETERMINISTIC LANGUAGE SQL
 
 BEGIN
@@ -54,6 +55,7 @@ BEGIN
     ,todate
     ,descid
     ,p_seq
+    ,pricetype
   FROM TABLE (func_miscvalid(p_tocode, p_itemkey, p_startdate, p_returndate, p_nradults, p_childbirthdate1, p_childbirthdate2, p_childbirthdate3, p_childbirthdate4, p_currency)) AS x
     ,TABLE (func_pricing2_tbl(p_tocode, p_itemkey, 'M', p_startdate, x.PRICEENDDATE, p_currentdate, x.NRADULTS, x.CHILDBIRTHDATE1, x.CHILDBIRTHDATE2, x.CHILDBIRTHDATE3, x.CHILDBIRTHDATE4, p_currency)) AS pricing
   WHERE func_test_price(p_tocode, p_itemkey, 'M', p_startdate, x.PRICEENDDATE, x.NRADULTS, x.CHILDBIRTHDATE1, x.CHILDBIRTHDATE2, x.CHILDBIRTHDATE3, x.CHILDBIRTHDATE4, p_currency) = 'OK';
@@ -101,6 +103,7 @@ RETURNS TABLE (
   ,TODATE DATE
   ,DESCID INTEGER
   ,P_SEQ VARCHAR(20)
+  ,PRICETYPE VARCHAR(10)
   ) NOT DETERMINISTIC LANGUAGE SQL
 
 BEGIN
@@ -133,6 +136,7 @@ BEGIN
     ,todate
     ,descid
     ,p_seq
+    ,pricetype
   FROM TABLE (func_miscvalid(p_tocode, p_itemkey, startdate, returndate, p_nradults, childbirthdate1, childbirthdate2, childbirthdate3, childbirthdate4, p_currency)) AS x
     ,TABLE (func_pricing2_tbl(p_tocode, p_itemkey, 'M', startdate, x.PRICEENDDATE, currentdate, x.NRADULTS, x.CHILDBIRTHDATE1, x.CHILDBIRTHDATE2, x.CHILDBIRTHDATE3, x.CHILDBIRTHDATE4, p_currency)) AS pricing
   WHERE func_test_price(p_tocode, p_itemkey, 'M', startdate, x.PRICEENDDATE, x.NRADULTS, x.CHILDBIRTHDATE1, x.CHILDBIRTHDATE2, x.CHILDBIRTHDATE3, x.CHILDBIRTHDATE4, p_currency) = 'OK';

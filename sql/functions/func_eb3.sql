@@ -29,6 +29,7 @@ RETURNS TABLE (
   ,TODATE DATE
   ,DESCID INTEGER
   ,P_SEQ VARCHAR(20)
+  ,PRICETYPE VARCHAR(10)
   ) NOT DETERMINISTIC LANGUAGE SQL
 
 BEGIN
@@ -71,6 +72,7 @@ RETURN
       ) AS effectivedateto
     ,tooearlybookings.descid as descid
     ,tooearlybookings.p_seq as p_seq
+    ,tooearlybookings.pricetype as pricetype
   FROM tooearlybookings
   WHERE (
       itemkey

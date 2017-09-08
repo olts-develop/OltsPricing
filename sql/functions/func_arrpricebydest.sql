@@ -519,6 +519,7 @@ RETURNS TABLE (
   ,DESCID INTEGER
   ,P_SEQ VARCHAR(20)
   ,STATUS VARCHAR(2)
+  ,PRICETYPE VARCHAR(10)
   ) NOT DETERMINISTIC LANGUAGE SQL
 
 BEGIN
@@ -620,6 +621,7 @@ BEGIN
     ,y.DESCID
     ,y.P_SEQ
     ,coalesce(x.STATUS, 'XX') AS STATUS
+    y.PRICETYPE
   FROM tooarrangement
   LEFT OUTER JOIN tmptable3 x ON x.ARRKEY = tooarrangement.ARRKEY
   LEFT OUTER JOIN tmptable4 y ON y.ARRKEY = tooarrangement.ARRKEY

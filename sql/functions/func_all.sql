@@ -26,6 +26,7 @@ RETURNS TABLE (
   ,NOTSPECIALRELEVANT INTEGER
   ,DESCID INTEGER
   ,P_SEQ VARCHAR(20)
+  ,PRICETYPE VARCHAR(10)
   ) NOT DETERMINISTIC LANGUAGE SQL
 
 BEGIN
@@ -89,6 +90,7 @@ BEGIN
     ,notspecialrelevant
     ,descid
     ,p_seq
+    ,tooperdayprice.pricetype
   FROM tooperdayprice
   WHERE (
       itemkey
@@ -118,6 +120,7 @@ BEGIN
     ,notspecialrelevant
     ,descid
     ,p_seq
+    ,tooperdayprice.pricetype
   FROM childtemptable
     ,tooperdayprice
   WHERE (
@@ -177,6 +180,7 @@ BEGIN
     ,notspecialrelevant
     ,descid
     ,p_seq
+    ,tooaddperdayprice.pricetype
   FROM tooaddperdayprice
   WHERE (
       itemkey
@@ -206,6 +210,7 @@ BEGIN
     ,notspecialrelevant
     ,descid
     ,p_seq
+    ,tooaddperdayprice.pricetype
   FROM childtemptable
     ,tooaddperdayprice
   WHERE (
@@ -265,6 +270,7 @@ BEGIN
     ,notspecialrelevant
     ,descid
     ,p_seq
+    ,tooonetime.pricetype
   FROM tooonetime
   WHERE (
       itemkey
@@ -347,6 +353,7 @@ BEGIN
     ,notspecialrelevant
     ,descid
     ,p_seq
+    ,tooonetime.pricetype
   FROM childtemptable
     ,tooonetime
   WHERE (

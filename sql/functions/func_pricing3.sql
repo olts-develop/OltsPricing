@@ -29,6 +29,7 @@ RETURNS TABLE (
   ,NOTSPECIALRELEVANT INTEGER
   ,DESCID INTEGER
   ,P_SEQ VARCHAR(20)
+  ,PRICETYPE VARCHAR(10)
   ) NOT DETERMINISTIC LANGUAGE SQL
 
 BEGIN
@@ -81,6 +82,7 @@ BEGIN
     ,notspecialrelevant
     ,descid
     ,p_seq
+    ,pricetype
   FROM TABLE (func_all_tbl(p_tocode, p_itemkey, p_itemtype, p_startdate, p_returndate, p_nradults, p_childbirthdate1, p_childbirthdate2, p_childbirthdate3, p_childbirthdate4, p_currency)) AS pricing
   
   UNION ALL
@@ -113,6 +115,7 @@ BEGIN
     ,0 AS NOTSPECIALRELEVANT
     ,so.DESCID
     ,so.P_SEQ
+    ,so.PRICETYPE
   FROM TABLE (func_spof3_tbl(p_tocode, p_itemkey, p_itemtype, p_startdate, p_returndate, p_currentdate, p_nradults, p_childbirthdate1, p_childbirthdate2, p_childbirthdate3, p_childbirthdate4, p_currency)) AS so;
 END
 @

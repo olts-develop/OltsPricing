@@ -33,6 +33,7 @@ RETURNS TABLE (
   ,TODATE DATE
   ,DESCID INTEGER
   ,P_SEQ VARCHAR(20)
+  ,PRICETYPE VARCHAR(10)
   ) NOT DETERMINISTIC LANGUAGE SQL
 
 BEGIN
@@ -57,6 +58,7 @@ BEGIN
     ,todate
     ,descid
     ,p_seq
+    ,pricetype
   FROM TABLE (func_roomvalid(p_tocode, p_itemkey, p_nradults, p_childbirthdate1, p_childbirthdate2, p_childbirthdate3, p_childbirthdate4, p_currency)) AS x
     ,TABLE (func_pricing2_tbl(p_tocode, p_itemkey, 'H', p_startdate, p_returndate, p_currentdate, x.NRADULTS, x.CHILDBIRTHDATE1, x.CHILDBIRTHDATE2, x.CHILDBIRTHDATE3, x.CHILDBIRTHDATE4, p_currency)) AS pricing
   WHERE func_test_price(p_tocode, p_itemkey, 'H', p_startdate, p_returndate, x.NRADULTS, x.CHILDBIRTHDATE1, x.CHILDBIRTHDATE2, x.CHILDBIRTHDATE3, x.CHILDBIRTHDATE4, p_currency) = 'OK';
@@ -136,6 +138,7 @@ RETURNS TABLE (
   ,TODATE DATE
   ,DESCID INTEGER
   ,P_SEQ VARCHAR(20)
+  ,PRICETYPE VARCHAR(10)
   ) NOT DETERMINISTIC LANGUAGE SQL
 
 BEGIN
@@ -168,6 +171,7 @@ BEGIN
     ,todate
     ,descid
     ,p_seq
+    ,pricetype
   FROM TABLE (func_roomvalid(p_tocode, p_itemkey, p_nradults, childbirthdate1, childbirthdate2, childbirthdate3, childbirthdate4, p_currency)) AS x
     ,TABLE (func_pricing2_tbl(p_tocode, p_itemkey, 'H', startdate, returndate, currentdate, x.NRADULTS, x.CHILDBIRTHDATE1, x.CHILDBIRTHDATE2, x.CHILDBIRTHDATE3, x.CHILDBIRTHDATE4, p_currency)) AS pricing
   WHERE func_test_price(p_tocode, p_itemkey, 'H', p_startdate, p_returndate, x.NRADULTS, x.CHILDBIRTHDATE1, x.CHILDBIRTHDATE2, x.CHILDBIRTHDATE3, x.CHILDBIRTHDATE4, p_currency) = 'OK';
@@ -496,6 +500,7 @@ RETURNS TABLE (
   ,TODATE DATE
   ,DESCID INTEGER
   ,P_SEQ VARCHAR(20)
+  ,PRICETYPE VARCHAR(10)
   ) NOT DETERMINISTIC LANGUAGE SQL
 
 BEGIN
@@ -522,6 +527,7 @@ BEGIN
     ,todate
     ,descid
     ,p_seq
+    ,pricetype
   FROM TABLE (func_roomvalid(p_tocode, p_itemkey, p_nradults, p_childbirthdate1, p_childbirthdate2, p_childbirthdate3, p_childbirthdate4, p_currency)) AS x
     ,TABLE (func_pricing2_tbl(p_tocode, p_itemkey, 'H', p_startdate, p_returndate, p_currentdate, x.NRADULTS, x.CHILDBIRTHDATE1, x.CHILDBIRTHDATE2, x.CHILDBIRTHDATE3, x.CHILDBIRTHDATE4, p_currency)) AS pricing
   WHERE func_test_price(p_tocode, p_itemkey, 'H', p_startdate, p_returndate, x.NRADULTS, x.CHILDBIRTHDATE1, x.CHILDBIRTHDATE2, x.CHILDBIRTHDATE3, x.CHILDBIRTHDATE4, p_currency) = 'OK';
@@ -614,6 +620,7 @@ RETURNS TABLE (
   ,DESCID INTEGER
   ,P_SEQ VARCHAR(20)
   ,STATUS VARCHAR(2)
+  ,PRICETYPE VARCHAR(10)
   ) NOT DETERMINISTIC LANGUAGE SQL
 
 BEGIN
@@ -686,7 +693,7 @@ BEGIN
             )
         )
       )
-    ,tmptble1(XHOTELKEY, XROOMKEY, XALLTOMENTCODE, NR, PRICE, TOTAL, TYPE1, TYPE2, FROMDATE, TODATE, DESCID, P_SEQ) AS (
+    ,tmptble1(XHOTELKEY, XROOMKEY, XALLTOMENTCODE, NR, PRICE, TOTAL, TYPE1, TYPE2, FROMDATE, TODATE, DESCID, P_SEQ, PRICETYPE) AS (
       (
         SELECT h.HOTELKEY
           ,r.ROOMKEY
@@ -700,6 +707,7 @@ BEGIN
           ,pricing.TODATE AS TODATE
           ,pricing.DESCID AS DESCID
           ,pricing.P_SEQ AS P_SEQ
+          ,pricing.PRICETYPE AS PRICETYPE
         FROM TOOHOTEL h
         INNER JOIN TOOROOMS r ON h.HOTELKEY = r.HOTELKEY
           AND h.TOCODE = r.TOCODE
@@ -736,6 +744,7 @@ BEGIN
     ,pricing2.DESCID AS DESCID
     ,pricing2.P_SEQ AS P_SEQ
     ,coalesce(pricing.XALLTOMENTCODE, 'XX') AS STATUS
+    ,pricing2.PRICETYPE AS PRICETYPE
   FROM TOOHOTEL h
   INNER JOIN TOOROOMS r ON h.HOTELKEY = r.HOTELKEY
     AND h.TOCODE = r.TOCODE

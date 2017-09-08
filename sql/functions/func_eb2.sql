@@ -31,6 +31,7 @@ RETURNS TABLE (
   ,TODATE DATE
   ,DESCID INTEGER
   ,P_SEQ VARCHAR(20)
+  ,PRICETYPE VARCHAR(10)
   ) NOT DETERMINISTIC LANGUAGE SQL
 
 BEGIN
@@ -236,6 +237,7 @@ BEGIN
     ,earlybookinglist2.seqdate
     ,MAX(tooearlybookings.descid)
     ,MAX(tooearlybookings.p_seq)
+    ,MAX(tooearlybookings.pricetype)
   FROM earlybookinglist2
     ,tooearlybookings
   WHERE earlybookinglist2.id = tooearlybookings.id

@@ -28,6 +28,7 @@ RETURNS TABLE (
   ,TODATE DATE
   ,DESCID INTEGER
   ,P_SEQ VARCHAR(20)
+  ,PRICETYPE VARCHAR(10)
   ) NOT DETERMINISTIC LANGUAGE SQL
 
 BEGIN
@@ -52,6 +53,7 @@ BEGIN
     ,todate
     ,descid
     ,p_seq
+    ,pricetype
   FROM TABLE (func_pricing3_tbl(p_tocode, p_itemkey, p_itemtype, p_startdate, p_returndate, p_currentdate, p_nradults, p_childbirthdate1, p_childbirthdate2, p_childbirthdate3, p_childbirthdate4, p_currency)) AS pricing
   
   UNION ALL
@@ -66,6 +68,7 @@ BEGIN
     ,TODATE
     ,DESCID
     ,P_SEQ
+    ,PRICETYPE
   FROM TABLE (func_eb2_tbl(p_tocode, p_itemkey, p_itemtype, p_startdate, p_returndate, p_currentdate, p_nradults, p_childbirthdate1, p_childbirthdate2, p_childbirthdate3, p_childbirthdate4, p_currency)) AS pricing
   
   UNION ALL
@@ -80,6 +83,7 @@ BEGIN
     ,TODATE
     ,DESCID
     ,P_SEQ
+    ,PRICETYPE
   FROM TABLE (func_eb3_tbl(p_tocode, p_itemkey, p_itemtype, p_startdate, p_returndate, p_currentdate, p_nradults, p_childbirthdate1, p_childbirthdate2, p_childbirthdate3, p_childbirthdate4, p_currency)) AS pricing
 ;
 END

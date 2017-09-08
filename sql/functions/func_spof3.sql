@@ -26,6 +26,7 @@ RETURNS TABLE (
   ,DESCID INTEGER
   ,CHILDCHILDNR INTEGER
   ,P_SEQ VARCHAR(20)
+  ,PRICETYPE VARCHAR(10)
   ) NOT DETERMINISTIC LANGUAGE SQL
 
 BEGIN
@@ -513,6 +514,7 @@ SELECT tmppricelist3.seqdate
   ,so.DESCID
   ,so.CHILDCHILDNR
   ,so.P_SEQ
+  ,so.PRICETYPE
 FROM tmppricelist3
   ,toospecialoffers so
 WHERE tmppricelist3.id = so.id
