@@ -1,7 +1,7 @@
 -- -----------------------------------------------------------------------------
 -- Function name: *func_miscpricing_tbl*
 
--- This function takes into account the mixpersons, maxpersons. 
+-- This function takes into account the minpersons, maxpersons. 
 -- Note: this function is only useful for a miscellaneous pricing!
 -- -----------------------------------------------------------------------------
 
