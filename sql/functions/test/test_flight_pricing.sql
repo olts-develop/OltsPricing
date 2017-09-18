@@ -19,7 +19,7 @@ as (
 	from TOOFLIGHTLEG leg1
 	LEFT OUTER JOIN TOOALLOTMENTS a1 on a1.ITEMKEY = leg1.LEGKEY
 		and a1.ITEMTYPE = 'F'
-		and a1.ALLOTDATE = '2018-02-06'
+		and a1.ALLOTDATE = '2018-02-11'
 	where leg1.FLIGHTKEY = 'BICZRH10337'
 		and (
 			(
@@ -168,9 +168,9 @@ select LEGKEY1
 	,case when LEGKEY3 is not null then func_get_allotment2('', LEGKEY3, 'F', date (DEPTS3), date (DEPTS3) + 1 day, current date) else '' end as allotleg3
 	,case when LEGKEY4 is not null then func_get_allotment2('', LEGKEY4, 'F', date (DEPTS4), date (DEPTS4) + 1 day, current date) else '' end as allotleg4
 	,func_flightpricing( '', tmp_leg_1.LEGKEY1, date(DEPTS1), current date, 1, cast(NULL as DATE), cast(NULL as DATE), cast(NULL as DATE), cast(NULL as DATE) ) as priceleg1
-	,case when LEGKEY2 is not null then func_flightpricing( '', tmp_leg_2.LEGKEY2, date(DEPTS2), current date, 1, cast(NULL as DATE), cast(NULL as DATE), cast(NULL as DATE), cast(NULL as DATE) ) else 0.00 end as priceleg2
-	,case when LEGKEY3 is not null then func_flightpricing( '', tmp_leg_3.LEGKEY3, date(DEPTS3), current date, 1, cast(NULL as DATE), cast(NULL as DATE), cast(NULL as DATE), cast(NULL as DATE) ) else 0.00 end as priceleg3
-	,case when LEGKEY4 is not null then func_flightpricing( '', tmp_leg_4.LEGKEY4, date(DEPTS4), current date, 1, cast(NULL as DATE), cast(NULL as DATE), cast(NULL as DATE), cast(NULL as DATE) ) else 0.00 end as priceleg4
+	,func_flightpricing( '', tmp_leg_2.LEGKEY2, date(DEPTS2), current date, 1, cast(NULL as DATE), cast(NULL as DATE), cast(NULL as DATE), cast(NULL as DATE) ) as priceleg2
+	,func_flightpricing( '', tmp_leg_3.LEGKEY3, date(DEPTS3), current date, 1, cast(NULL as DATE), cast(NULL as DATE), cast(NULL as DATE), cast(NULL as DATE) ) as priceleg3
+	,func_flightpricing( '', tmp_leg_4.LEGKEY4, date(DEPTS4), current date, 1, cast(NULL as DATE), cast(NULL as DATE), cast(NULL as DATE), cast(NULL as DATE) ) as priceleg4
 	
 from tmp_leg_1
 LEFT OUTER JOIN tmp_leg_2 on 1 = 1
