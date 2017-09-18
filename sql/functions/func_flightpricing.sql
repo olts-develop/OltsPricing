@@ -180,18 +180,18 @@ RETURNS DECIMAL(10, 2) NOT DETERMINISTIC LANGUAGE SQL
 BEGIN
   ATOMIC
 
-  --  DECLARE childbirthdate1 DATE;
-  --  DECLARE childbirthdate2 DATE;
-  --  DECLARE childbirthdate3 DATE;
-  --  DECLARE childbirthdate4 DATE;
-  --  SET childbirthdate1 = p_childbirthdate1 ;
-  --  SET childbirthdate2 = p_childbirthdate2 ;
-  --  SET childbirthdate3 = p_childbirthdate3 ;
-  --  SET childbirthdate4 = p_childbirthdate4 ;
-  RETURN
+  DECLARE total DECIMAL(10, 2);
+  
+  IF coalesce(p_itemkey,'') = '' or p_startdate is NULL
+    THEN SET total = 0.00;
+  ELSE
+    SET total = (
+      SELECT coalesce(sum(x.TOTAL), 0)
+      FROM TABLE (func_flightpricing_tbl(p_tocode, p_itemkey, p_startdate, p_currentdate, p_nradults, p_childbirthdate1, p_childbirthdate2, p_childbirthdate3, p_childbirthdate4, p_currency)) AS x
+    );
+  END IF; 
 
-  SELECT coalesce(sum(x.TOTAL), 0)
-  FROM TABLE (func_flightpricing_tbl(p_tocode, p_itemkey, p_startdate, p_currentdate, p_nradults, p_childbirthdate1, p_childbirthdate2, p_childbirthdate3, p_childbirthdate4, p_currency)) AS x;
+  RETURN total;
 END
 @
 
