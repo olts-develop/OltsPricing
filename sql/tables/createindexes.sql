@@ -23,24 +23,30 @@ drop index TOO_PDP_IDX2 @
 drop index TOO_PDP_IDX3 @
 drop index TOO_PDP_IDX4 @
 drop index TOO_PDP_IDX5 @
+drop index TOO_PDP_IDX6 @
 
 drop index TOO_APDP_IDX1 @
 drop index TOO_APDP_IDX2 @
 drop index TOO_APDP_IDX3 @
 drop index TOO_APDP_IDX4 @
 drop index TOO_APDP_IDX5 @
+drop index TOO_APDP_IDX6 @
 
 drop index TOO_OT_IDX1 @
 drop index TOO_OT_IDX2 @
 drop index TOO_OT_IDX3 @
 drop index TOO_OT_IDX4 @
 drop index TOO_OT_IDX5 @
+drop index TOO_OT_IDX6 @
+drop index TOO_OT_IDX7 @
+drop index TOO_OT_IDX8 @
 
 drop index TOO_SO_IDX1 @
 drop index TOO_SO_IDX2 @
 drop index TOO_SO_IDX3 @
 drop index TOO_SO_IDX4 @
 drop index TOO_SO_IDX5 @
+drop index TOO_SO_IDX6 @
 
 drop index TOO_EB_IDX1 @
 drop index TOO_EB_IDX2 @
@@ -122,24 +128,30 @@ create index TOO_PDP_IDX2 ON TOOPERDAYPRICE ( itemkey, tocode, day, childidxnr, 
 create index TOO_PDP_IDX3 ON TOOPERDAYPRICE ( itemkey ) ALLOW REVERSE SCANS PAGE SPLIT SYMMETRIC COMPRESS NO   @
 create index TOO_PDP_IDX4 ON TOOPERDAYPRICE ( parentkey ) ALLOW REVERSE SCANS PAGE SPLIT SYMMETRIC COMPRESS NO   @
 create index TOO_PDP_IDX5 ON TOOPERDAYPRICE ( p_seq ) ALLOW REVERSE SCANS PAGE SPLIT SYMMETRIC COMPRESS NO   @
+create index TOO_PDP_IDX6 ON TOOPERDAYPRICE ( itemkey, tocode, day, childidxnr, agefrom, ageto, itemtype, currency ) ALLOW REVERSE SCANS PAGE SPLIT SYMMETRIC COMPRESS NO   @
 
 create index TOO_APDP_IDX1 ON TOOADDPERDAYPRICE ( itemkey, tocode, itemtype, currency ) ALLOW REVERSE SCANS PAGE SPLIT SYMMETRIC COMPRESS NO   @
 create index TOO_APDP_IDX2 ON TOOADDPERDAYPRICE ( itemkey, tocode, day, itemtype, currency ) ALLOW REVERSE SCANS PAGE SPLIT SYMMETRIC COMPRESS NO   @
 create index TOO_APDP_IDX3 ON TOOADDPERDAYPRICE ( itemkey ) ALLOW REVERSE SCANS PAGE SPLIT SYMMETRIC COMPRESS NO   @
 create index TOO_APDP_IDX4 ON TOOADDPERDAYPRICE ( parentkey ) ALLOW REVERSE SCANS PAGE SPLIT SYMMETRIC COMPRESS NO   @
 create index TOO_APDP_IDX5 ON TOOADDPERDAYPRICE ( p_seq ) ALLOW REVERSE SCANS PAGE SPLIT SYMMETRIC COMPRESS NO   @
+create index TOO_APDP_IDX6 ON TOOADDPERDAYPRICE ( itemkey, tocode, day, itemtype, day, childidxnr, currency ) ALLOW REVERSE SCANS PAGE SPLIT SYMMETRIC COMPRESS NO   @
 
 create index TOO_OT_IDX1 ON TOOONETIME ( itemkey, tocode, itemtype, currency ) ALLOW REVERSE SCANS PAGE SPLIT SYMMETRIC COMPRESS NO   @
-create index TOO_OT_IDX2 ON TOOONETIME ( itemkey, tocode, datefrom, itemtype, currency ) ALLOW REVERSE SCANS PAGE SPLIT SYMMETRIC COMPRESS NO   @
+create index TOO_OT_IDX2 ON TOOONETIME ( itemkey, tocode, datefrom, dateto, itemtype, currency ) ALLOW REVERSE SCANS PAGE SPLIT SYMMETRIC COMPRESS NO   @
 create index TOO_OT_IDX3 ON TOOONETIME ( itemkey ) ALLOW REVERSE SCANS PAGE SPLIT SYMMETRIC COMPRESS NO   @
 create index TOO_OT_IDX4 ON TOOONETIME ( parentkey ) ALLOW REVERSE SCANS PAGE SPLIT SYMMETRIC COMPRESS NO   @
 create index TOO_OT_IDX5 ON TOOONETIME ( p_seq ) ALLOW REVERSE SCANS PAGE SPLIT SYMMETRIC COMPRESS NO   @
+create index TOO_OT_IDX6 ON TOOONETIME ( itemkey, datefrom, dateto, itemtype, currency, tocode ) ALLOW REVERSE SCANS PAGE SPLIT SYMMETRIC COMPRESS NO   @
+-- create index TOO_OT_IDX7 ON TOOONETIME ( itemkey, tocode, datefrom, dateto, itemtype, agefrom, ageto, child, currency ) ALLOW REVERSE SCANS PAGE SPLIT SYMMETRIC COMPRESS NO   @
+-- create index TOO_OT_IDX8 ON TOOONETIME ( itemkey, tocode, datefrom, dateto, itemtype, startdaterelevant, enddaterelevant, agefrom, ageto, child, currency ) ALLOW REVERSE SCANS PAGE SPLIT SYMMETRIC COMPRESS NO   @
 
 create index TOO_SO_IDX1 ON TOOSPECIALOFFERS ( itemkey, tocode, itemtype, currency ) ALLOW REVERSE SCANS PAGE SPLIT SYMMETRIC COMPRESS NO   @
 create index TOO_SO_IDX2 ON TOOSPECIALOFFERS ( itemkey, tocode, datefrom, dateto, childchildnr, itemtype, currency ) ALLOW REVERSE SCANS PAGE SPLIT SYMMETRIC COMPRESS NO   @
 create index TOO_SO_IDX3 ON TOOSPECIALOFFERS ( itemkey ) ALLOW REVERSE SCANS PAGE SPLIT SYMMETRIC COMPRESS NO   @
 create index TOO_SO_IDX4 ON TOOSPECIALOFFERS ( parentkey ) ALLOW REVERSE SCANS PAGE SPLIT SYMMETRIC COMPRESS NO   @
 create index TOO_SO_IDX5 ON TOOSPECIALOFFERS ( p_seq ) ALLOW REVERSE SCANS PAGE SPLIT SYMMETRIC COMPRESS NO   @
+create index TOO_SO_IDX6 ON TOOSPECIALOFFERS ( itemkey, tocode, datefrom, dateto, childchildnr, days, startdaterelevant, enddaterelevant, itemtype, currency ) ALLOW REVERSE SCANS PAGE SPLIT SYMMETRIC COMPRESS NO   @
 
 create index TOO_EB_IDX1 ON TOOEARLYBOOKINGS ( itemkey, tocode, itemtype, currency ) ALLOW REVERSE SCANS PAGE SPLIT SYMMETRIC COMPRESS NO   @
 create index TOO_EB_IDX2 ON TOOEARLYBOOKINGS ( itemkey, tocode, datefrom, dateto, daysbeforedeparturefrom, daysbeforedepartureto, datebeforedeparturefrom, datebeforedepartureto, fromday, itemtype, currency ) ALLOW REVERSE SCANS PAGE SPLIT SYMMETRIC COMPRESS NO   @

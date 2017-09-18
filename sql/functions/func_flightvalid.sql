@@ -250,11 +250,9 @@ BEGIN
     ,func_getposdatedesc(0, 3, childbirthdate1, childbirthdate2, childbirthdate3, childbirthdate4)
     ,func_getposdatedesc(0, 4, childbirthdate1, childbirthdate2, childbirthdate3, childbirthdate4)
   FROM
-    tooflight, tooflightleg
+    tooflightleg
   WHERE
-    tooflight.flightkey = tooflightleg.flightkey
-    AND tooflightleg.legkey = p_flightkey
-    AND tooflight.tocode = p_tocode
+    tooflightleg.legkey = p_flightkey
     AND tooflightleg.tocode = p_tocode
     AND nradults > 0;
 END
