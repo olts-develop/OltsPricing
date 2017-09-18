@@ -1,3 +1,5 @@
+DROP FUNCTION func_flightvalid @
+
 CREATE FUNCTION func_flightvalid (
   p_tocode VARCHAR(5) DEFAULT ''
   ,p_flightkey VARCHAR(20) DEFAULT ''
@@ -256,3 +258,5 @@ BEGIN
     AND tooflightleg.tocode = p_tocode
     AND nradults > 0;
 END
+
+@
