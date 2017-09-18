@@ -443,6 +443,12 @@ create table TOOALLOTMENTS
   ,noarrival integer with default 0
   ,nodeparture integer with default 0
   ,itemtype varchar(1) with default ''
+  ,deptime time
+  ,arrtime time
+  ,carrier varchar(30) with default ''
+  ,flightnr varchar(30) with default ''
+  ,checkinminbeforedep integer with default 0
+  ,checkintimedev integer with default 0
   ,PRIMARY key(id)
 )
 @
@@ -766,21 +772,21 @@ drop table TOOFLIGHT @
 
 create table TOOFLIGHT
 (
-   FLIGHTKEY VARCHAR(20) with default ''
-  ,TOCODE VARCHAR(5) with default ''
-  ,DEP VARCHAR(5) with default ''
-  ,ARR VARCHAR(5) with default ''
-  ,CARRIER VARCHAR(30) with default ''
-  ,FLIGHTNR VARCHAR(30) with default ''
-  ,CLASS VARCHAR(30) with default ''
-  ,CLASSDESC VARCHAR(100) with default ''
-  ,SEATCLASS VARCHAR(30) with default ''
-  ,SEATCLASSNR INTEGER with default 0
-  ,DESTINATIONCODE VARCHAR(50) with default ''
-  ,PASSIVE INTEGER with default 0
-  ,PASSIVEFROMDATE DATE
-  ,MULTILEG INTEGER with default 0
-  ,PRIMARY key(FLIGHTKEY, TOCODE)
+   flightkey varchar(20) with default ''
+  ,tocode varchar(5) with default ''
+  ,dep varchar(5) with default ''
+  ,arr varchar(5) with default ''
+  ,carrier varchar(30) with default ''
+  ,flightnr varchar(30) with default ''
+  ,class varchar(30) with default ''
+  ,classdesc varchar(100) with default ''
+  ,seatclass varchar(30) with default ''
+  ,seatclassnr integer with default 0
+  ,destinationcode varchar(50) with default ''
+  ,passive integer with default 0
+  ,passivefromdate date
+  ,multileg integer with default 0
+  ,PRIMARY key(flightkey, tocode)
 )
 @
 
@@ -788,22 +794,22 @@ drop table TOOFLIGHTLEG @
 
 create table TOOFLIGHTLEG
 (
-  LEGKEY VARCHAR(20) with default ''
-  ,FLIGHTKEY VARCHAR(20) with default ''
-  ,TOCODE VARCHAR(5) with default ''
-  ,DEP VARCHAR(5) with default ''
-  ,ARR VARCHAR(5) with default ''
-  ,CARRIER VARCHAR(30) with default ''
-  ,FLIGHTNR VARCHAR(30) with default ''
-  ,CLASS VARCHAR(30) with default ''
-  ,CLASSDESC VARCHAR(100) with default ''
-  ,SEATCLASS VARCHAR(30) with default ''
-  ,SEATCLASSNR INTEGER with default 0
-  ,CHECKINMINBEFOREDEP INTEGER with default 0
-  ,CHECKINTIMEDEV INTEGER with default 0
-  ,FEEDER INTEGER with default 0
-  ,POS INTEGER with default 0
-  ,PRIMARY key(LEGKEY, TOCODE)
+  legkey varchar(20) with default ''
+  ,flightkey varchar(20) with default ''
+  ,tocode varchar(5) with default ''
+  ,dep varchar(5) with default ''
+  ,arr varchar(5) with default ''
+  ,carrier varchar(30) with default ''
+  ,flightnr varchar(30) with default ''
+  ,class varchar(30) with default ''
+  ,classdesc varchar(100) with default ''
+  ,seatclass varchar(30) with default ''
+  ,seatclassnr integer with default 0
+  ,checkinminbeforedep integer with default 0
+  ,checkintimedev integer with default 0
+  ,feeder integer with default 0
+  ,pos integer with default 0
+  ,PRIMARY key(legkey, tocode)
 )
 @
 
