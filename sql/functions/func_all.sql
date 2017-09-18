@@ -39,10 +39,6 @@ BEGIN
   DECLARE childage3 DECIMAL(10, 4);
   DECLARE childage4 DECIMAL(10, 4);
 
-  --  DECLARE childbirthdate1 DATE;
-  --  DECLARE childbirthdate2 DATE;
-  --  DECLARE childbirthdate3 DATE;
-  --  DECLARE childbirthdate4 DATE;
   SET returndateminus1 = p_returndate - 1 DAY;
   SET startdate_iso_dayofweek = DAYOFWEEK_ISO(p_startdate);
   SET childage1 = ((DAYS(p_startdate) - DAYS(p_childbirthdate1)) / 365);
@@ -50,10 +46,6 @@ BEGIN
   SET childage3 = ((DAYS(p_startdate) - DAYS(p_childbirthdate3)) / 365);
   SET childage4 = ((DAYS(p_startdate) - DAYS(p_childbirthdate4)) / 365);
 
-  --  SET childbirthdate1 = p_childbirthdate1 ;
-  --  SET childbirthdate2 = p_childbirthdate2 ;
-  --  SET childbirthdate3 = p_childbirthdate3 ;
-  --  SET childbirthdate4 = p_childbirthdate4 ;
   RETURN
   WITH childtemptable(chdnr, chdnrstring, bd) AS (
       VALUES (

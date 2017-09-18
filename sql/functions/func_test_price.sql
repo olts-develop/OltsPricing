@@ -30,17 +30,9 @@ NOT DETERMINISTIC
 LANGUAGE SQL
 BEGIN ATOMIC
 
---  DECLARE childbirthdate1 DATE;
---  DECLARE childbirthdate2 DATE;
---  DECLARE childbirthdate3 DATE;
---  DECLARE childbirthdate4 DATE;
   DECLARE daysbetweenstartend INTEGER;  
   DECLARE counter INTEGER;
 
---  SET childbirthdate1 = p_childbirthdate1 ;
---  SET childbirthdate2 = p_childbirthdate2 ;
---  SET childbirthdate3 = p_childbirthdate3 ;
---  SET childbirthdate4 = p_childbirthdate4 ;
   SET daysbetweenstartend = ( DAYS(p_returndate) - DAYS(p_startdate) );
 
 SET counter = 

@@ -35,14 +35,6 @@ RETURNS TABLE (
 BEGIN
   ATOMIC
 
-  --  DECLARE childbirthdate1 DATE;
-  --  DECLARE childbirthdate2 DATE;
-  --  DECLARE childbirthdate3 DATE;
-  --  DECLARE childbirthdate4 DATE;
-  --  SET childbirthdate1 = p_childbirthdate1 ;
-  --  SET childbirthdate2 = p_childbirthdate2 ;
-  --  SET childbirthdate3 = p_childbirthdate3 ;
-  --  SET childbirthdate4 = p_childbirthdate4 ;
   RETURN
 
   SELECT nr
