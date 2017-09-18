@@ -258,7 +258,7 @@ BEGIN
   
   UNION ALL
   
-  -- OneTime: End
+  -- OneTime: Start
   SELECT p_adultnr
     ,price
     ,p_adultnr * price
@@ -451,6 +451,7 @@ BEGIN
         END
       )
     AND bd IS NOT NULL;
+  -- OneTime: End
 END
 @
 
