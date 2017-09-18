@@ -130,7 +130,7 @@ BEGIN
     AND tooperdayprice.day >= p_startdate
     AND tooperdayprice.day < p_returndate
     AND childidxnr = chdnr
-    AND itemtype not in ('F')
+    AND p_itemtype <> 'F'
     AND agefrom <= (
       CASE chdnr
         WHEN 1
@@ -190,7 +190,7 @@ BEGIN
     AND tooaddperdayprice.day >= p_startdate
     AND tooaddperdayprice.day < p_returndate
     AND childidxnr = 0
-    AND itemtype not in ('F')
+    AND p_itemtype <> 'F'
   
   UNION ALL
   
@@ -222,7 +222,7 @@ BEGIN
     AND tooaddperdayprice.day >= p_startdate
     AND tooaddperdayprice.day < p_returndate
     AND childidxnr = chdnr
-    AND itemtype not in ('F')
+    AND p_itemtype <> 'F'
     AND agefrom <= (
       CASE chdnr
         WHEN 1
