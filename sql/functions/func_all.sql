@@ -411,7 +411,6 @@ BEGIN
         AND enddaterelevant = 1
         )
       )
-    --  AND substr(coalesce(NULLIF(NULLIF(weekdaysvalid,'0'),''),'1111111'), startdate_iso_dayofweek, 1) = '1'
     AND (
       (
         child = 1
