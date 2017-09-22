@@ -74,7 +74,7 @@ BEGIN
       CASE 
         WHEN childage1 < 2
           THEN 1
-        WHEN (
+        WHEN (childage1 >= 2) AND (
             SELECT count(ID)
             FROM TOOPERDAYFLIGHTPRICE
             WHERE (
@@ -99,7 +99,7 @@ BEGIN
       CASE 
         WHEN childage2 < 2
           THEN 1
-        WHEN (
+        WHEN (childage2 >= 2) AND (
             SELECT count(ID)
             FROM TOOPERDAYFLIGHTPRICE
             WHERE (
@@ -124,7 +124,7 @@ BEGIN
       CASE 
         WHEN childage3 < 2
           THEN 1
-        WHEN (
+        WHEN (childage3 >= 2) AND (
             SELECT count(ID)
             FROM TOOPERDAYFLIGHTPRICE
             WHERE (
@@ -149,7 +149,7 @@ BEGIN
       CASE 
         WHEN childage4 < 2
           THEN 1
-        WHEN (
+        WHEN (childage4 >= 2) AND (
             SELECT count(ID)
             FROM TOOPERDAYFLIGHTPRICE
             WHERE (
@@ -174,7 +174,7 @@ BEGIN
       CASE 
         WHEN p_childbirthdate1 IS NULL
           THEN 0
-        WHEN child1_hasprice = 1
+        WHEN p_childbirthdate1 IS NOT NULL AND child1_hasprice = 1
           THEN 0
         ELSE 1
         END
@@ -182,7 +182,7 @@ BEGIN
       CASE 
         WHEN p_childbirthdate2 IS NULL
           THEN 0
-        WHEN child2_hasprice = 1
+        WHEN p_childbirthdate2 IS NOT NULL AND child2_hasprice = 1
           THEN 0
         ELSE 1
         END
@@ -190,7 +190,7 @@ BEGIN
       CASE 
         WHEN p_childbirthdate3 IS NULL
           THEN 0
-        WHEN child3_hasprice = 1
+        WHEN p_childbirthdate3 IS NOT NULL AND child3_hasprice = 1
           THEN 0
         ELSE 1
         END
@@ -198,7 +198,7 @@ BEGIN
       CASE 
         WHEN p_childbirthdate4 IS NULL
           THEN 0
-        WHEN child4_hasprice = 1
+        WHEN p_childbirthdate4 IS NOT NULL AND child4_hasprice = 1
           THEN 0
         ELSE 1
         END
