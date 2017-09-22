@@ -5,7 +5,7 @@
 -- Note: this function is only useful for a arrangement pricing!
 -- -----------------------------------------------------------------------------
 
-DROP FUNCTION func_arrpricing_tbl @
+drop function func_arrpricing_tbl @
 
 CREATE FUNCTION func_arrpricing_tbl (
   p_tocode VARCHAR(5) DEFAULT ''
@@ -71,7 +71,7 @@ END
 
 
 
-DROP FUNCTION func_arrpricing_tblch @
+drop function func_arrpricing_tblch @
 
 CREATE FUNCTION func_arrpricing_tblch (
   p_tocode VARCHAR(5) DEFAULT ''
@@ -158,7 +158,7 @@ END
 
 
 
-DROP FUNCTION func_arrpricing @
+drop function func_arrpricing @
 
 CREATE FUNCTION func_arrpricing (
   p_tocode VARCHAR(5) DEFAULT ''
@@ -198,7 +198,7 @@ END
 
 
 
-DROP FUNCTION func_arrpricingch @
+drop function func_arrpricingch @
 
 CREATE FUNCTION func_arrpricingch (
   p_tocode VARCHAR(5) DEFAULT ''

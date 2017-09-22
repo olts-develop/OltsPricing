@@ -76,23 +76,20 @@ BEGIN
           THEN 1
         WHEN (
             SELECT count(ID)
-            FROM TOOONETIME
+            FROM TOOPERDAYFLIGHTPRICE
             WHERE (
                 ITEMKEY
-                ,ITEMTYPE
-                ,TOOONETIME.TOCODE
+                ,TOOPERDAYFLIGHTPRICE.TOCODE
                 ,CURRENCY
                 ) = (
                 p_flightkey
-                ,'F'
                 ,p_tocode
                 ,p_currency
                 )
-              AND DATEFROM <= p_startdate
-              AND DATETO >= p_startdate
+              AND DAY = p_startdate
               AND AGEFROM <= childage1
               AND AGETO >= childage1
-              AND CHILD = 1 FETCH first 1 row ONLY
+              AND CHILDIDXNR = 1 FETCH first 1 row ONLY
             ) = 1
           THEN 1
         ELSE 0
@@ -104,23 +101,20 @@ BEGIN
           THEN 1
         WHEN (
             SELECT count(ID)
-            FROM TOOONETIME
+            FROM TOOPERDAYFLIGHTPRICE
             WHERE (
                 ITEMKEY
-                ,ITEMTYPE
-                ,TOOONETIME.TOCODE
+                ,TOOPERDAYFLIGHTPRICE.TOCODE
                 ,CURRENCY
                 ) = (
                 p_flightkey
-                ,'F'
                 ,p_tocode
                 ,p_currency
                 )
-              AND DATEFROM <= p_startdate
-              AND DATETO >= p_startdate
+              AND DAY = p_startdate
               AND AGEFROM <= childage2
               AND AGETO >= childage2
-              AND CHILD = 1 FETCH first 1 row ONLY
+              AND CHILDIDXNR = 2 FETCH first 1 row ONLY
             ) = 1
           THEN 1
         ELSE 0
@@ -132,23 +126,20 @@ BEGIN
           THEN 1
         WHEN (
             SELECT count(ID)
-            FROM TOOONETIME
+            FROM TOOPERDAYFLIGHTPRICE
             WHERE (
                 ITEMKEY
-                ,ITEMTYPE
-                ,TOOONETIME.TOCODE
+                ,TOOPERDAYFLIGHTPRICE.TOCODE
                 ,CURRENCY
                 ) = (
                 p_flightkey
-                ,'F'
                 ,p_tocode
                 ,p_currency
                 )
-              AND DATEFROM <= p_startdate
-              AND DATETO >= p_startdate
+              AND DAY = p_startdate
               AND AGEFROM <= childage3
               AND AGETO >= childage3
-              AND CHILD = 1 FETCH first 1 row ONLY
+              AND CHILDIDXNR = 3 FETCH first 1 row ONLY
             ) = 1
           THEN 1
         ELSE 0
@@ -160,23 +151,20 @@ BEGIN
           THEN 1
         WHEN (
             SELECT count(ID)
-            FROM TOOONETIME
+            FROM TOOPERDAYFLIGHTPRICE
             WHERE (
                 ITEMKEY
-                ,ITEMTYPE
-                ,TOOONETIME.TOCODE
+                ,TOOPERDAYFLIGHTPRICE.TOCODE
                 ,CURRENCY
                 ) = (
                 p_flightkey
-                ,'F'
                 ,p_tocode
                 ,p_currency
                 )
-              AND DATEFROM <= p_startdate
-              AND DATETO >= p_startdate
+              AND DAY = p_startdate
               AND AGEFROM <= childage4
               AND AGETO >= childage4
-              AND CHILD = 1 FETCH first 1 row ONLY
+              AND CHILDIDXNR = 4 FETCH first 1 row ONLY
             ) = 1
           THEN 1
         ELSE 0
@@ -256,7 +244,8 @@ BEGIN
   WHERE
     tooflightleg.legkey = p_flightkey
     AND tooflightleg.tocode = p_tocode
-    AND nradults > 0;
+    AND nradults > 0
+    ;
 END
 
 @

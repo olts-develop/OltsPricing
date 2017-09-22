@@ -5,7 +5,7 @@
 -- Note: this function is only useful for a miscellaneous pricing!
 -- -----------------------------------------------------------------------------
 
-DROP FUNCTION func_miscpricing_tbl @
+drop function func_miscpricing_tbl @
 
 CREATE FUNCTION func_miscpricing_tbl (
   p_tocode VARCHAR(5) DEFAULT ''
@@ -78,7 +78,7 @@ END
 --
 
 
-DROP FUNCTION func_miscpricing_tblch @
+drop function func_miscpricing_tblch @
 
 CREATE FUNCTION func_miscpricing_tblch (
   p_tocode VARCHAR(5) DEFAULT ''
@@ -165,7 +165,7 @@ END
 
 
 
-DROP FUNCTION func_miscpricing @
+drop function func_miscpricing @
 
 CREATE FUNCTION func_miscpricing (
   p_tocode VARCHAR(5) DEFAULT ''

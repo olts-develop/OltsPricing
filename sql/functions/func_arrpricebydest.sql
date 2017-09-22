@@ -2,7 +2,7 @@
 -- Pricing and Availability
 -- -----------------------------------------------------------------------------
 
-DROP FUNCTION func_arrpricebydest @
+drop function func_arrpricebydest @
 
 -- select * from TABLE( func_arrpricebydest ('', 'AGR', cast('2015-11-12' as DATE), cast('2015-11-12' as DATE), current date, 1 ) )
 
@@ -50,7 +50,7 @@ BEGIN
 END
 @
 
-DROP FUNCTION func_arrpricebydest_ch @
+drop function func_arrpricebydest_ch @
 
 -- select * from TABLE( func_arrpricebydest_ch ('', 'AGR', '2015-11-12', '2015-11-12', '', 1 , '', '', '', '') )
 -- select * from TABLE( func_arrpricebydest_ch ('TOU', 'AGR', '2015-11-12', '2015-11-12', '', 1 , '', '', '', '') )
@@ -111,7 +111,7 @@ END
 
 
 
-DROP FUNCTION func_arrpriceav @
+drop function func_arrpriceav @
 
 -- select * from TABLE( func_arrpriceav ('', cast('2015-11-12' as DATE), cast('2015-11-12' as DATE), current date, 1 ) )
 CREATE FUNCTION func_arrpriceav (
@@ -156,7 +156,7 @@ END
 
 
 
-DROP FUNCTION func_arrpriceav_ch @
+drop function func_arrpriceav_ch @
 
 -- select * from TABLE( func_arrpriceav_ch ('', '2015-11-12', '2015-11-12', '', 1 , '', '', '', '') )
 -- select * from TABLE( func_arrpriceav_ch ('TSOL', '2015-11-12', '2015-11-12', '', 1 , '', '', '', '') )
@@ -216,7 +216,7 @@ END
 
 
 
-DROP FUNCTION func_arrpriceav2 @
+drop function func_arrpriceav2 @
 
 -- The function func_arrpriceav2 imporves the performance of the search for misc availability and pricing dramatically.
 -- It alos improves the interface that can be used to search for either a group of products, e.g. by destination,
@@ -429,7 +429,7 @@ END
 
 
 
-DROP FUNCTION func_arrpriceav2_tbl @
+drop function func_arrpriceav2_tbl @
 
 --   SELECT tooarrangement.TOCODE AS TOCODE
 --     ,tooarrangement.ARRKEY AS ARRKEY

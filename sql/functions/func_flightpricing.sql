@@ -5,7 +5,7 @@
 -- Note: this function is only useful for a flight pricing!
 -- -----------------------------------------------------------------------------
 
-DROP FUNCTION func_flightpricing_tbl @
+drop function func_flightpricing_tbl @
 
 CREATE FUNCTION func_flightpricing_tbl (
   p_tocode VARCHAR(5) DEFAULT ''
@@ -37,7 +37,7 @@ BEGIN
 
   RETURN
 
-  SELECT nr
+  SELECT NR
     ,price
     ,total
     ,type1
@@ -47,9 +47,14 @@ BEGIN
     ,descid
     ,p_seq
     ,pricetype
-  FROM TABLE (func_flightvalid(p_tocode, p_itemkey, p_startdate, p_nradults, p_childbirthdate1, p_childbirthdate2, p_childbirthdate3, p_childbirthdate4, p_currency)) AS x
-    ,TABLE (func_pricing2_tbl(p_tocode, p_itemkey, 'F', p_startdate, p_startdate + 1 day, p_currentdate, x.NRADULTS, x.CHILDBIRTHDATE1, x.CHILDBIRTHDATE2, x.CHILDBIRTHDATE3, x.CHILDBIRTHDATE4, p_currency)) AS pricing
-  WHERE func_test_price_flight(p_tocode, p_itemkey, 'F', p_startdate, x.NRADULTS, x.CHILDBIRTHDATE1, x.CHILDBIRTHDATE2, x.CHILDBIRTHDATE3, x.CHILDBIRTHDATE4, p_currency) = 'OK';
+  FROM
+    TABLE (func_flightvalid(p_tocode, p_itemkey, p_startdate, 1, p_childbirthdate1, p_childbirthdate2, p_childbirthdate3, p_childbirthdate4, p_currency)) AS x
+    ,TABLE (func_all_flight_tbl(p_tocode, p_itemkey, p_startdate, x.NRADULTS, x.CHILDBIRTHDATE1, x.CHILDBIRTHDATE2, x.CHILDBIRTHDATE3, x.CHILDBIRTHDATE4, p_currency)) as pricing
+  WHERE
+    coalesce(p_itemkey,'') <> ''
+    AND p_startdate is not null
+    and func_test_price_flight(p_tocode, p_itemkey, p_startdate, x.NRADULTS, x.CHILDBIRTHDATE1, x.CHILDBIRTHDATE2, x.CHILDBIRTHDATE3, x.CHILDBIRTHDATE4, p_currency) = 'OK'
+  ;
 END
 @
 
@@ -69,7 +74,7 @@ END
 --
 
 
-DROP FUNCTION func_flightpricing_tblch @
+drop function func_flightpricing_tblch @
 
 CREATE FUNCTION func_flightpricing_tblch (
   p_tocode VARCHAR(5) DEFAULT ''
@@ -125,9 +130,9 @@ BEGIN
     ,descid
     ,p_seq
     ,pricetype
-  FROM TABLE (func_flightvalid(p_tocode, p_itemkey, startdate, p_nradults, childbirthdate1, childbirthdate2, childbirthdate3, childbirthdate4, p_currency)) AS x
-    ,TABLE (func_pricing2_tbl(p_tocode, p_itemkey, 'F', startdate, startdate + 1 day, currentdate, x.NRADULTS, x.CHILDBIRTHDATE1, x.CHILDBIRTHDATE2, x.CHILDBIRTHDATE3, x.CHILDBIRTHDATE4, p_currency)) AS pricing
-  WHERE func_test_price_flight(p_tocode, p_itemkey, 'F', startdate, x.NRADULTS, x.CHILDBIRTHDATE1, x.CHILDBIRTHDATE2, x.CHILDBIRTHDATE3, x.CHILDBIRTHDATE4, p_currency) = 'OK';
+  FROM
+    TABLE (func_flightpricing_tbl(p_tocode, p_itemkey, cast(nullif(p_startdate, '') AS DATE), currentdate, p_nradults, childbirthdate1, childbirthdate2, childbirthdate3, childbirthdate4, p_currency)) AS x
+  ;
 END
 @
 
@@ -153,7 +158,7 @@ END
 
 
 
-DROP FUNCTION func_flightpricing @
+drop function func_flightpricing @
 
 CREATE FUNCTION func_flightpricing (
   p_tocode VARCHAR(5) DEFAULT ''
@@ -174,12 +179,13 @@ BEGIN
 
   DECLARE total DECIMAL(10, 2);
   
-  IF coalesce(p_itemkey,'') = '' or p_startdate is NULL
+  IF p_itemkey='' or p_itemkey is NULL or p_startdate is NULL
     THEN SET total = 0.00;
   ELSE
     SET total = (
       SELECT coalesce(sum(x.TOTAL), 0)
-      FROM TABLE (func_flightpricing_tbl(p_tocode, p_itemkey, p_startdate, p_currentdate, p_nradults, p_childbirthdate1, p_childbirthdate2, p_childbirthdate3, p_childbirthdate4, p_currency)) AS x
+      FROM
+          TABLE (func_flightpricing_tbl(p_tocode, p_itemkey, p_startdate, p_currentdate, p_nradults, p_childbirthdate1, p_childbirthdate2, p_childbirthdate3, p_childbirthdate4, p_currency)) AS x
     );
   END IF; 
 
@@ -199,7 +205,7 @@ END
 --
 
 
-DROP FUNCTION func_flightpricingch @
+drop function func_flightpricingch @
 
 CREATE FUNCTION func_flightpricingch (
   p_tocode VARCHAR(5) DEFAULT ''

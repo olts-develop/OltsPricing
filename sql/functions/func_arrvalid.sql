@@ -4,7 +4,7 @@
 -- after taking into account the passed parameters and the occupancy details
 -- of the specific misc, or returns an empty table.
 -- -----------------------------------------------------------------------------
-DROP FUNCTION func_arrvalid @
+drop function func_arrvalid @
 
 CREATE FUNCTION func_arrvalid (
   p_tocode VARCHAR(5) DEFAULT ''
@@ -642,7 +642,7 @@ END
 
 
 
-DROP FUNCTION func_arrvalid_ch @
+drop function func_arrvalid_ch @
 
 CREATE FUNCTION func_arrvalid_ch (
   p_tocode VARCHAR(5) DEFAULT ''

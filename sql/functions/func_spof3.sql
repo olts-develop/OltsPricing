@@ -417,7 +417,7 @@ BEGIN
         ,daystart AS pricedaystart
         ,childchildnr
       FROM tmprulelist1
-        ,TABLE (func_all_tbl(p_tocode, p_itemkey, p_itemtype, p_startdate, p_returndate, p_nradults, p_childbirthdate1, p_childbirthdate2, p_childbirthdate3, p_childbirthdate4, p_currency)) AS priceall
+        ,TABLE (func_all_pdp_tbl(p_tocode, p_itemkey, p_itemtype, p_startdate, p_returndate, p_nradults, p_childbirthdate1, p_childbirthdate2, p_childbirthdate3, p_childbirthdate4, p_currency)) AS priceall
       WHERE priceall.fromdate >= tmprulelist1.startdate
         AND priceall.todate <= tmprulelist1.enddate
         AND priceall.type1 = 'PDP'

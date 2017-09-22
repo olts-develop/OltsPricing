@@ -14,7 +14,6 @@ create function func_test_price_flight
 (
    p_tocode VARCHAR(5) DEFAULT ''
   ,p_itemkey VARCHAR(20) DEFAULT ''
-  ,p_itemtype VARCHAR(1) DEFAULT ''
   ,p_startdate DATE DEFAULT NULL
   ,p_adultnr INTEGER DEFAULT 0
   ,p_childbirthdate1 DATE DEFAULT NULL
@@ -43,13 +42,9 @@ BEGIN ATOMIC
 SET counter = 
   (
     SELECT
-      COUNT(DISTINCT TMPDAY)
+      COUNT(DISTINCT x.FROMDATE)
     FROM
-      TOOTMPDAY
-      ,TABLE (FUNC_ALL_TBL(p_tocode, p_itemkey,p_itemtype , p_startdate, p_startdate + 1 day, p_adultnr, p_childbirthdate1, p_childbirthdate2, p_childbirthdate3, p_childbirthdate4, p_currency)) AS x
-    WHERE
-      X.TYPE1 in ('OT')
-      AND TMPDAY = p_startdate
+      TABLE (func_all_flight_tbl(p_tocode, p_itemkey, p_startdate, p_adultnr, p_childbirthdate1, p_childbirthdate2, p_childbirthdate3, p_childbirthdate4, p_currency)) AS x
   ) ;
          
 IF ( counter = 1 ) THEN

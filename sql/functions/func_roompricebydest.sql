@@ -2,7 +2,7 @@
 -- Pricing
 -- -----------------------------------------------------------------------------
 
-DROP FUNCTION func_roompricebydest @
+drop function func_roompricebydest @
 
 -- select * from TABLE( func_roompricebydest ('STOH', 'MRU', cast('2015-09-01' as DATE), cast('2015-09-25' as DATE),current date, 2 ) )
 CREATE FUNCTION func_roompricebydest (
@@ -55,7 +55,7 @@ END
 
 
 
-DROP FUNCTION func_roompricebydest_ch @
+drop function func_roompricebydest_ch @
 
 -- select * from TABLE( func_roompricebydest_ch ('', 'AGR', '2015-11-12', '2015-11-12', '', 1 , '', '', '', '') )
 CREATE FUNCTION func_roompricebydest_ch (

@@ -2,7 +2,7 @@
 -- Pricing and Availability
 -- -----------------------------------------------------------------------------
 
-DROP FUNCTION func_miscpricebydest @
+drop function func_miscpricebydest @
 
 -- select * from TABLE( func_miscpricebydest ('', 'AGR', cast('2015-11-12' as DATE), cast('2015-11-12' as DATE), current date, 1 ) )
 CREATE FUNCTION func_miscpricebydest (
@@ -52,7 +52,7 @@ END
 
 
 
-DROP FUNCTION func_miscpricebydest_ch @
+drop function func_miscpricebydest_ch @
 
 -- select * from TABLE( func_miscpricebydest_ch ('', 'AGR', '2015-11-12', '2015-11-12', '', 1 , '', '', '', '') )
 -- select * from TABLE( func_miscpricebydest_ch ('TOU', 'AGR', '2015-11-12', '2015-11-12', '', 1 , '', '', '', '') )
@@ -116,7 +116,7 @@ END
 
 
 
-DROP FUNCTION func_miscpriceav @
+drop function func_miscpriceav @
 
 -- select * from TABLE( func_miscpriceav ('', cast('2015-11-12' as DATE), cast('2015-11-12' as DATE), current date, 1 ) )
 CREATE FUNCTION func_miscpriceav (
@@ -162,7 +162,7 @@ BEGIN
 END
 @
 
-DROP FUNCTION func_miscpriceav_ch @
+drop function func_miscpriceav_ch @
 
 -- select * from TABLE( func_miscpriceav_ch ('', '2015-11-12', '2015-11-12', '', 1 , '', '', '', '') )
 -- select * from TABLE( func_miscpriceav_ch ('TSOL', '2015-11-12', '2015-11-12', '', 1 , '', '', '', '') )
@@ -225,7 +225,7 @@ END
 
 
 
-DROP FUNCTION func_miscpriceav2 @
+drop function func_miscpriceav2 @
 
 -- The function func_miscpriceav2 imporves the performance of the search for misc availability and pricing dramatically.
 -- It alos improves the interface that can be used to search for either a group of products, e.g. by destination,
@@ -445,7 +445,7 @@ END
 
 
 
-DROP FUNCTION func_miscpriceav2_tbl @
+drop function func_miscpriceav2_tbl @
 
 --   SELECT TOOMISC.TOCODE AS TOCODE
 --     ,TOOMISC.MISCKEY AS MISCKEY
