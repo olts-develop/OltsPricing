@@ -172,6 +172,7 @@ create table TOOROOMS
   ,fromdate date
   ,passive integer with default 0
   ,tocode varchar(5) not null with default ''
+  ,export integer with default 0
   ,PRIMARY key(roomkey, tocode)
 )
 @
@@ -692,6 +693,7 @@ create table TOOMISC
   ,misccode VARCHAR(10) not null with default ''
   ,miscitemcode VARCHAR(10) not null with default ''
   ,overnight INTEGER not null with default 0
+  ,export integer with default 0
   ,PRIMARY key(misckey, tocode)
 )
 @
@@ -775,6 +777,7 @@ create table TOOARRANGEMENT
   ,invtext VARCHAR(3000) not null with default ''
   ,passive INTEGER not null with default 0
   ,passivefromdate DATE
+  ,export integer with default 0
   ,PRIMARY key(arrkey, tocode)
 )
 @
@@ -834,6 +837,7 @@ create table TOOFLIGHTLEG
   ,checkintimedev integer with default 0
   ,feeder integer with default 0
   ,pos integer with default 0
+  ,export integer with default 0
   ,PRIMARY key(legkey, tocode)
 )
 @
