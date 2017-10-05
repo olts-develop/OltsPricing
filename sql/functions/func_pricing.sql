@@ -351,6 +351,7 @@ CREATE FUNCTION func_hotelpriceav (
   ,IN_ROOMKEY VARCHAR(20) DEFAULT ''
   ,IN_HOTELKEY VARCHAR(20) DEFAULT ''
   ,IN_CURRENCY VARCHAR(3) DEFAULT 'CHF'
+  ,IN_EXPORT_ONLY INTEGER DEFAULT 1
   )
 RETURNS TABLE (
   TOCODE VARCHAR(5)
@@ -416,8 +417,9 @@ BEGIN
           AND r.TOURBOCODE = coalesce(nullif(IN_ROOMCODE, ''), r.TOURBOCODE)
           AND r.TOURBOMEALCODE = coalesce(nullif(IN_TOURBOMEALCODE, ''), r.TOURBOMEALCODE)
           AND r.ROOMKEY = coalesce(nullif(IN_ROOMKEY, ''), r.ROOMKEY)
+          AND r.EXPORT = coalesce(nullif(IN_EXPORT_ONLY, 0), r.EXPORT)
           AND h.HOTELKEY = coalesce(nullif(IN_HOTELKEY, ''), h.HOTELKEY)
-          AND r.NORMALOCCUPANCY = IN_NORMALOCCUPANCY
+          AND r.NORMALOCCUPANCY = coalesce(nullif(IN_NORMALOCCUPANCY, 0), r.NORMALOCCUPANCY)
           AND r.TOCODE = IN_TOCODE
           AND h.TOCODE = IN_TOCODE
           AND (
@@ -444,10 +446,11 @@ BEGIN
     AND r.TOURBOCODE = coalesce(nullif(IN_ROOMCODE, ''), r.TOURBOCODE)
     AND r.TOURBOMEALCODE = coalesce(nullif(IN_TOURBOMEALCODE, ''), r.TOURBOMEALCODE)
     AND r.ROOMKEY = coalesce(nullif(IN_ROOMKEY, ''), r.ROOMKEY)
+    AND r.EXPORT = coalesce(nullif(IN_EXPORT_ONLY, 0), r.EXPORT)
     AND h.HOTELKEY = coalesce(nullif(IN_HOTELKEY, ''), h.HOTELKEY)
     AND r.TOCODE = IN_TOCODE
     AND h.TOCODE = IN_TOCODE
-    AND r.NORMALOCCUPANCY = IN_NORMALOCCUPANCY
+    AND r.NORMALOCCUPANCY = coalesce(nullif(IN_NORMALOCCUPANCY, 0), r.NORMALOCCUPANCY)
     AND (
       (
         IN_IGNORE_PRICE0 = 1
@@ -606,6 +609,7 @@ CREATE FUNCTION func_hotelpriceav_tbl (
   ,IN_ROOMKEY VARCHAR(20) DEFAULT ''
   ,IN_HOTELKEY VARCHAR(20) DEFAULT ''
   ,IN_CURRENCY VARCHAR(3) DEFAULT 'CHF'
+  ,IN_EXPORT_ONLY INTEGER DEFAULT 1
   )
 RETURNS TABLE (
   TOCODE VARCHAR(5)
@@ -680,8 +684,9 @@ BEGIN
           AND r.TOURBOCODE = coalesce(nullif(IN_ROOMCODE, ''), r.TOURBOCODE)
           AND r.TOURBOMEALCODE = coalesce(nullif(IN_TOURBOMEALCODE, ''), r.TOURBOMEALCODE)
           AND r.ROOMKEY = coalesce(nullif(IN_ROOMKEY, ''), r.ROOMKEY)
+          AND r.EXPORT = coalesce(nullif(IN_EXPORT_ONLY, 0), r.EXPORT)
           AND h.HOTELKEY = coalesce(nullif(IN_HOTELKEY, ''), h.HOTELKEY)
-          AND r.NORMALOCCUPANCY = IN_NORMALOCCUPANCY
+          AND r.NORMALOCCUPANCY = coalesce(nullif(IN_NORMALOCCUPANCY, 0), r.NORMALOCCUPANCY)
           AND r.TOCODE = IN_TOCODE
           AND h.TOCODE = IN_TOCODE
           AND (
@@ -718,8 +723,9 @@ BEGIN
           AND r.TOURBOCODE = coalesce(nullif(IN_ROOMCODE, ''), r.TOURBOCODE)
           AND r.TOURBOMEALCODE = coalesce(nullif(IN_TOURBOMEALCODE, ''), r.TOURBOMEALCODE)
           AND r.ROOMKEY = coalesce(nullif(IN_ROOMKEY, ''), r.ROOMKEY)
+          AND r.EXPORT = coalesce(nullif(IN_EXPORT_ONLY, 0), r.EXPORT)
           AND h.HOTELKEY = coalesce(nullif(IN_HOTELKEY, ''), h.HOTELKEY)
-          AND r.NORMALOCCUPANCY = IN_NORMALOCCUPANCY
+          AND r.NORMALOCCUPANCY = coalesce(nullif(IN_NORMALOCCUPANCY, 0), r.NORMALOCCUPANCY)
           AND r.TOCODE = IN_TOCODE
           AND h.TOCODE = IN_TOCODE
           AND (
@@ -757,10 +763,11 @@ BEGIN
     AND r.TOURBOCODE = coalesce(nullif(IN_ROOMCODE, ''), r.TOURBOCODE)
     AND r.TOURBOMEALCODE = coalesce(nullif(IN_TOURBOMEALCODE, ''), r.TOURBOMEALCODE)
     AND r.ROOMKEY = coalesce(nullif(IN_ROOMKEY, ''), r.ROOMKEY)
+    AND r.EXPORT = coalesce(nullif(IN_EXPORT_ONLY, 0), r.EXPORT)
     AND h.HOTELKEY = coalesce(nullif(IN_HOTELKEY, ''), h.HOTELKEY)
     AND r.TOCODE = IN_TOCODE
     AND h.TOCODE = IN_TOCODE
-    AND r.NORMALOCCUPANCY = IN_NORMALOCCUPANCY
+    AND r.NORMALOCCUPANCY = coalesce(nullif(IN_NORMALOCCUPANCY, 0), r.NORMALOCCUPANCY)
     AND (
       (
         IN_IGNORE_PRICE0 = 1
