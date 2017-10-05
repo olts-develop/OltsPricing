@@ -311,6 +311,7 @@ CREATE FUNCTION func_arrpriceav2 (
   ,IN_ARRKEY VARCHAR(20) DEFAULT ''
   ,IN_CURRENCY VARCHAR(3) DEFAULT 'CHF'
   ,IN_ARRLANG VARCHAR (3) DEFAULT 'DE'
+  ,IN_EXPORT_ONLY INTEGER DEFAULT 1
   )
 RETURNS TABLE (
   TOCODE VARCHAR(5)
@@ -354,6 +355,7 @@ BEGIN
         AND tooarrangement.ARRCODE = coalesce(nullif(IN_ARRCODE, ''), tooarrangement.ARRCODE)
         AND tooarrangement.ARRITEMCODE = coalesce(nullif(IN_ARRITEMCODE, ''), tooarrangement.ARRITEMCODE)
         AND tooarrangement.ARRKEY = coalesce(nullif(IN_ARRKEY, ''), tooarrangement.ARRKEY)
+        AND tooarrangement.EXPORT = coalesce(nullif(IN_EXPORT_ONLY, 0), tooarrangement.EXPORT)
         AND tooarrangement.ARRLANG = IN_ARRLANG
       )
     ,tmptable2(ARRKEY, NRADULTS, CHDDOB1, CHDDOB2, CHDDOB3, CHDDOB4, PRICEENDDATE, STATUS) AS (
@@ -402,6 +404,7 @@ BEGIN
     AND tooarrangement.ARRCODE = coalesce(nullif(IN_ARRCODE, ''), tooarrangement.ARRCODE)
     AND tooarrangement.ARRITEMCODE = coalesce(nullif(IN_ARRITEMCODE, ''), tooarrangement.ARRITEMCODE)
     AND tooarrangement.ARRKEY = coalesce(nullif(IN_ARRKEY, ''), tooarrangement.ARRKEY)
+    AND tooarrangement.EXPORT = coalesce(nullif(IN_EXPORT_ONLY, 0), tooarrangement.EXPORT)
     AND tooarrangement.ARRLANG = IN_ARRLANG
     AND coalesce(x.STATUS, 'XX') <> (
       CASE 
@@ -505,6 +508,7 @@ CREATE FUNCTION func_arrpriceav2_tbl (
   ,IN_ARRKEY VARCHAR(20) DEFAULT ''
   ,IN_CURRENCY VARCHAR(3) DEFAULT 'CHF'
   ,IN_ARRLANG VARCHAR (3) DEFAULT 'DE'
+  ,IN_EXPORT_ONLY INTEGER DEFAULT 1
   )
 RETURNS TABLE (
   TOCODE VARCHAR(5)
@@ -557,6 +561,7 @@ BEGIN
         AND tooarrangement.ARRCODE = coalesce(nullif(IN_ARRCODE, ''), tooarrangement.ARRCODE)
         AND tooarrangement.ARRITEMCODE = coalesce(nullif(IN_ARRITEMCODE, ''), tooarrangement.ARRITEMCODE)
         AND tooarrangement.ARRKEY = coalesce(nullif(IN_ARRKEY, ''), tooarrangement.ARRKEY)
+        AND tooarrangement.EXPORT = coalesce(nullif(IN_EXPORT_ONLY, 0), tooarrangement.EXPORT)
         AND tooarrangement.ARRLANG = IN_ARRLANG
       )
     ,tmptable2(ARRKEY, NRADULTS, CHDDOB1, CHDDOB2, CHDDOB3, CHDDOB4, PRICEENDDATE, STATUS) AS (
@@ -630,6 +635,7 @@ BEGIN
     AND tooarrangement.ARRCODE = coalesce(nullif(IN_ARRCODE, ''), tooarrangement.ARRCODE)
     AND tooarrangement.ARRITEMCODE = coalesce(nullif(IN_ARRITEMCODE, ''), tooarrangement.ARRITEMCODE)
     AND tooarrangement.ARRKEY = coalesce(nullif(IN_ARRKEY, ''), tooarrangement.ARRKEY)
+    AND tooarrangement.EXPORT = coalesce(nullif(IN_EXPORT_ONLY, 0), tooarrangement.EXPORT)
     AND tooarrangement.ARRLANG = IN_ARRLANG
     AND coalesce(x.STATUS, 'XX') <> (
       CASE 
