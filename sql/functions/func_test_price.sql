@@ -44,8 +44,20 @@ SET counter =
       ,TABLE (FUNC_ALL_PDP_PP_APP_TBL(p_tocode, p_itemkey, p_itemtype , p_startdate, p_returndate, p_adultnr, p_childbirthdate1, p_childbirthdate2, p_childbirthdate3, p_childbirthdate4, p_currency)) AS x
     WHERE
       X.TYPE1 in ('PDP','PP','APP')
+      AND p_itemtype='H'
       AND TMPDAY BETWEEN x.fromdate AND x.todate
-  ) ;
+  ) + (
+    SELECT
+      COUNT(DISTINCT TMPDAY)
+    FROM
+      TOOTMPDAY
+      ,TABLE (func_all_ot_tbl(p_tocode, p_itemkey, p_itemtype , p_startdate, p_returndate, p_adultnr, p_childbirthdate1, p_childbirthdate2, p_childbirthdate3, p_childbirthdate4, p_currency)) AS x
+    WHERE
+      X.TYPE1 in ('OT')
+      AND p_itemtype='M'
+      AND TMPDAY BETWEEN x.fromdate AND x.todate
+  )
+  ;
          
 IF ( counter = daysbetweenstartend AND counter > 0 ) THEN
   -- RETURN RTRIM(cast(counter as VARCHAR(10)));
