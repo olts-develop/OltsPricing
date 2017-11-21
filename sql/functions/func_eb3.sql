@@ -116,7 +116,7 @@ RETURN
             datefrom BETWEEN p_startdate
               AND returndateminus1
             AND dateto BETWEEN p_startdate
-              AND p_returndate - 1 DAY
+              AND returndateminus1
             )
           OR (
             p_startdate BETWEEN datefrom
@@ -168,7 +168,7 @@ RETURN
                 WHEN datefrom < p_startdate
                   THEN p_startdate
                 ELSE datefrom
-                END) BETWEEN fromday
+                END) +1 BETWEEN fromday
               AND today
             )
           )
@@ -178,6 +178,11 @@ END
 @
 
 -- 'TOUWAL27943'
+-- MOD:rb:2017-11-21
+-- There was a problem with the calculation of the earlybooking. The calculation 
+-- if the period of the price fits into the fromday/today range was off by one.
+-- Reported by AK (ACT).
+-- Replaced a "returndate -1 day" with the appropriate variable.
 -- -----------------------------------------------------------------------------
 -- EOF
 -- -----------------------------------------------------------------------------
