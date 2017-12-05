@@ -175,8 +175,5 @@ BEGIN
 
   -- Cursor left open for client application
   OPEN cursor1;
-END
-
-P1
-
+END P1
 @
