@@ -471,6 +471,7 @@ create table TOOALLOTMENTS
   ,itemtype varchar(1) with default ''
   ,deptime time
   ,arrtime time
+  ,arrtimedev integer with default 0
   ,carrier varchar(30) with default ''
   ,flightnr varchar(30) with default ''
   ,checkinminbeforedep integer with default 0
