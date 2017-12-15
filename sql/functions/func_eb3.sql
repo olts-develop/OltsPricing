@@ -85,8 +85,6 @@ RETURN
       ,p_itemtype
       ,p_currency
       )
-    AND datefrom <= p_startdate
-    AND dateto >= returndateminus1
     AND PERCENT = 0
     AND fromday <= daysbetweenstartend
     AND (
@@ -94,38 +92,32 @@ RETURN
         daysbeforedeparturefrom = 0
         AND daysbeforedepartureto = 0
         AND current date BETWEEN datebeforedeparturefrom
-          AND datebeforedepartureto
+        AND datebeforedepartureto
         )
       OR (
         -- ( daysbeforedeparturefrom <> 0 OR daysbeforedepartureto <> 0 )
         daysbeforedeparturefrom + daysbeforedepartureto > 0
         AND current date BETWEEN p_startdate - daysbeforedeparturefrom days
-          AND p_startdate - daysbeforedepartureto days
+        AND p_startdate - daysbeforedepartureto days
         )
       )
     AND (
       (
         (
           (
-            p_startdate BETWEEN datefrom
-              AND dateto
-            AND returndateminus1 BETWEEN datefrom
-              AND dateto
+            p_startdate BETWEEN datefrom AND dateto
+            AND returndateminus1 BETWEEN datefrom AND dateto
             )
           OR (
-            datefrom BETWEEN p_startdate
-              AND returndateminus1
-            AND dateto BETWEEN p_startdate
-              AND returndateminus1
+            datefrom BETWEEN p_startdate AND returndateminus1
+            AND dateto BETWEEN p_startdate AND returndateminus1
             )
           OR (
-            p_startdate BETWEEN datefrom
-              AND dateto
+            p_startdate BETWEEN datefrom AND dateto
             AND returndateminus1 > dateto
             )
           OR (
-            returndateminus1 BETWEEN datefrom
-              AND dateto
+            returndateminus1 BETWEEN datefrom AND dateto
             AND p_startdate < datefrom
             )
           )
@@ -158,18 +150,32 @@ RETURN
             AND fromday = 0
             AND today = 0
             )
+		OR (
+			foralldays = 0
+			AND startdaterelevant = 1
+			AND enddaterelevant = 0
+			AND DAYS(returndateminus1) - DAYS(p_startdate) + 1 BETWEEN fromday AND today
+			)
+		OR (
+			foralldays = 0
+			AND startdaterelevant = 0
+			AND enddaterelevant = 1
+			AND DAYS(returndateminus1) - DAYS(p_startdate) + 1 BETWEEN fromday AND today
+			)
           OR (
             foralldays = 0
             AND DAYS(CASE 
-                WHEN dateto > returndateminus1
-                  THEN returndateminus1
-                ELSE dateto
-                END) - DAYS(CASE 
-                WHEN datefrom < p_startdate
-                  THEN p_startdate
-                ELSE datefrom
-                END) +1 BETWEEN fromday
-              AND today
+					WHEN dateto > returndateminus1
+						THEN returndateminus1
+					ELSE dateto
+					END)
+				- DAYS(CASE 
+					WHEN datefrom < p_startdate
+						THEN p_startdate
+					ELSE datefrom
+                END)
+				+1
+				BETWEEN fromday AND today
             )
           )
 ;
