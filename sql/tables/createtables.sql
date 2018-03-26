@@ -843,6 +843,20 @@ create table TOOFLIGHTLEG
 )
 @
 
+drop table TOOFLIGHTLEGDAY @
+
+create table TOOFLIGHTLEGDAY
+(
+  flightkey varchar(20) with default ''
+  ,legkey varchar(20) with default ''
+  ,tocode varchar(5) with default ''
+  ,flightday date not null
+  ,legday date not null
+  ,pos integer with default 0
+  ,PRIMARY key(legkey, legday, tocode)
+)
+@
+
 -- -----------------------------------------------------------------------------
 -- EOF
 -- -----------------------------------------------------------------------------
