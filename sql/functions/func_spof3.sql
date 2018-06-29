@@ -28,10 +28,8 @@ RETURNS TABLE (
   ,P_SEQ VARCHAR(20)
   ,PRICETYPE VARCHAR(10)
   ) NOT DETERMINISTIC LANGUAGE SQL
-
 BEGIN
   ATOMIC
-
   DECLARE daysbetweenstartend INTEGER;
   DECLARE returndateminus1 DATE;
   DECLARE startdate_iso_dayofweek INTEGER;
@@ -40,7 +38,6 @@ BEGIN
   --  DECLARE childbirthdate3 DATE;
   --  DECLARE childbirthdate4 DATE;
   DECLARE nrchildren INTEGER;
-
   SET daysbetweenstartend = (DAYS(p_returndate) - DAYS(p_startdate));
   SET returndateminus1 = p_returndate - 1 DAY;
   SET startdate_iso_dayofweek = DAYOFWEEK_ISO(p_startdate);
@@ -49,7 +46,6 @@ BEGIN
   --  SET childbirthdate3 = p_childbirthdate3 ;
   --  SET childbirthdate4 = p_childbirthdate4 ;
   SET nrchildren = 0;
-
   IF p_childbirthdate1 IS NOT NULL THEN
     SET nrchildren = nrchildren + 1;
   END IF ;
@@ -78,7 +74,7 @@ BEGIN
       WHERE k < 1000
         AND k < daysbetweenstartend
       )
-    ,tmpspecial(paynights, type, revolvinggroup, addamount, descid, daystring, days, id, childchildnr) AS (
+    ,tmpspecial(paynights, type, revolvinggroup, addamount, descid, daystring, days, id, childchildnr, startoffset) AS (
       -- Finde den besten passenden Special für dieses Datum und die angegebene Duration.
       -- PAYNIGHTS TYPE      REVOLVINGGROUP ADDAMOUNT DESCID DAYSTRING DAYS ID
       -- --------- --------- -------------- --------- ------ --------- ---- --
@@ -93,6 +89,7 @@ BEGIN
         ,days
         ,id
         ,childchildnr
+        ,startoffset        
       FROM (
         SELECT ROW_NUMBER() OVER (
             PARTITION BY so.childchildnr ORDER BY so.days DESC
@@ -106,6 +103,7 @@ BEGIN
           ,so.days
           ,so.id
           ,so.childchildnr
+          ,(CASE WHEN so.startdaterelevant = 1 AND p_startdate < so.datefrom THEN DAYS(so.datefrom) - DAYS(p_startdate) ELSE 0 END ) as startoffset
         FROM toospecialoffers so
         WHERE (
             so.itemkey
@@ -127,13 +125,15 @@ BEGIN
               AND so.enddaterelevant = 1
               )
             OR (
-              p_startdate >= so.datefrom
+              so.datefrom >= p_startdate
               AND p_startdate <= so.dateto
+              AND p_returndate > so.datefrom
               AND so.startdaterelevant = 1
               AND so.enddaterelevant = 0
               )
             OR (
-              so.datefrom <= p_startdate
+              so.datefrom >= p_startdate
+              AND p_returndate > so.datefrom
               AND so.datefrom <= (p_startdate + (so.days - 1) DAYS)
               AND so.dateto >= p_startdate
               AND so.dateto >= (p_startdate + (so.days - 1) DAYS)
@@ -244,7 +244,7 @@ BEGIN
         ) AS T
       WHERE rownumb = 1
       )
-    ,tmpsplitlist(days, daystart, paynights, type, revolvinggroup, addamount, descid, id, childchildnr) AS (
+    ,tmpsplitlist(days, daystart, paynights, type, revolvinggroup, addamount, descid, id, childchildnr, startoffset) AS (
       -- Wenn ein Special 8 Days mit dem DayString 4,4 gefunden wird, geht es hier
       -- darum aus der einen Regel 8 eine Liste mit zwei Zeilen zu machen
       -- Vorher:
@@ -269,6 +269,7 @@ BEGIN
         ,descid
         ,id
         ,childchildnr
+        ,startoffset
       FROM tmpspecial
         ,TABLE (elements2(daystring, ',')) AS t(elem, INDEX)
       )
@@ -284,8 +285,8 @@ BEGIN
       -- 2016-05-17 2016-05-20    4        4         3 StartDays              6      0.00      7 41
       -- So wissen wir wann der erste Tag des Specials ist und wann der letzte, damit die Tage
       -- dazwischen mit den Tagespreisen später verknüpft werden können.
-      SELECT p_startdate + daystart DAYS AS startdate
-        ,p_startdate + daystart DAYS + days DAYS - 1 DAY AS enddate
+      SELECT p_startdate + daystart DAYS + startoffset DAYS AS startdate
+        ,p_startdate + daystart DAYS + days DAYS - 1 DAY + startoffset DAYS AS enddate
         ,days
         ,daystart
         ,paynights
@@ -507,7 +508,6 @@ BEGIN
         ,childchildnr
       FROM tmprulelist3
       )
-
 SELECT tmppricelist3.seqdate
   ,coalesce(tmppricelist3.special, 0)
   ,coalesce(tmppricelist3.addamount, 0)
