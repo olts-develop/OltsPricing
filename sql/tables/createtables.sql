@@ -839,6 +839,8 @@ create table TOOFLIGHTLEG
   ,feeder integer with default 0
   ,pos integer with default 0
   ,export integer with default 0
+  ,baggagetext varchar(50) with default ''
+  ,baggagecode varchar(20) with default ''
   ,PRIMARY key(legkey, tocode)
 )
 @
