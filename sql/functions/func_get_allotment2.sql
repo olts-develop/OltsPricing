@@ -29,25 +29,24 @@ BEGIN ATOMIC
 DECLARE av INTEGER ;
 DECLARE rq INTEGER ;
 DECLARE fs INTEGER ;
+DECLARE max_min_stay_num INTEGER ;
 DECLARE counter INTEGER ;
 DECLARE daysbetweenstartend INTEGER ;
-DECLARE enddateminusone DATE ;
 
 IF ( p_startdate IS NULL or p_returndate IS NULL ) THEN
   RETURN 'XX';
 END IF;
 
 SET daysbetweenstartend = ( DAYS(p_returndate) - DAYS(p_startdate) );
-SET enddateminusone = p_returndate - 1 DAY;
 
 IF ( p_currentdate < CURRENT DATE ) THEN
   RETURN 'XX';
 END IF;
 
-SET (counter, av, rq, fs) =
+SET (counter, av, rq, fs, max_min_stay_num) =
 (
 SELECT
-  COUNT(id), MIN(av), MIN(rq), MIN(fs)
+  COUNT(id), MIN(av), MIN(rq), MIN(fs), MAX(days(minstay)-days(allotdate)+1)
 FROM
   tooallotments
 WHERE
@@ -55,11 +54,14 @@ WHERE
   AND allotdate >= p_startdate
   AND allotdate < p_returndate
   AND rel > p_currentdate
-  AND minstay < enddateminusone
 )
 ;
-         
+
 IF ( counter < daysbetweenstartend ) THEN
+  RETURN 'XX';
+ELSEIF ( av > 0 AND max_min_stay_num > daysbetweenstartend AND rq > 0) THEN
+  RETURN 'RQ'; -- Request
+ELSEIF ( av > 0 AND max_min_stay_num > daysbetweenstartend AND rq = 0) THEN
   RETURN 'XX';
 ELSEIF ( av > 0 AND av <= 9999 ) THEN
   RETURN RTRIM(cast(AV as VARCHAR(4))); -- 1, 2, 3, etc. if allotment
