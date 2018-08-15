@@ -176,8 +176,8 @@ BEGIN
           OR (
             foralldays = 0
             AND DAYS(CASE 
-                WHEN dateto > returndateminus1
-                  THEN returndateminus1
+                WHEN dateto > p_returndate
+                  THEN p_returndate
                 ELSE dateto
                 END) - DAYS(CASE 
                 WHEN datefrom < p_startdate
