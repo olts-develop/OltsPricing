@@ -119,23 +119,21 @@ BEGIN
           AND so.childchildnr <= nrchildren
           AND (
             (
-              p_startdate + (so.days - 1) DAYS >= so.datefrom
-              AND (p_startdate + (so.days - 1) DAYS) <= so.dateto
+              so.datefrom <= p_startdate + (so.days - 1) DAYS
+              AND so.dateto >= (p_startdate + (so.days - 1) DAYS)
               AND so.startdaterelevant = 0
               AND so.enddaterelevant = 1
               )
             OR (
-              so.datefrom >= p_startdate
-              AND p_startdate <= so.dateto
-              AND p_returndate > so.datefrom
+              so.datefrom <= p_startdate
+              AND so.dateto >= p_startdate
               AND so.startdaterelevant = 1
               AND so.enddaterelevant = 0
               )
             OR (
-              so.datefrom >= p_startdate
-              AND p_returndate > so.datefrom
-              AND so.datefrom <= (p_startdate + (so.days - 1) DAYS)
+              so.datefrom <= p_startdate
               AND so.dateto >= p_startdate
+              AND so.datefrom <= (p_startdate + (so.days - 1) DAYS)
               AND so.dateto >= (p_startdate + (so.days - 1) DAYS)
               AND so.startdaterelevant = 1
               AND so.enddaterelevant = 1
