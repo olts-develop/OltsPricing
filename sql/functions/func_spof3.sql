@@ -646,18 +646,14 @@ END
 -- -----------------------------------------------------------------------------
 
 -- BSP2: MRU-LUXGAU-D2-HB: Ok
--- SELECT
---    X.*
---   ,TOODESCRIPTIONS.DESCDE
--- FROM
---   TABLE (func_spof3_tbl('IMHO', 'TUIXYA192344', CAST ('2016-10-03' AS DATE), CAST ('2016-10-12' AS DATE), CURRENT DATE, 2)) AS X
---   ,TOODESCRIPTIONS
--- WHERE
---   X.DESCID = TOODESCRIPTIONS.DESCID
---   AND TOODESCRIPTIONS.TOCODE = 'IMHO'
---   AND TOODESCRIPTIONS.ROOMKEY = 'TUIXYA192344'
+-- SELECT X.*
+-- ..,TOODESCRIPTIONS.DESCDE
+-- FROM TABLE (func_spof3_tbl('', '5126', 'H', CAST('2020-11-07' AS DATE), CAST('2020-11-16' AS DATE), CURRENT DATE, 2, CAST(NULL AS DATE), CAST(NULL AS DATE), CAST(NULL AS DATE), CAST(NULL AS DATE), 'EUR')) AS X
+-- ..,TOODESCRIPTIONS
+-- WHERE X.DESCID = TOODESCRIPTIONS.DESCID
+-- ..AND TOODESCRIPTIONS.TOCODE = ''
+-- ..AND TOODESCRIPTIONS.ITEMKEY = '5126'
 --
--- SEQDATE     SPECIAL  ADDAMOUNT  DESCID  CHILDCHILDNR  P_SEQ  DESCDE
--- ----------  -------  ---------  ------  ------------  -----  -------------------------------------------------------------------------------
--- 2016-10-08  -348.00       0.00       2             0   NULL  1 Gratisnacht pro Person (oblig. Halbpension berücksichtigt) vom 1.11-31.10.14
--- 2016-10-09  -348.00       0.00       2             0   NULL  1 Gratisnacht pro Person (oblig. Halbpension berücksichtigt) vom 1.11-31.10.14
+-- | SEQDATE    | SPECIAL | ADDAMOUNT | DESCID | CHILDCHILDNR | P_SEQ    | PRICETYPE | DESCDE                  |
+-- |------------|---------|-----------|--------|--------------|----------|-----------|-------------------------|
+-- | 2020-11-15 | -134.00 | 0.00      | 3      | 0            | 16996141 |           | Spar-Tipp: Gratis Nacht |
