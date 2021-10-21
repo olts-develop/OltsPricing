@@ -815,6 +815,8 @@ create table TOOFLIGHT
   ,passive integer with default 0
   ,passivefromdate date
   ,multileg integer with default 0
+  ,depgmtoffset double with default 0
+  ,arrgmtoffset double with default 0
   ,PRIMARY key(flightkey, tocode)
 )
 @
@@ -841,6 +843,8 @@ create table TOOFLIGHTLEG
   ,export integer with default 0
   ,baggagetext varchar(50) with default ''
   ,baggagecode varchar(20) with default ''
+  ,depgmtoffset double with default 0
+  ,arrgmtoffset double with default 0
   ,PRIMARY key(legkey, tocode)
 )
 @
