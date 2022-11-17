@@ -206,6 +206,7 @@ SELECT
     ,max(coalesce(x.STATUS, 'XX')) AS STATUS
     ,max((case when length(TYPE1)>=2 and substr(TYPE1,1,2)='SO' then 'SO'  else '' end)) as SO
     ,max((case when length(TYPE1)>=2 and substr(TYPE1,1,2)='EB' then 'EB'  else '' end)) as EB
+	,max((case when length(TYPE1)>=2 and substr(TYPE1,1,2)='OT' then 'OT'  else '' end)) as OT
   FROM 
     TABLE (func_hotelpriceav_tbl(IN_TOCODE, IN_DESTINATIONCODE, IN_PRICEDATEFROM, IN_PRICEDATETO, IN_NORMALOCCUPANCY, IN_HOTELCODE, IN_ROOMCODE, IN_TOURBOMEALCODE, IN_CHDDOB1, IN_CHDDOB2, IN_CHDDOB3, IN_CHDDOB4, IN_IGNORE_XX, IN_IGNORE_RQ, IN_IGNORE_PRICE0, IN_CURRENTDATE, IN_ROOMKEY, IN_HOTELKEY, IN_CURRENCY, IN_EXPORT_ONLY, IN_COUNTRYCODE)) AS x
     INNER JOIN TOOROOMS r ON r.ROOMKEY = x.ROOMKEY
