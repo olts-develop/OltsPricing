@@ -138,17 +138,15 @@ P1:
 BEGIN
   DECLARE cursor1 CURSOR WITH RETURN
   FOR
-SELECT
-	r.TOCODE AS TOCODE
+  SELECT r.TOCODE AS TOCODE
     ,r.ROOMKEY AS ROOMKEY
-    ,max(h.HOTELKEY) as HOTELKEY
+    ,max(h.HOTELKEY) AS HOTELKEY
     ,max(h.DESTINATIONCODE) AS DESTINATIONCODE
     ,max(h.HOTELCODE) AS HOTELCODE
     ,max(r.TOURBOCODE) AS ROOMCODE
     ,max(r.TOURBOMEALCODE) AS MEALCODE
     ,max(h.CATEGORY) AS CATEGORY
-    ,max(
-      CASE upper(IN_LANGCODE)
+    ,max(CASE upper(IN_LANGCODE)
         WHEN 'EN'
           THEN h.HOTELNAMEEN
         WHEN 'FR'
@@ -156,15 +154,13 @@ SELECT
         WHEN 'IT'
           THEN h.HOTELNAMEIT
         ELSE h.HOTELNAMEDE
-        END
-      ) AS HOTELNAME
+        END) AS HOTELNAME
     ,max(h.ADDRESS1) AS ADDRESS1
     ,max(h.ADDRESS2) AS ADDRESS2
-    ,max(h.CITY) asCITY
+    ,max(h.CITY) AS CITY
     ,max(h.COUNTRY) AS COUNTRY
     ,max(h.COUNTRYISOCODE) AS COUNTRYCODE
-    ,max(
-      CASE upper(IN_LANGCODE)
+    ,max(CASE upper(IN_LANGCODE)
         WHEN 'EN'
           THEN r.ROOMTYPEEN
         WHEN 'FR'
@@ -172,10 +168,8 @@ SELECT
         WHEN 'IT'
           THEN r.ROOMTYPEIT
         ELSE r.ROOMTYPEDE
-        END
-      ) AS ROOMTYPE
-    ,max(
-      CASE upper(IN_LANGCODE)
+        END) AS ROOMTYPE
+    ,max(CASE upper(IN_LANGCODE)
         WHEN 'EN'
           THEN r.DESCRIPTIONEN
         WHEN 'FR'
@@ -183,10 +177,8 @@ SELECT
         WHEN 'IT'
           THEN r.DESCRIPTIONIT
         ELSE r.DESCRIPTIONDE
-        END
-      ) AS DESCRIPTION
-    ,max(
-      CASE upper(IN_LANGCODE)
+        END) AS DESCRIPTION
+    ,max(CASE upper(IN_LANGCODE)
         WHEN 'EN'
           THEN r.MEALDESCRIPTIONEN
         WHEN 'FR'
@@ -194,35 +186,112 @@ SELECT
         WHEN 'IT'
           THEN r.MEALDESCRIPTIONIT
         ELSE r.MEALDESCRIPTIONDE
-        END
-      ) AS MEALDESCRIPTION
+        END) AS MEALDESCRIPTION
     ,max(r.MAXADULTS) AS MAXADULTS
     ,max(r.EXTRABEDCHILDREN) AS EXTRABEDCHILDREN
     ,max(r.NORMALOCCUPANCY) AS NORMALOCCUPANCY
     ,max(r.MINIMALOCCUPANCY) AS MINIMALOCCUPANCY
     ,max(r.MAXIMALOCCUPANCY) AS MAXIMALOCCUPANCY
     ,max(h.GIATAID) AS GIATAID
-    ,coalesce(sum(x.TOTAL),0) AS TOTAL
+    ,coalesce(sum(x.TOTAL), 0) AS TOTAL
     ,max(coalesce(x.STATUS, 'XX')) AS STATUS
-    ,max((case when length(TYPE1)>=2 and substr(TYPE1,1,2)='SO' then 'SO'  else '' end)) as SO
-    ,max((case when length(TYPE1)>=2 and substr(TYPE1,1,2)='EB' then 'EB'  else '' end)) as EB
-	,max((case when length(TYPE1)>=2 and substr(TYPE1,1,2)='OT' then 'OT'  else '' end)) as OT
-  FROM 
-    TABLE (func_hotelpriceav_tbl(IN_TOCODE, IN_DESTINATIONCODE, IN_PRICEDATEFROM, IN_PRICEDATETO, IN_NORMALOCCUPANCY, IN_HOTELCODE, IN_ROOMCODE, IN_TOURBOMEALCODE, IN_CHDDOB1, IN_CHDDOB2, IN_CHDDOB3, IN_CHDDOB4, IN_IGNORE_XX, IN_IGNORE_RQ, IN_IGNORE_PRICE0, IN_CURRENTDATE, IN_ROOMKEY, IN_HOTELKEY, IN_CURRENCY, IN_EXPORT_ONLY, IN_COUNTRYCODE)) AS x
-    INNER JOIN TOOROOMS r ON r.ROOMKEY = x.ROOMKEY
-    INNER JOIN TOOHOTEL h ON h.HOTELKEY = r.HOTELKEY
-    WHERE r.TOCODE = IN_TOCODE
-      AND h.TOCODE = IN_TOCODE
-      AND r.ROOMKEY = x.ROOMKEY
-      AND h.HOTELKEY = r.HOTELKEY
-      AND x.ROOMKEY = r.ROOMKEY
-  GROUP BY
-  	r.ROOMKEY
-  	,r.TOCODE;
+    ,max((
+        CASE 
+          WHEN length(TYPE1) >= 2
+            AND substr(TYPE1, 1, 2) = 'SO'
+            THEN 'SO'
+          ELSE ''
+          END
+        )) AS SO
+    ,max((
+        CASE 
+          WHEN length(TYPE1) >= 2
+            AND substr(TYPE1, 1, 2) = 'EB'
+            THEN 'EB'
+          ELSE ''
+          END
+        )) AS EB
+    ,max((
+        CASE 
+          WHEN length(TYPE1) >= 2
+            AND substr(TYPE1, 1, 2) = 'OT'
+            THEN 'OT'
+          ELSE ''
+          END
+        )) AS OT
+    ,trim(BOTH '|' FROM listagg((
+          CASE 
+            WHEN length(TYPE1) >= 2
+              AND substr(TYPE1, 1, 2) = 'SO'
+              THEN (
+                  CASE IN_LANGCODE
+                    WHEN 'EN'
+                      THEN DESCEN
+                    WHEN 'FR'
+                      THEN DESCFR
+                    WHEN 'IT'
+                      THEN DESCIT
+                    ELSE DESCDE
+                    END
+                  )
+            ELSE ''
+            END
+          ), '|')) AS SODESC
+    ,trim(BOTH '|' FROM listagg((
+          CASE 
+            WHEN length(TYPE1) >= 2
+              AND substr(TYPE1, 1, 2) = 'EB'
+              THEN (
+                  CASE IN_LANGCODE
+                    WHEN 'EN'
+                      THEN DESCEN
+                    WHEN 'FR'
+                      THEN DESCFR
+                    WHEN 'IT'
+                      THEN DESCIT
+                    ELSE DESCDE
+                    END
+                  )
+            ELSE ''
+            END
+          ), '|')) AS EBDESC
+    ,trim(BOTH '|' FROM listagg((
+          CASE 
+            WHEN length(TYPE1) >= 2
+              AND substr(TYPE1, 1, 2) = 'OT'
+              THEN (
+                  CASE IN_LANGCODE
+                    WHEN 'EN'
+                      THEN DESCEN
+                    WHEN 'FR'
+                      THEN DESCFR
+                    WHEN 'IT'
+                      THEN DESCIT
+                    ELSE DESCDE
+                    END
+                  )
+            ELSE ''
+            END
+          ), '|')) AS OTDESC
+  FROM TABLE (func_hotelpriceav_tbl(IN_TOCODE, IN_DESTINATIONCODE, IN_PRICEDATEFROM, IN_PRICEDATETO, IN_NORMALOCCUPANCY, IN_HOTELCODE, IN_ROOMCODE, IN_TOURBOMEALCODE, IN_CHDDOB1, IN_CHDDOB2, IN_CHDDOB3, IN_CHDDOB4, IN_IGNORE_XX, IN_IGNORE_RQ, IN_IGNORE_PRICE0, IN_CURRENTDATE, IN_ROOMKEY, IN_HOTELKEY, IN_CURRENCY, IN_EXPORT_ONLY, IN_COUNTRYCODE)) AS x
+  INNER JOIN TOOROOMS r ON r.ROOMKEY = x.ROOMKEY
+  INNER JOIN TOOHOTEL h ON h.HOTELKEY = r.HOTELKEY
+  LEFT OUTER JOIN TOODESCRIPTIONS ON TOODESCRIPTIONS.ITEMKEY = x.ROOMKEY
+    AND TOODESCRIPTIONS.ITEMTYPE = 'H'
+    AND TOODESCRIPTIONS.DESCID = x.DESCID
+  WHERE r.TOCODE = IN_TOCODE
+    AND h.TOCODE = IN_TOCODE
+    AND r.ROOMKEY = x.ROOMKEY
+    AND h.HOTELKEY = r.HOTELKEY
+    AND x.ROOMKEY = r.ROOMKEY
+  GROUP BY r.ROOMKEY
+    ,r.TOCODE;
 
   -- Cursor left open for client application
   OPEN cursor1;
-END P1
+END
+
+P1
 @
 
 CREATE
