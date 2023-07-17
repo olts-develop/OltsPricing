@@ -1,152 +1,155 @@
-CREATE
-	OR REPLACE PROCEDURE SP_SALESFORCE_CUSTOMER (IN FILTER_MODDATETIME VARCHAR(26) DEFAULT '') DYNAMIC RESULT SETS 1
+CREATE OR REPLACE PROCEDURE SP_SALESFORCE_CUSTOMER
+    (
+    IN FILTER_MODDATETIME VARCHAR(26) DEFAULT ''
+    ) DYNAMIC
+    RESULT SETS 1 P1:
+        BEGIN
+            DECLARE cursor1 CURSOR WITH
+            RETURN FOR
+            SELECT
+                SALESFORCECUSTOMER.PRIMARYKEY           ,
+                SALESFORCECUSTOMER.SALUTATION           ,
+                SALESFORCECUSTOMER.TITLE                ,
+                SALESFORCECUSTOMER.FIRSTNAME            ,
+                SALESFORCECUSTOMER.LASTNAME             ,
+                SALESFORCECUSTOMER.STREET1              ,
+                SALESFORCECUSTOMER.STREET2              ,
+                SALESFORCECUSTOMER.COUNTRYCODE          ,
+                SALESFORCECUSTOMER.POSTALCODE           ,
+                SALESFORCECUSTOMER.CITY                 ,
+                SALESFORCECUSTOMER.PHONE                ,
+                SALESFORCECUSTOMER.PHONEBUSINESS        ,
+                SALESFORCECUSTOMER.MOBILE               ,
+                SALESFORCECUSTOMER.CUSTOMERNR           ,
+                SALESFORCECUSTOMER.BIRTHDATE            ,
+                SALESFORCECUSTOMER.MAIL1                ,
+                SALESFORCECUSTOMER.MAIL2                ,
+                SALESFORCECUSTOMER.LOCKED               ,
+                SALESFORCECUSTOMER.LANGUAGE             ,
+                SALESFORCECUSTOMER.MAILING              ,
+                SALESFORCECUSTOMER.TYPE                 ,
+                SALESFORCECUSTOMER.NROFFILES            ,
+                SALESFORCECUSTOMER.NROFPRINTEDFILES     ,
+                SALESFORCECUSTOMER.NONSMOKER            ,
+                SALESFORCECUSTOMER.SMOKER               ,
+                SALESFORCECUSTOMER.AISLE                ,
+                SALESFORCECUSTOMER.WINDOW               ,
+                SALESFORCECUSTOMER.SPECIALMEALCODE      ,
+                SALESFORCECUSTOMER.SPECIALSEATCODE      ,
+                SALESFORCECUSTOMER.TRAINHALBTAX         ,
+                SALESFORCECUSTOMER.TRAINHALBTAXEXPIRY   ,
+                SALESFORCECUSTOMER.TRAINGA              ,
+                SALESFORCECUSTOMER.TRAINGAEXPIRY        ,
+                SALESFORCECUSTOMER.TRAINNRYEARS         ,
+                SALESFORCECUSTOMER.TRAINCLASS           ,
+                SALESFORCECUSTOMER.PASSPORTNATIONALITY  ,
+                SALESFORCECUSTOMER.PASSPORTBIRTHTOWN    ,
+                SALESFORCECUSTOMER.PASSPORTNUMBER       ,
+                SALESFORCECUSTOMER.PASSPORTVALIDUNTIL   ,
+                SALESFORCECUSTOMER.PASSPORTPLACEOFISSUE ,
+                SALESFORCECUSTOMER.PASSPORTISSUEDATE    ,
+                SALESFORCECUSTOMER.JOB                  ,
+                SALESFORCECUSTOMER.LAST10DESTINATIONS   ,
+                SALESFORCECUSTOMER.MODDATETIME          ,
+                SALESFORCECUSTOMER.MD5                  ,
+                SALESFORCECUSTOMER.ACTION               ,
+                SALESFORCECUSTOMER.LOCKEDREASON
+            FROM
+                SALESFORCECUSTOMER SALESFORCECUSTOMER
+            WHERE
+                SALESFORCECUSTOMER.MODDATETIME > cast(coalesce(NULLIF(FILTER_MODDATETIME, ''), current timestamp - 50 years) as TIMESTAMP)
+            ORDER BY
+                SALESFORCECUSTOMER.MODDATETIME ASC;
+            -- Cursor left open for client application
+            OPEN cursor1;
+        END
+    P1 @
 
-P1:
+CREATE OR REPLACE PROCEDURE SP_SALESFORCE_DOSSIER
+    (
+    IN FILTER_MODDATETIME VARCHAR(26) DEFAULT ''
+    ) DYNAMIC
+    RESULT SETS 1 P1:
+        BEGIN
+            DECLARE cursor1 CURSOR WITH
+            RETURN FOR
+            SELECT
+                SALESFORCEDOSSIER.PRIMARYKEY               ,
+                SALESFORCEDOSSIER.CUSTOMERFK               ,
+                SALESFORCEDOSSIER.CUSTOMERNR               ,
+                SALESFORCEDOSSIER.DOSSIERNR                ,
+                SALESFORCEDOSSIER.REVISIONNR               ,
+                SALESFORCEDOSSIER.DESTINATIONCODE          ,
+                SALESFORCEDOSSIER.TURNOVERNETTO            ,
+                SALESFORCEDOSSIER.DEPDATE                  ,
+                SALESFORCEDOSSIER.CREATEDATE               ,
+                SALESFORCEDOSSIER.DOSSIERSTATE             ,
+                SALESFORCEDOSSIER.NRPAX                    ,
+                SALESFORCEDOSSIER.RETURNDATE               ,
+                SALESFORCEDOSSIER.NROFFERSPRINTED          ,
+                SALESFORCEDOSSIER.NRINVOICESPRINTED        ,
+                SALESFORCEDOSSIER.NRCREDITNOTESPRINTED     ,
+                SALESFORCEDOSSIER.FIRSTOFFERPRINTDATE      ,
+                SALESFORCEDOSSIER.LASTOFFERPRINTDATE       ,
+                SALESFORCEDOSSIER.FIRSTINVOICEPRINTDATE    ,
+                SALESFORCEDOSSIER.LASTINVOICEPRINTDATE     ,
+                SALESFORCEDOSSIER.FIRSTCREDITNOTEPRINTDATE ,
+                SALESFORCEDOSSIER.LASTCREDITNOTEPRINTDATE  ,
+                SALESFORCEDOSSIER.MODDATETIME              ,
+                SALESFORCEDOSSIER.MD5                      ,
+                SALESFORCEDOSSIER.ACTION                   ,
+                SALESFORCEDOSSIER.TURNOVERBRUTTO           ,
+                SALESFORCEDOSSIER.CODE1                    ,
+                SALESFORCEDOSSIER.CODE2                    ,
+                SALESFORCEDOSSIER.CODE3                    ,
+                SALESFORCEDOSSIER.CODE4                    ,
+                SALESFORCEDOSSIER.SCORE                    ,
+                SALESFORCEDOSSIER.TITLE                    ,
+                SALESFORCEDOSSIER.TITLECODE                ,
+                SALESFORCEDOSSIER.OWNERCODE                ,
+                SALESFORCEDOSSIER.OWNERNAME
+            FROM
+                SALESFORCEDOSSIER SALESFORCEDOSSIER
+            WHERE
+                SALESFORCEDOSSIER.MODDATETIME > cast(coalesce(NULLIF(FILTER_MODDATETIME, ''), current timestamp - 50 years) as TIMESTAMP)
+            ORDER BY
+                SALESFORCEDOSSIER.MODDATETIME ASC;
+            -- Cursor left open for client application
+            OPEN cursor1;
+        END
+    P1 @
 
-BEGIN
-	DECLARE cursor1 CURSOR WITH RETURN
-	FOR
-	SELECT SALESFORCECUSTOMER.PRIMARYKEY
-		,SALESFORCECUSTOMER.SALUTATION
-		,SALESFORCECUSTOMER.TITLE
-		,SALESFORCECUSTOMER.FIRSTNAME
-		,SALESFORCECUSTOMER.LASTNAME
-		,SALESFORCECUSTOMER.STREET1
-		,SALESFORCECUSTOMER.STREET2
-		,SALESFORCECUSTOMER.COUNTRYCODE
-		,SALESFORCECUSTOMER.POSTALCODE
-		,SALESFORCECUSTOMER.CITY
-		,SALESFORCECUSTOMER.PHONE
-		,SALESFORCECUSTOMER.PHONEBUSINESS
-		,SALESFORCECUSTOMER.MOBILE
-		,SALESFORCECUSTOMER.CUSTOMERNR
-		,SALESFORCECUSTOMER.BIRTHDATE
-		,SALESFORCECUSTOMER.MAIL1
-		,SALESFORCECUSTOMER.MAIL2
-		,SALESFORCECUSTOMER.LOCKED
-		,SALESFORCECUSTOMER.LANGUAGE
-		,SALESFORCECUSTOMER.MAILING
-		,SALESFORCECUSTOMER.TYPE
-		,SALESFORCECUSTOMER.NROFFILES
-		,SALESFORCECUSTOMER.NROFPRINTEDFILES
-		,SALESFORCECUSTOMER.NONSMOKER
-		,SALESFORCECUSTOMER.SMOKER
-		,SALESFORCECUSTOMER.AISLE
-		,SALESFORCECUSTOMER.WINDOW
-		,SALESFORCECUSTOMER.SPECIALMEALCODE
-		,SALESFORCECUSTOMER.SPECIALSEATCODE
-		,SALESFORCECUSTOMER.TRAINHALBTAX
-		,SALESFORCECUSTOMER.TRAINHALBTAXEXPIRY
-		,SALESFORCECUSTOMER.TRAINGA
-		,SALESFORCECUSTOMER.TRAINGAEXPIRY
-		,SALESFORCECUSTOMER.TRAINNRYEARS
-		,SALESFORCECUSTOMER.TRAINCLASS
-		,SALESFORCECUSTOMER.PASSPORTNATIONALITY
-		,SALESFORCECUSTOMER.PASSPORTBIRTHTOWN
-		,SALESFORCECUSTOMER.PASSPORTNUMBER
-		,SALESFORCECUSTOMER.PASSPORTVALIDUNTIL
-		,SALESFORCECUSTOMER.PASSPORTPLACEOFISSUE
-		,SALESFORCECUSTOMER.PASSPORTISSUEDATE
-		,SALESFORCECUSTOMER.JOB
-		,SALESFORCECUSTOMER.LAST10DESTINATIONS
-		,SALESFORCECUSTOMER.MODDATETIME
-		,SALESFORCECUSTOMER.MD5
-		,SALESFORCECUSTOMER.ACTION
-		,SALESFORCECUSTOMER.LOCKEDREASON
-	FROM SALESFORCECUSTOMER SALESFORCECUSTOMER
-	WHERE SALESFORCECUSTOMER.MODDATETIME > cast(coalesce(NULLIF(FILTER_MODDATETIME, ''), current timestamp - 50 years) as TIMESTAMP)
-	ORDER BY SALESFORCECUSTOMER.MODDATETIME ASC;
-
-	-- Cursor left open for client application
-	OPEN cursor1;
-END
-
-P1
-@
-
-CREATE
-	OR REPLACE PROCEDURE SP_SALESFORCE_DOSSIER (IN FILTER_MODDATETIME VARCHAR(26) DEFAULT '') DYNAMIC RESULT SETS 1
-
-P1:
-
-BEGIN
-	DECLARE cursor1 CURSOR WITH RETURN
-	FOR
-	SELECT SALESFORCEDOSSIER.PRIMARYKEY
-		,SALESFORCEDOSSIER.CUSTOMERFK
-		,SALESFORCEDOSSIER.CUSTOMERNR
-		,SALESFORCEDOSSIER.DOSSIERNR
-		,SALESFORCEDOSSIER.REVISIONNR
-		,SALESFORCEDOSSIER.DESTINATIONCODE
-		,SALESFORCEDOSSIER.TURNOVERNETTO
-		,SALESFORCEDOSSIER.DEPDATE
-		,SALESFORCEDOSSIER.CREATEDATE
-		,SALESFORCEDOSSIER.DOSSIERSTATE
-		,SALESFORCEDOSSIER.NRPAX
-		,SALESFORCEDOSSIER.RETURNDATE
-		,SALESFORCEDOSSIER.NROFFERSPRINTED
-		,SALESFORCEDOSSIER.NRINVOICESPRINTED
-		,SALESFORCEDOSSIER.NRCREDITNOTESPRINTED
-		,SALESFORCEDOSSIER.FIRSTOFFERPRINTDATE
-		,SALESFORCEDOSSIER.LASTOFFERPRINTDATE
-		,SALESFORCEDOSSIER.FIRSTINVOICEPRINTDATE
-		,SALESFORCEDOSSIER.LASTINVOICEPRINTDATE
-		,SALESFORCEDOSSIER.FIRSTCREDITNOTEPRINTDATE
-		,SALESFORCEDOSSIER.LASTCREDITNOTEPRINTDATE
-		,SALESFORCEDOSSIER.MODDATETIME
-		,SALESFORCEDOSSIER.MD5
-		,SALESFORCEDOSSIER.ACTION
-		,SALESFORCEDOSSIER.TURNOVERBRUTTO
-		,SALESFORCEDOSSIER.CODE1
-		,SALESFORCEDOSSIER.CODE2
-		,SALESFORCEDOSSIER.CODE3
-		,SALESFORCEDOSSIER.CODE4
-		,SALESFORCEDOSSIER.SCORE
-		,SALESFORCEDOSSIER.TITLE
-		,SALESFORCEDOSSIER.TITLECODE
-		,SALESFORCEDOSSIER.OWNERCODE
-		,SALESFORCEDOSSIER.OWNERNAME
-	FROM SALESFORCEDOSSIER SALESFORCEDOSSIER
-	WHERE SALESFORCEDOSSIER.MODDATETIME > cast(coalesce(NULLIF(FILTER_MODDATETIME, ''), current timestamp - 50 years) as TIMESTAMP)
-	ORDER BY SALESFORCEDOSSIER.MODDATETIME ASC;
-
-	-- Cursor left open for client application
-	OPEN cursor1;
-END
-
-P1
-@
-
-CREATE
-	OR REPLACE PROCEDURE SP_SALESFORCE_MEMBERSHIP (IN FILTER_MODDATETIME VARCHAR(26) DEFAULT '') DYNAMIC RESULT SETS 1
-
-P1:
-
-BEGIN
-	DECLARE cursor1 CURSOR WITH RETURN
-	FOR
-	SELECT SALESFORCEMEMBERSHIP.PRIMARYKEY
-		,SALESFORCEMEMBERSHIP.NUMBER
-		,SALESFORCEMEMBERSHIP.EXPIRY
-		,SALESFORCEMEMBERSHIP.NUMBER2
-		,SALESFORCEMEMBERSHIP.TYPE
-		,SALESFORCEMEMBERSHIP.CODE
-		,SALESFORCEMEMBERSHIP.CODEDESC
-		,SALESFORCEMEMBERSHIP.CUSTOMERFK
-		,SALESFORCEMEMBERSHIP.CUSTOMERNR
-		,SALESFORCEMEMBERSHIP.MODDATETIME
-		,SALESFORCEMEMBERSHIP.MD5
-		,SALESFORCEMEMBERSHIP.ACTION
-	FROM SALESFORCEMEMBERSHIP SALESFORCEMEMBERSHIP
-	WHERE SALESFORCEMEMBERSHIP.MODDATETIME > cast(coalesce(NULLIF(FILTER_MODDATETIME, ''), current timestamp - 50 years) as TIMESTAMP)
-	ORDER BY SALESFORCEMEMBERSHIP.MODDATETIME ASC;
-
-	-- Cursor left open for client application
-	OPEN cursor1;
-END
-
-P1
-@
+CREATE OR REPLACE PROCEDURE SP_SALESFORCE_MEMBERSHIP
+    (
+    IN FILTER_MODDATETIME VARCHAR(26) DEFAULT ''
+    ) DYNAMIC
+    RESULT SETS 1 P1:
+        BEGIN
+            DECLARE cursor1 CURSOR WITH
+            RETURN FOR
+            SELECT
+                SALESFORCEMEMBERSHIP.PRIMARYKEY  ,
+                SALESFORCEMEMBERSHIP.NUMBER      ,
+                SALESFORCEMEMBERSHIP.EXPIRY      ,
+                SALESFORCEMEMBERSHIP.NUMBER2     ,
+                SALESFORCEMEMBERSHIP.TYPE        ,
+                SALESFORCEMEMBERSHIP.CODE        ,
+                SALESFORCEMEMBERSHIP.CODEDESC    ,
+                SALESFORCEMEMBERSHIP.CUSTOMERFK  ,
+                SALESFORCEMEMBERSHIP.CUSTOMERNR  ,
+                SALESFORCEMEMBERSHIP.MODDATETIME ,
+                SALESFORCEMEMBERSHIP.MD5         ,
+                SALESFORCEMEMBERSHIP.ACTION
+            FROM
+                SALESFORCEMEMBERSHIP SALESFORCEMEMBERSHIP
+            WHERE
+                SALESFORCEMEMBERSHIP.MODDATETIME > cast(coalesce(NULLIF(FILTER_MODDATETIME, ''), current timestamp - 50 years) as TIMESTAMP)
+            ORDER BY
+                SALESFORCEMEMBERSHIP.MODDATETIME ASC;
+            -- Cursor left open for client application
+            OPEN cursor1;
+        END
+    P1 @
 
 CREATE OR REPLACE PROCEDURE SP_SALESFORCE_CUSTOMER_ACTION
     (
@@ -281,16 +284,16 @@ CREATE OR REPLACE PROCEDURE SP_SALESFORCE_CUSTOMER_ACTION
                 'PRIVATE'
             END;
             /* LANGUAGE */
-            SET LANGUAGE = UPPER(COALESCE(LANGUAGE,''));
-            SET LANGUAGE =
+            SET "LANGUAGE" = UPPER(COALESCE("LANGUAGE",''));
+            SET "LANGUAGE" =
             CASE
-                LANGUAGE
+                "LANGUAGE"
             WHEN
                 ''
             THEN
                 'DE'
             ELSE
-                LANGUAGE
+                "LANGUAGE"
             END;
             /* MAILING */
             SET MAILING = UPPER(MAILING);
@@ -366,9 +369,9 @@ CREATE OR REPLACE PROCEDURE SP_SALESFORCE_CUSTOMER_ACTION
                 SET Customer_Nr_Type = COALESCE(Customer_Nr_Type,'CENTRAL');
                 /* CENTRAL will fetch and increment the GLOBAL table, which BRANCH will fetch and UPDATE the REPGLOBAL for the branch */
                 IF
+                    /* CENTRAL will fetch and increment the GLOBAL table */
                     Customer_Nr_Type = 'CENTRAL'
                 THEN
-                    /* CENTRAL will fetch and increment the GLOBAL table */
                     SELECT
                         GL_KUNDENNBR
                     INTO
@@ -427,9 +430,9 @@ CREATE OR REPLACE PROCEDURE SP_SALESFORCE_CUSTOMER_ACTION
                         FROM
                             DB2ADMIN.GENERALVALUES
                         WHERE
-                            GV_KEY1='SALESFORCE'
-                        AND GV_KEY2='CREATE_CUSTOMER'
-                        AND GV_KEY3='DEFAULT_PAYMENT_CONDITION'
+                            GV_KEY1 ='SALESFORCE'
+                        AND GV_KEY2 ='CREATE_CUSTOMER'
+                        AND GV_KEY3 ='DEFAULT_PAYMENT_CONDITION'
                         FETCH FIRST 1 ROW ONLY );
                 
                 SET Payment_Condition_Seq = COALESCE(Payment_Condition_Seq,'');
@@ -443,7 +446,7 @@ CREATE OR REPLACE PROCEDURE SP_SALESFORCE_CUSTOMER_ACTION
                 WHERE
                     UPPER(KUT_KURZ) =
                     CASE
-                        LANGUAGE
+                        "LANGUAGE"
                     WHEN
                         'EN'
                     THEN
@@ -651,22 +654,22 @@ CREATE OR REPLACE PROCEDURE SP_SALESFORCE_CUSTOMER_ACTION
                         Payment_Condition_Seq                         ,
                         ''                                            ,
                         Customer_Type_Seq                             ,
-                        SALUTATION                                    ,
-                        FIRSTNAME                                     ,
-                        LASTNAME                                      ,
+                        COALESCE(SALUTATION,'')                       ,
+                        COALESCE(FIRSTNAME,'')                        ,
+                        COALESCE(LASTNAME,'')                         ,
                         ''                                            ,
                         ''                                            ,
                         ''                                            ,
-                        STREET1                                       ,
-                        STREET2                                       ,
-                        POSTALCODE                                    ,
-                        CITY                                          ,
+                        COALESCE(STREET1,'')                          ,
+                        COALESCE(STREET2,'')                          ,
+                        COALESCE(POSTALCODE,'')                       ,
+                        COALESCE(CITY,'')                             ,
                         ''                                            ,
-                        COUNTRYCODE                                   ,
+                        COALESCE(COUNTRYCODE,'')                      ,
                         ''                                            ,
-                        PHONE                                         ,
+                        COALESCE(PHONE,'')                            ,
                         ''                                            ,
-                        MAIL1                                         ,
+                        COALESCE(MAIL1,'')                            ,
                         ''                                            ,
                         ''                                            ,
                         NextCustomerNr                                ,
@@ -678,7 +681,7 @@ CREATE OR REPLACE PROCEDURE SP_SALESFORCE_CUSTOMER_ACTION
                         ''                                            ,
                         (
                             CASE
-                                LANGUAGE
+                                "LANGUAGE"
                             WHEN
                                 'EN'
                             THEN
@@ -693,48 +696,48 @@ CREATE OR REPLACE PROCEDURE SP_SALESFORCE_CUSTOMER_ACTION
                                 3
                             ELSE
                                 0
-                            END )          ,
-                        ''                 ,
-                        ''                 ,
-                        0                  ,
-                        0                  ,
-                        PHONEBUSINESS      ,
-                        ''                 ,
-                        CAST(NULL AS DATE) ,
-                        ''                 ,
-                        ''                 ,
-                        ''                 ,
-                        ''                 ,
-                        0                  ,
-                        0                  ,
-                        ''                 ,
-                        ''                 ,
-                        ''                 ,
-                        ''                 ,
-                        ''                 ,
-                        ''                 ,
-                        ''                 ,
-                        0                  ,
-                        ''                 ,
-                        ''                 ,
-                        ''                 ,
-                        ''                 ,
-                        ''                 ,
-                        0                  ,
-                        0                  ,
-                        ''                 ,
-                        0                  ,
-                        ''                 ,
-                        0                  ,
-                        '1'                ,
-                        'storedproc'       ,
-                        CURRENT DATE       ,
-                        'storedproc'       ,
-                        CURRENT DATE       ,
-                        ''                 ,
-                        ''                 ,
-                        0                  ,
-                        ''                 ,
+                            END )                  ,
+                        ''                         ,
+                        ''                         ,
+                        0                          ,
+                        0                          ,
+                        COALESCE(PHONEBUSINESS,'') ,
+                        ''                         ,
+                        CAST(NULL AS DATE)         ,
+                        ''                         ,
+                        ''                         ,
+                        ''                         ,
+                        ''                         ,
+                        0                          ,
+                        0                          ,
+                        ''                         ,
+                        ''                         ,
+                        ''                         ,
+                        ''                         ,
+                        ''                         ,
+                        ''                         ,
+                        ''                         ,
+                        0                          ,
+                        ''                         ,
+                        ''                         ,
+                        ''                         ,
+                        ''                         ,
+                        ''                         ,
+                        0                          ,
+                        0                          ,
+                        ''                         ,
+                        0                          ,
+                        ''                         ,
+                        0                          ,
+                        '1'                        ,
+                        'storedproc'               ,
+                        CURRENT DATE               ,
+                        'storedproc'               ,
+                        CURRENT DATE               ,
+                        ''                         ,
+                        ''                         ,
+                        0                          ,
+                        ''                         ,
                         (
                             CASE
                                 MAILING
@@ -818,7 +821,7 @@ CREATE OR REPLACE PROCEDURE SP_SALESFORCE_CUSTOMER_ACTION
                             SELECT
                                 (
                                     CASE
-                                        LANGUAGE
+                                        "LANGUAGE"
                                     WHEN
                                         'EN'
                                     THEN
@@ -929,26 +932,26 @@ CREATE OR REPLACE PROCEDURE SP_SALESFORCE_CUSTOMER_ACTION
                             DB2ADMIN.RECHEMPF
                         WHERE
                             R_KUNDENNBR = NextCustomerNr ) ,
-                    SALUTATION                             ,
-                    TITLE                                  ,
-                    FIRSTNAME                              ,
-                    LASTNAME                               ,
-                    STREET1                                ,
-                    STREET2                                ,
-                    COUNTRYCODE                            ,
-                    POSTALCODE                             ,
-                    CITY                                   ,
-                    PHONE                                  ,
-                    PHONEBUSINESS                          ,
-                    MOBILE                                 ,
+                    COALESCE(SALUTATION,'')                ,
+                    COALESCE(TITLE,'')                     ,
+                    COALESCE(FIRSTNAME,'')                 ,
+                    COALESCE(LASTNAME,'')                  ,
+                    COALESCE(STREET1,'')                   ,
+                    COALESCE(STREET2,'')                   ,
+                    COALESCE(COUNTRYCODE,'')               ,
+                    COALESCE(POSTALCODE,'')                ,
+                    COALESCE(CITY,'')                      ,
+                    COALESCE(PHONE,'')                     ,
+                    COALESCE(PHONEBUSINESS,'')             ,
+                    COALESCE(MOBILE,'')                    ,
                     NextCustomerNr                         ,
                     BIRTHDATE                              ,
-                    MAIL1                                  ,
-                    MAIL2                                  ,
+                    COALESCE(MAIL1,'')                     ,
+                    COALESCE(MAIL2,'')                     ,
                     ''                                     ,
-                    LANGUAGE                               ,
-                    MAILING                                ,
-                    "TYPE"                                 ,
+                    COALESCE("LANGUAGE",'')                ,
+                    COALESCE(MAILING,'')                   ,
+                    COALESCE("TYPE",'')                    ,
                     '0'                                    ,
                     '0'                                    ,
                     ''                                     ,
@@ -1006,23 +1009,24 @@ CREATE OR REPLACE PROCEDURE SP_SALESFORCE_CUSTOMER_ACTION
                         1
                     )
                 ;
-                /* ELSEIF ACTION = 'INSERT' AND COALESCE(LASTNAME,'') = '' */
+            
             ELSEIF
+                /* ELSEIF ACTION = 'INSERT' AND COALESCE(LASTNAME,'') = '' */
                 ACTION                    = 'INSERT'
                 AND COALESCE(LASTNAME,'') = ''
             THEN
                 SET ErrorCode = 'Missing_INSERT_LASTNAME';
                 SET ErrorDesc = 'INSERT with a missing LASTNAME parameter';
-                /* ELSEIF ACTION = 'UPDATE' AND (CUSTOMER_NR <= 0 OR COALESCE(LASTNAME,'') = '') */
             ELSEIF
+                /* ELSEIF ACTION = 'UPDATE' AND (CUSTOMER_NR <= 0 OR COALESCE(LASTNAME,'') = '') */
                 ACTION                   = 'UPDATE'
                 AND (CUSTOMER_NR         <= 0
                 OR COALESCE(LASTNAME,'') = '')
             THEN
                 SET ErrorCode = 'Missing_UPDATE_CUSTOMER_NR';
                 SET ErrorDesc = 'UPDATE with a missing, 0 or negative CUSTOMER_NR parameter';
-                /* ELSEIF ACTION = 'UPDATE' AND CUSTOMER_NR > 0 AND COALESCE(LASTNAME,'') <> '' */
             ELSEIF
+                /* ELSEIF ACTION = 'UPDATE' AND CUSTOMER_NR > 0 AND COALESCE(LASTNAME,'') <> '' */
                 ACTION                    = 'UPDATE'
                 AND CUSTOMER_NR           > 0
                 AND COALESCE(LASTNAME,'') <> ''
@@ -1031,27 +1035,27 @@ CREATE OR REPLACE PROCEDURE SP_SALESFORCE_CUSTOMER_ACTION
                 UPDATE
                     DB2ADMIN.RECHEMPF
                 SET
-                    R_ANREDE1        = SALUTATION        ,
-                    R_AN_TITEL       = TITLE             ,
-                    R_VORNAME1       = FIRSTNAME         ,
-                    R_NAME1          = LASTNAME          ,
-                    R_STRASSE        = STREET1           ,
-                    R_STRASSEZUSATZ  = STREET2           ,
-                    R_LAND           = COUNTRYCODE       ,
-                    R_PLZ            = POSTALCODE        ,
-                    R_ORT            = CITY              ,
-                    R_TEL            = PHONE             ,
-                    R_TELVOR         = ''                ,
-                    R_TELGESCHAEFT   = PHONEBUSINESS     ,
-                    R_TELGESCHAEFTVOR=''                 ,
-                    R_NATEL          = MOBILE            ,
-                    R_NATELVOR       =''                 ,
-                    R_GEBURTSTAG     = BIRTHDATE_AS_DATE ,
-                    R_INTERNET       = MAIL1             ,
-                    R_ADD_EMAIL      = MAIL2             ,
+                    R_ANREDE1        = COALESCE(SALUTATION,'')    ,
+                    R_AN_TITEL       = COALESCE(TITLE,'')         ,
+                    R_VORNAME1       = COALESCE(FIRSTNAME,'')     ,
+                    R_NAME1          = COALESCE(LASTNAME,'')      ,
+                    R_STRASSE        = COALESCE(STREET1,'')       ,
+                    R_STRASSEZUSATZ  = COALESCE(STREET2 ,'')      ,
+                    R_LAND           = COALESCE(COUNTRYCODE,'')   ,
+                    R_PLZ            = COALESCE(POSTALCODE ,'')   ,
+                    R_ORT            = COALESCE(CITY ,'')         ,
+                    R_TEL            = COALESCE(PHONE ,'')        ,
+                    R_TELVOR         = ''                         ,
+                    R_TELGESCHAEFT   = COALESCE(PHONEBUSINESS,'') ,
+                    R_TELGESCHAEFTVOR=''                          ,
+                    R_NATEL          = COALESCE(MOBILE,'')        ,
+                    R_NATELVOR       =''                          ,
+                    R_GEBURTSTAG     = BIRTHDATE_AS_DATE          ,
+                    R_INTERNET       = COALESCE(MAIL1,'')         ,
+                    R_ADD_EMAIL      = COALESCE(MAIL2,'')         ,
                     R_LANG           = (
                         CASE
-                            LANGUAGE
+                            "LANGUAGE"
                         WHEN
                             'EN'
                         THEN
@@ -1103,27 +1107,27 @@ CREATE OR REPLACE PROCEDURE SP_SALESFORCE_CUSTOMER_ACTION
                 UPDATE
                     "DB2ADMIN"."SALESFORCECUSTOMER"
                 SET
-                    "SALUTATION"    = SALUTATION        ,
-                    "TITLE"         = TITLE             ,
-                    "FIRSTNAME"     = FIRSTNAME         ,
-                    "LASTNAME"      = LASTNAME          ,
-                    "STREET1"       = STREET1           ,
-                    "STREET2"       = STREET2           ,
-                    "COUNTRYCODE"   = COUNTRYCODE       ,
-                    "POSTALCODE"    = POSTALCODE        ,
-                    "CITY"          = CITY              ,
-                    "PHONE"         = PHONE             ,
-                    "PHONEBUSINESS" = PHONEBUSINESS     ,
-                    "MOBILE"        = MOBILE            ,
-                    "CUSTOMERNR"    = CUSTOMERNR        ,
-                    "BIRTHDATE"     = BIRTHDATE         ,
-                    "MAIL1"         = MAIL1             ,
-                    "MAIL2"         = MAIL2             ,
-                    "LANGUAGE"      = LANGUAGE          ,
-                    "MAILING"       = MAILING           ,
-                    "MODDATETIME"   = CURRENT TIMESTAMP ,
-                    "MD5"           = ''                ,
-                    "ACTION"        = 'UPDATE'          ,
+                    "SALUTATION"    = COALESCE(SALUTATION,'')    ,
+                    "TITLE"         = COALESCE(TITLE ,'')        ,
+                    "FIRSTNAME"     = COALESCE(FIRSTNAME,'')     ,
+                    "LASTNAME"      = COALESCE(LASTNAME,'')      ,
+                    "STREET1"       = COALESCE(STREET1 ,'')      ,
+                    "STREET2"       = COALESCE(STREET2,'')       ,
+                    "COUNTRYCODE"   = COALESCE(COUNTRYCODE ,'')  ,
+                    "POSTALCODE"    = COALESCE(POSTALCODE ,'')   ,
+                    "CITY"          = COALESCE(CITY ,'')         ,
+                    "PHONE"         = COALESCE(PHONE,'')         ,
+                    "PHONEBUSINESS" = COALESCE(PHONEBUSINESS,'') ,
+                    "MOBILE"        = COALESCE(MOBILE ,'')       ,
+                    "CUSTOMERNR"    = CUSTOMERNR                 ,
+                    "BIRTHDATE"     = BIRTHDATE                  ,
+                    "MAIL1"         = COALESCE(MAIL1,'')         ,
+                    "MAIL2"         = COALESCE(MAIL2 ,'')        ,
+                    "LANGUAGE"      = COALESCE("LANGUAGE" ,'')   ,
+                    "MAILING"       = COALESCE(MAILING,'')       ,
+                    "MODDATETIME"   = CURRENT TIMESTAMP          ,
+                    "MD5"           = ''                         ,
+                    "ACTION"        = 'UPDATE'                   ,
                     "MODDATETIME2"  = CURRENT TIMESTAMP
                 WHERE
                     CUSTOMERNR = CUSTOMER_NR;
@@ -1155,8 +1159,9 @@ CREATE OR REPLACE PROCEDURE SP_SALESFORCE_CUSTOMER_ACTION
                         1
                     )
                 ;
-                /* ELSEIF ACTION = 'GET' AND CUSTOMER_NR <= 0 */
+            
             ELSEIF
+                /* ELSEIF ACTION = 'GET' AND CUSTOMER_NR <= 0 */
                 ACTION          = 'GET'
                 AND CUSTOMER_NR <= 0
             THEN
@@ -1172,5 +1177,4 @@ CREATE OR REPLACE PROCEDURE SP_SALESFORCE_CUSTOMER_ACTION
                 OPEN errorcursor1;
             END IF;
         END
-    P1
-@
+    P1 @
