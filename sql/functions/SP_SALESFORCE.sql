@@ -1119,7 +1119,6 @@ CREATE OR REPLACE PROCEDURE SP_SALESFORCE_CUSTOMER_ACTION
                     "PHONE"         = COALESCE(PHONE,'')         ,
                     "PHONEBUSINESS" = COALESCE(PHONEBUSINESS,'') ,
                     "MOBILE"        = COALESCE(MOBILE ,'')       ,
-                    "CUSTOMERNR"    = CUSTOMERNR                 ,
                     "BIRTHDATE"     = BIRTHDATE                  ,
                     "MAIL1"         = COALESCE(MAIL1,'')         ,
                     "MAIL2"         = COALESCE(MAIL2 ,'')        ,
@@ -1153,9 +1152,9 @@ CREATE OR REPLACE PROCEDURE SP_SALESFORCE_CUSTOMER_ACTION
                             FROM
                                 DB2ADMIN.RECHEMPF
                             WHERE
-                                R_KUNDENNBR = NextCustomerNr ) ,
-                        CAST(NextCustomerNr AS VARCHAR(20))    ,
-                        ''                                     ,
+                                R_KUNDENNBR = CUSTOMER_NR ) ,
+                        CAST(NextCustomerNr AS VARCHAR(20)) ,
+                        ''                                  ,
                         1
                     )
                 ;
