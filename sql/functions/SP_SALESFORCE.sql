@@ -186,14 +186,19 @@ CREATE OR REPLACE PROCEDURE SP_SALESFORCE_CUSTOMER_ACTION
             DECLARE Customer_Nr_Type  VARCHAR(20) DEFAULT 'CENTRAL';
             DECLARE ErrorCode         VARCHAR(254) DEFAULT '';
             DECLARE ErrorDesc         VARCHAR(254) DEFAULT '';
+            DECLARE Orig_In_Action    VARCHAR(254) DEFAULT '';
             /* The cursor "cursor1" will be the result returned by the SQL in the case of success, and
         is
             identical to the result of a call to SP_SALESFORCE_CUSTOMER */
             DECLARE cursor1 CURSOR WITH
             RETURN FOR
             SELECT
-                IN_ACTION        AS IN_ACTION           ,
+                Orig_In_Action   AS IN_ACTION           ,
+                IN_ACTION        AS IN_EFF_ACTION       ,
                 "IN_CUSTOMER_NR" AS IN_CUSTOMERNR       ,
+                'ok'             as "OUT_STATUS"        ,
+                ''               AS "OUT_ERROR"         ,
+                ''               AS "OUT_ERRORDESC"     ,
                 Rechempf_Seq     AS Rechempf_Seq        ,
                 SALESFORCECUSTOMER.PRIMARYKEY           ,
                 SALESFORCECUSTOMER.SALUTATION           ,
@@ -252,14 +257,16 @@ CREATE OR REPLACE PROCEDURE SP_SALESFORCE_CUSTOMER_ACTION
             DECLARE errorcursor1 CURSOR WITH
             RETURN FOR
             SELECT
-                IN_ACTION      AS IN_ACTION        ,
-                IN_CUSTOMER_NR AS "IN_CUSTOMER_NR" ,
-                'error'        as "STATUS"         ,
-                ErrorCode      AS "ERROR"          ,
-                ErrorDesc      AS "ERRORDESC"
+                Orig_In_Action   AS IN_ACTION     ,
+                IN_ACTION        AS IN_EFF_ACTION ,
+                "IN_CUSTOMER_NR" AS IN_CUSTOMERNR ,
+                'error'          as "OUT_STATUS"  ,
+                ErrorCode        AS "OUT_ERROR"   ,
+                ErrorDesc        AS "OUT_ERRORDESC"
             FROM
                 SYSIBM.SYSDUMMY1;
             /* Clean up parameters that have possibly been sent in lowercase or capitalized */
+            SET Orig_In_Action   = COALESCE(IN_ACTION,'');
             SET IN_ACTION        = UPPER(COALESCE("IN_ACTION", 'GET'));
             SET IN_CUSTOMER_NR   = COALESCE(IN_CUSTOMER_NR, 0);
             SET IN_SALUTATION    = COALESCE(IN_SALUTATION, '');
