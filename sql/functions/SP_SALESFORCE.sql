@@ -1010,23 +1010,28 @@ CREATE OR REPLACE PROCEDURE SP_SALESFORCE_CUSTOMER_ACTION
                         "JB_KEY3"        ,
                         "JB_LOCKMINUTES"
                     )
-                VALUES
+                SELECT
+                    NEXTVAL FOR SEQ_JOB                          ,
+                    'TOUCH_CUSTOMER'                             ,
+                    CURRENT TIMESTAMP                            ,
+                    CAST(PREVVAL FOR SEQ_RECHEMPF AS VARCHAR(20)),
+                    CAST(NextCustomerNr AS VARCHAR(20))          ,
+                    ''                                           ,
+                    1
+                FROM
+                    SYSIBM.SYSDUMMY1
+                WHERE NOT EXISTS
                     (
-                        NEXTVAL FOR SEQ_JOB ,
-                        'TOUCH_CUSTOMER'    ,
-                        CURRENT TIMESTAMP   ,
-                        (
-                            SELECT
-                                R_SEQ
-                            FROM
-                                DB2ADMIN.RECHEMPF
-                            WHERE
-                                R_KUNDENNBR = NextCustomerNr ) ,
-                        CAST(NextCustomerNr AS VARCHAR(20))    ,
-                        ''                                     ,
-                        1
-                    )
-                ;
+                        SELECT
+                            JB_SEQ
+                        FROM
+                            JOB
+                        WHERE
+                            JB_CODE   = 'TOUCH_CUSTOMER'
+                        and JB_KEY1   = CAST(PREVVAL FOR SEQ_RECHEMPF AS VARCHAR(20))
+                        and JB_KEY2   = CAST(NextCustomerNr AS VARCHAR(20))
+                        and JB_KEY3   = ''
+                        and JB_STATUS = 0 );
             
             ELSEIF
                 /* ELSEIF IN_ACTION = 'INSERT' AND LASTNAME = '' */
@@ -1179,17 +1184,28 @@ CREATE OR REPLACE PROCEDURE SP_SALESFORCE_CUSTOMER_ACTION
                         "JB_KEY3"        ,
                         "JB_LOCKMINUTES"
                     )
-                VALUES
+                SELECT
+                    NEXTVAL FOR SEQ_JOB                 ,
+                    'TOUCH_CUSTOMER'                    ,
+                    CURRENT TIMESTAMP                   ,
+                    Rechempf_Seq                        ,
+                    CAST(IN_CUSTOMER_NR AS VARCHAR(20)) ,
+                    ''                                  ,
+                    1
+                FROM
+                    SYSIBM.SYSDUMMY1
+                WHERE NOT EXISTS
                     (
-                        NEXTVAL FOR SEQ_JOB                 ,
-                        'TOUCH_CUSTOMER'                    ,
-                        CURRENT TIMESTAMP                   ,
-                        Rechempf_Seq                        ,
-                        CAST(NextCustomerNr AS VARCHAR(20)) ,
-                        ''                                  ,
-                        1
-                    )
-                ;
+                        SELECT
+                            JB_SEQ
+                        FROM
+                            JOB
+                        WHERE
+                            JB_CODE   = 'TOUCH_CUSTOMER'
+                        and JB_KEY1   = Rechempf_Seq
+                        and JB_KEY2   = CAST(IN_CUSTOMER_NR AS VARCHAR(20))
+                        and JB_KEY3   = ''
+                        and JB_STATUS = 0 );
             
             ELSEIF
                 /* ELSEIF IN_ACTION = 'GET' AND IN_CUSTOMER_NR <= 0 */
