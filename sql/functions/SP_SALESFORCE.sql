@@ -54,7 +54,7 @@ CREATE OR REPLACE PROCEDURE SP_SALESFORCE_CUSTOMER
                 SALESFORCECUSTOMER.MD5                  ,
                 SALESFORCECUSTOMER.ACTION               ,
                 SALESFORCECUSTOMER.LOCKEDREASON         ,
-                SALESFORCECUSTOMER.SOURCE
+				SALESFORCECUSTOMER.EXTERNALKEY
             FROM
                 SALESFORCECUSTOMER SALESFORCECUSTOMER
             WHERE
@@ -174,7 +174,8 @@ CREATE OR REPLACE PROCEDURE SP_SALESFORCE_CUSTOMER_ACTION
     IN IN_MAIL2         VARCHAR(80) DEFAULT ''    ,
     IN IN_LANGUAGE      VARCHAR(3) DEFAULT ''     ,
     IN IN_MAILING       VARCHAR(3) DEFAULT 'YES'  ,
-    IN IN_TYPE          VARCHAR(20) DEFAULT 'PRIVATE'
+    IN IN_TYPE          VARCHAR(20) DEFAULT 'PRIVATE',
+	IN IN_EXTERNALKEY   VARCHAR(40) DEFAULT ''
     ) DYNAMIC
     RESULT SETS 1 MODIFIES SQL DATA P1:
         BEGIN
@@ -247,7 +248,8 @@ CREATE OR REPLACE PROCEDURE SP_SALESFORCE_CUSTOMER_ACTION
                 SALESFORCECUSTOMER.MODDATETIME          ,
                 SALESFORCECUSTOMER.MD5                  ,
                 SALESFORCECUSTOMER.ACTION               ,
-                SALESFORCECUSTOMER.LOCKEDREASON
+                SALESFORCECUSTOMER.LOCKEDREASON         ,
+				SALESFORCECUSTOMER.EXTERNALKEY
             FROM
                 SALESFORCECUSTOMER SALESFORCECUSTOMER
             WHERE
@@ -288,6 +290,7 @@ CREATE OR REPLACE PROCEDURE SP_SALESFORCE_CUSTOMER_ACTION
             SET IN_LANGUAGE      = UPPER(COALESCE(IN_LANGUAGE, ''));
             SET IN_MAILING       = UPPER(COALESCE(IN_MAILING, 'YES'));
             SET IN_TYPE          = UPPER(COALESCE(IN_TYPE, 'PRIVATE'));
+			SET IN_EXTERNALKEY   = COALESCE(IN_EXTERNALKEY, '');
             /* IN_ACTION */
             SET IN_ACTION =
             CASE
@@ -774,7 +777,7 @@ CREATE OR REPLACE PROCEDURE SP_SALESFORCE_CUSTOMER_ACTION
                         0         ,
                         ''        ,
                         ''        ,
-                        ''        ,
+                        IN_EXTERNALKEY ,
                         ''        ,
                         ''        ,
                         ''        ,
@@ -940,7 +943,8 @@ CREATE OR REPLACE PROCEDURE SP_SALESFORCE_CUSTOMER_ACTION
                         "MD5"                  ,
                         ACTION                 ,
                         "LOCKEDREASON"         ,
-                        "MODDATETIME2"
+                        "MODDATETIME2"         ,
+						"EXTERNALKEY"
                     )
                 VALUES
                     (
@@ -997,7 +1001,8 @@ CREATE OR REPLACE PROCEDURE SP_SALESFORCE_CUSTOMER_ACTION
                     ''                                     ,
                     'INSERT'                               ,
                     ''                                     ,
-                    CAST(CURRENT TIMESTAMP AS CHAR(26))
+                    CAST(CURRENT TIMESTAMP AS CHAR(26))    ,
+					IN_EXTERNALKEY
                     )
                 ;
                 /* Add a JOB to create a DWH Trigger TOUCH_CUSTOMER to update the data in the SALESFORCECUSTOMER table */
@@ -1143,7 +1148,8 @@ CREATE OR REPLACE PROCEDURE SP_SALESFORCE_CUSTOMER_ACTION
                             1
                         ELSE
                             0
-                        END )
+                        END ) ,
+					R_MASTR1 = IN_EXTERNALKEY
                 WHERE
                     R_SEQ = Rechempf_Seq;
                 /* Update the SALESFORCECUSTOMER table. Only those parameters that are passed are updated. */
@@ -1171,7 +1177,8 @@ CREATE OR REPLACE PROCEDURE SP_SALESFORCE_CUSTOMER_ACTION
                     MODDATETIME   = CAST(CURRENT TIMESTAMP AS CHAR(26)) ,
                     MD5           = ''                                  ,
                     ACTION        = 'UPDATE'                            ,
-                    MODDATETIME2  = CAST(CURRENT TIMESTAMP AS CHAR(26))
+                    MODDATETIME2  = CAST(CURRENT TIMESTAMP AS CHAR(26)) ,
+					EXTERNALKEY       = IN_EXTERNALKEY 
                 WHERE
                     PRIMARYKEY = Rechempf_Seq;
                 /* Add a JOB to create a DWH Trigger TOUCH_CUSTOMER to update the data in the SALESFORCECUSTOMER table */
