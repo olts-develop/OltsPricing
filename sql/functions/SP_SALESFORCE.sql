@@ -81,12 +81,22 @@ CREATE OR REPLACE PROCEDURE SP_SALESFORCE_DOSSIER
                 SALESFORCEDOSSIER.DOSSIERNR                ,
                 SALESFORCEDOSSIER.REVISIONNR               ,
                 SALESFORCEDOSSIER.DESTINATIONCODE          ,
-                SALESFORCEDOSSIER.TURNOVERNETTO            ,
+                
                 SALESFORCEDOSSIER.DEPDATE                  ,
                 SALESFORCEDOSSIER.CREATEDATE               ,
                 SALESFORCEDOSSIER.DOSSIERSTATE             ,
                 SALESFORCEDOSSIER.NRPAX                    ,
                 SALESFORCEDOSSIER.RETURNDATE               ,
+                SALESFORCEDOSSIER.CODE1                    ,
+                SALESFORCEDOSSIER.CODE2                    ,
+                SALESFORCEDOSSIER.CODE3                    ,
+                SALESFORCEDOSSIER.CODE4                    ,
+                SALESFORCEDOSSIER.SCORE                    ,
+                SALESFORCEDOSSIER.TITLE                    ,
+                SALESFORCEDOSSIER.TITLECODE                ,
+                SALESFORCEDOSSIER.OWNERCODE                ,
+                SALESFORCEDOSSIER.OWNERNAME                ,
+				
                 SALESFORCEDOSSIER.NROFFERSPRINTED          ,
                 SALESFORCEDOSSIER.NRINVOICESPRINTED        ,
                 SALESFORCEDOSSIER.NRCREDITNOTESPRINTED     ,
@@ -96,19 +106,20 @@ CREATE OR REPLACE PROCEDURE SP_SALESFORCE_DOSSIER
                 SALESFORCEDOSSIER.LASTINVOICEPRINTDATE     ,
                 SALESFORCEDOSSIER.FIRSTCREDITNOTEPRINTDATE ,
                 SALESFORCEDOSSIER.LASTCREDITNOTEPRINTDATE  ,
+				
+				SALESFORCEDOSSIER.TURNOVERBRUTTO           ,
+				SALESFORCEDOSSIER.TURNOVERNETTOEXCLFLIGHT  ,
+				SALESFORCEDOSSIER.TURNOVERBRUTTOEXCLFLIGHT ,
+				SALESFORCEDOSSIER.BUY                      ,
+				SALESFORCEDOSSIER.BUYEXCLFLIGHT            ,
+				SALESFORCEDOSSIER.MARGINBRUTTO             ,
+				SALESFORCEDOSSIER.MARGINNETTO              ,
+				SALESFORCEDOSSIER.MARGINBRUTTOEXCLFLIGHT   ,
+				SALESFORCEDOSSIER.MARGINNETTOEXCLFLIGHT    ,
+				
                 SALESFORCEDOSSIER.MODDATETIME              ,
                 SALESFORCEDOSSIER.MD5                      ,
-                SALESFORCEDOSSIER.ACTION                   ,
-                SALESFORCEDOSSIER.TURNOVERBRUTTO           ,
-                SALESFORCEDOSSIER.CODE1                    ,
-                SALESFORCEDOSSIER.CODE2                    ,
-                SALESFORCEDOSSIER.CODE3                    ,
-                SALESFORCEDOSSIER.CODE4                    ,
-                SALESFORCEDOSSIER.SCORE                    ,
-                SALESFORCEDOSSIER.TITLE                    ,
-                SALESFORCEDOSSIER.TITLECODE                ,
-                SALESFORCEDOSSIER.OWNERCODE                ,
-                SALESFORCEDOSSIER.OWNERNAME
+                SALESFORCEDOSSIER.ACTION                   				
             FROM
                 SALESFORCEDOSSIER SALESFORCEDOSSIER
             WHERE
@@ -151,7 +162,6 @@ CREATE OR REPLACE PROCEDURE SP_SALESFORCE_MEMBERSHIP
             OPEN cursor1;
         END
     P1 @
-    --WARNING! ERRORS ENCOUNTERED DURING SQL PARSING! (FEEDBACK TO https://github.com/TaoK/PoorMansTSqlFormatter/commits)
 
 CREATE OR REPLACE PROCEDURE SP_SALESFORCE_CUSTOMER_ACTION
     (
@@ -174,8 +184,7 @@ CREATE OR REPLACE PROCEDURE SP_SALESFORCE_CUSTOMER_ACTION
     IN IN_MAIL2         VARCHAR(80) DEFAULT ''    ,
     IN IN_LANGUAGE      VARCHAR(3) DEFAULT ''     ,
     IN IN_MAILING       VARCHAR(3) DEFAULT 'YES'  ,
-    IN IN_TYPE          VARCHAR(20) DEFAULT 'PRIVATE',
-	IN IN_EXTERNALKEY   VARCHAR(40) DEFAULT ''
+    IN IN_TYPE          VARCHAR(20) DEFAULT 'PRIVATE'
     ) DYNAMIC
     RESULT SETS 1 MODIFIES SQL DATA P1:
         BEGIN
@@ -248,8 +257,7 @@ CREATE OR REPLACE PROCEDURE SP_SALESFORCE_CUSTOMER_ACTION
                 SALESFORCECUSTOMER.MODDATETIME          ,
                 SALESFORCECUSTOMER.MD5                  ,
                 SALESFORCECUSTOMER.ACTION               ,
-                SALESFORCECUSTOMER.LOCKEDREASON         ,
-				SALESFORCECUSTOMER.EXTERNALKEY
+                SALESFORCECUSTOMER.LOCKEDREASON
             FROM
                 SALESFORCECUSTOMER SALESFORCECUSTOMER
             WHERE
@@ -290,7 +298,6 @@ CREATE OR REPLACE PROCEDURE SP_SALESFORCE_CUSTOMER_ACTION
             SET IN_LANGUAGE      = UPPER(COALESCE(IN_LANGUAGE, ''));
             SET IN_MAILING       = UPPER(COALESCE(IN_MAILING, 'YES'));
             SET IN_TYPE          = UPPER(COALESCE(IN_TYPE, 'PRIVATE'));
-			SET IN_EXTERNALKEY   = COALESCE(IN_EXTERNALKEY, '');
             /* IN_ACTION */
             SET IN_ACTION =
             CASE
@@ -777,7 +784,7 @@ CREATE OR REPLACE PROCEDURE SP_SALESFORCE_CUSTOMER_ACTION
                         0         ,
                         ''        ,
                         ''        ,
-                        IN_EXTERNALKEY ,
+                        ''        ,
                         ''        ,
                         ''        ,
                         ''        ,
@@ -837,8 +844,40 @@ CREATE OR REPLACE PROCEDURE SP_SALESFORCE_CUSTOMER_ACTION
                             FROM
                                 DB2ADMIN.ANREDE
                             WHERE
-                                UPPER(AN_DEUTSCH)        = UPPER(IN_SALUTATION)
-                            AND COALESCE(AN_DEUTSCH, '') <> '' ) ,
+                                RTRIM(UPPER(CASE
+                                        IN_LANGUAGE
+                                    WHEN
+                                        'EN'
+                                    THEN
+                                        AN_ENGLISCH
+                                    WHEN
+                                        'FR'
+                                    THEN
+                                        AN_FRANZ
+                                    WHEN
+                                        'IT'
+                                    THEN
+                                        AN_ITAL
+                                    ELSE
+                                        AN_DEUTSCH
+                                    END ),'.')        = RTRIM(UPPER(IN_SALUTATION),'.')
+                            AND COALESCE(CASE
+                                        IN_LANGUAGE
+                                    WHEN
+                                        'EN'
+                                    THEN
+                                        AN_ENGLISCH
+                                    WHEN
+                                        'FR'
+                                    THEN
+                                        AN_FRANZ
+                                    WHEN
+                                        'IT'
+                                    THEN
+                                        AN_ITAL
+                                    ELSE
+                                        AN_DEUTSCH
+                                    END , '') <> '' ) ,
                         (
                             SELECT
                                 (
@@ -943,8 +982,7 @@ CREATE OR REPLACE PROCEDURE SP_SALESFORCE_CUSTOMER_ACTION
                         "MD5"                  ,
                         ACTION                 ,
                         "LOCKEDREASON"         ,
-                        "MODDATETIME2"         ,
-						"EXTERNALKEY"
+                        "MODDATETIME2"
                     )
                 VALUES
                     (
@@ -1001,8 +1039,7 @@ CREATE OR REPLACE PROCEDURE SP_SALESFORCE_CUSTOMER_ACTION
                     ''                                     ,
                     'INSERT'                               ,
                     ''                                     ,
-                    CAST(CURRENT TIMESTAMP AS CHAR(26))    ,
-					IN_EXTERNALKEY
+                    CAST(CURRENT TIMESTAMP AS CHAR(26))
                     )
                 ;
                 /* Add a JOB to create a DWH Trigger TOUCH_CUSTOMER to update the data in the SALESFORCECUSTOMER table */
@@ -1101,6 +1138,46 @@ CREATE OR REPLACE PROCEDURE SP_SALESFORCE_CUSTOMER_ACTION
                         END )             ,
                     R_INTERNET  = IN_MAIL1 ,
                     R_ADD_EMAIL = IN_MAIL2 ,
+                    R_ANSEQ = (
+                            SELECT
+                                AN_SEQ
+                            FROM
+                                DB2ADMIN.ANREDE
+                            WHERE
+                                RTRIM(UPPER(CASE
+                                        IN_LANGUAGE
+                                    WHEN
+                                        'EN'
+                                    THEN
+                                        AN_ENGLISCH
+                                    WHEN
+                                        'FR'
+                                    THEN
+                                        AN_FRANZ
+                                    WHEN
+                                        'IT'
+                                    THEN
+                                        AN_ITAL
+                                    ELSE
+                                        AN_DEUTSCH
+                                    END ),'.')        = RTRIM(UPPER(IN_SALUTATION),'.')
+                            AND COALESCE(CASE
+                                        IN_LANGUAGE
+                                    WHEN
+                                        'EN'
+                                    THEN
+                                        AN_ENGLISCH
+                                    WHEN
+                                        'FR'
+                                    THEN
+                                        AN_FRANZ
+                                    WHEN
+                                        'IT'
+                                    THEN
+                                        AN_ITAL
+                                    ELSE
+                                        AN_DEUTSCH
+                                    END , '') <> '' ) ,
                     R_LANG      = (
                         CASE
                             IN_LANGUAGE
@@ -1148,8 +1225,7 @@ CREATE OR REPLACE PROCEDURE SP_SALESFORCE_CUSTOMER_ACTION
                             1
                         ELSE
                             0
-                        END ) ,
-					R_MASTR1 = IN_EXTERNALKEY
+                        END )
                 WHERE
                     R_SEQ = Rechempf_Seq;
                 /* Update the SALESFORCECUSTOMER table. Only those parameters that are passed are updated. */
@@ -1177,8 +1253,7 @@ CREATE OR REPLACE PROCEDURE SP_SALESFORCE_CUSTOMER_ACTION
                     MODDATETIME   = CAST(CURRENT TIMESTAMP AS CHAR(26)) ,
                     MD5           = ''                                  ,
                     ACTION        = 'UPDATE'                            ,
-                    MODDATETIME2  = CAST(CURRENT TIMESTAMP AS CHAR(26)) ,
-					EXTERNALKEY       = IN_EXTERNALKEY 
+                    MODDATETIME2  = CAST(CURRENT TIMESTAMP AS CHAR(26))
                 WHERE
                     PRIMARYKEY = Rechempf_Seq;
                 /* Add a JOB to create a DWH Trigger TOUCH_CUSTOMER to update the data in the SALESFORCECUSTOMER table */
