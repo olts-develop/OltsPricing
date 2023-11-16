@@ -1,3 +1,4 @@
+/* Use Notepad++ and SQLinForm to format this SQL: 2 spaces */
 CREATE OR REPLACE PROCEDURE SP_SALESFORCE_CUSTOMER
   (
   IN FILTER_MODDATETIME VARCHAR(26) DEFAULT ''
@@ -473,9 +474,9 @@ CREATE OR REPLACE PROCEDURE SP_SALESFORCE_CUSTOMER_ACTION
               FROM
                 DB2ADMIN.GENERALVALUES
               WHERE
-                GV_KEY1   = 'SALESFORCE'
-              AND GV_KEY2 = 'CREATE_CUSTOMER'
-              AND GV_KEY3 = 'DEFAULT_CUSTOMER_TYPE_E'
+                GV_KEY1     = 'SALESFORCE'
+                AND GV_KEY2 = 'CREATE_CUSTOMER'
+                AND GV_KEY3 = 'DEFAULT_CUSTOMER_TYPE_E'
               FETCH FIRST 1 ROW ONLY )
           WHEN
             'FR'
@@ -486,9 +487,9 @@ CREATE OR REPLACE PROCEDURE SP_SALESFORCE_CUSTOMER_ACTION
               FROM
                 DB2ADMIN.GENERALVALUES
               WHERE
-                GV_KEY1   = 'SALESFORCE'
-              AND GV_KEY2 = 'CREATE_CUSTOMER'
-              AND GV_KEY3 = 'DEFAULT_CUSTOMER_TYPE_F'
+                GV_KEY1     = 'SALESFORCE'
+                AND GV_KEY2 = 'CREATE_CUSTOMER'
+                AND GV_KEY3 = 'DEFAULT_CUSTOMER_TYPE_F'
               FETCH FIRST 1 ROW ONLY )
           WHEN
             'IT'
@@ -499,9 +500,9 @@ CREATE OR REPLACE PROCEDURE SP_SALESFORCE_CUSTOMER_ACTION
               FROM
                 DB2ADMIN.GENERALVALUES
               WHERE
-                GV_KEY1   = 'SALESFORCE'
-              AND GV_KEY2 = 'CREATE_CUSTOMER'
-              AND GV_KEY3 = 'DEFAULT_CUSTOMER_TYPE_I'
+                GV_KEY1     = 'SALESFORCE'
+                AND GV_KEY2 = 'CREATE_CUSTOMER'
+                AND GV_KEY3 = 'DEFAULT_CUSTOMER_TYPE_I'
               FETCH FIRST 1 ROW ONLY )
           ELSE
             (
@@ -510,9 +511,9 @@ CREATE OR REPLACE PROCEDURE SP_SALESFORCE_CUSTOMER_ACTION
               FROM
                 DB2ADMIN.GENERALVALUES
               WHERE
-                GV_KEY1   = 'SALESFORCE'
-              AND GV_KEY2 = 'CREATE_CUSTOMER'
-              AND GV_KEY3 = 'DEFAULT_CUSTOMER_TYPE_D'
+                GV_KEY1     = 'SALESFORCE'
+                AND GV_KEY2 = 'CREATE_CUSTOMER'
+                AND GV_KEY3 = 'DEFAULT_CUSTOMER_TYPE_D'
               FETCH FIRST 1 ROW ONLY )
           END;
         
