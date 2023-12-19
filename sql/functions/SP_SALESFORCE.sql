@@ -1,166 +1,3 @@
-/* Use Notepad++ and SQLinForm to format this SQL: 2 spaces */
-CREATE OR REPLACE PROCEDURE SP_SALESFORCE_CUSTOMER
-  (
-  IN FILTER_MODDATETIME VARCHAR(26) DEFAULT ''
-  ) DYNAMIC
-  RESULT SETS 1 P1:
-    BEGIN
-      DECLARE cursor1 CURSOR WITH
-      RETURN FOR
-      SELECT
-        SALESFORCECUSTOMER.PRIMARYKEY           ,
-        SALESFORCECUSTOMER.SALUTATION           ,
-        SALESFORCECUSTOMER.TITLE                ,
-        SALESFORCECUSTOMER.FIRSTNAME            ,
-        SALESFORCECUSTOMER.LASTNAME             ,
-        SALESFORCECUSTOMER.STREET1              ,
-        SALESFORCECUSTOMER.STREET2              ,
-        SALESFORCECUSTOMER.COUNTRYCODE          ,
-        SALESFORCECUSTOMER.POSTALCODE           ,
-        SALESFORCECUSTOMER.CITY                 ,
-        SALESFORCECUSTOMER.PHONE                ,
-        SALESFORCECUSTOMER.PHONEBUSINESS        ,
-        SALESFORCECUSTOMER.MOBILE               ,
-        SALESFORCECUSTOMER.CUSTOMERNR           ,
-        SALESFORCECUSTOMER.BIRTHDATE            ,
-        SALESFORCECUSTOMER.MAIL1                ,
-        SALESFORCECUSTOMER.MAIL2                ,
-        SALESFORCECUSTOMER.LOCKED               ,
-        SALESFORCECUSTOMER.LANGUAGE             ,
-        SALESFORCECUSTOMER.MAILING              ,
-        SALESFORCECUSTOMER.TYPE                 ,
-        SALESFORCECUSTOMER.NROFFILES            ,
-        SALESFORCECUSTOMER.NROFPRINTEDFILES     ,
-        SALESFORCECUSTOMER.NONSMOKER            ,
-        SALESFORCECUSTOMER.SMOKER               ,
-        SALESFORCECUSTOMER.AISLE                ,
-        SALESFORCECUSTOMER.WINDOW               ,
-        SALESFORCECUSTOMER.SPECIALMEALCODE      ,
-        SALESFORCECUSTOMER.SPECIALSEATCODE      ,
-        SALESFORCECUSTOMER.TRAINHALBTAX         ,
-        SALESFORCECUSTOMER.TRAINHALBTAXEXPIRY   ,
-        SALESFORCECUSTOMER.TRAINGA              ,
-        SALESFORCECUSTOMER.TRAINGAEXPIRY        ,
-        SALESFORCECUSTOMER.TRAINNRYEARS         ,
-        SALESFORCECUSTOMER.TRAINCLASS           ,
-        SALESFORCECUSTOMER.PASSPORTNATIONALITY  ,
-        SALESFORCECUSTOMER.PASSPORTBIRTHTOWN    ,
-        SALESFORCECUSTOMER.PASSPORTNUMBER       ,
-        SALESFORCECUSTOMER.PASSPORTVALIDUNTIL   ,
-        SALESFORCECUSTOMER.PASSPORTPLACEOFISSUE ,
-        SALESFORCECUSTOMER.PASSPORTISSUEDATE    ,
-        SALESFORCECUSTOMER.JOB                  ,
-        SALESFORCECUSTOMER.LAST10DESTINATIONS   ,
-        SALESFORCECUSTOMER.MODDATETIME          ,
-        SALESFORCECUSTOMER.MD5                  ,
-        SALESFORCECUSTOMER.ACTION               ,
-        SALESFORCECUSTOMER.LOCKEDREASON         ,
-        SALESFORCECUSTOMER.EXTERNALKEY
-      FROM
-        SALESFORCECUSTOMER SALESFORCECUSTOMER
-      WHERE
-        SALESFORCECUSTOMER.MODDATETIME > cast(coalesce(NULLIF(FILTER_MODDATETIME, ''), current timestamp - 50 years) as TIMESTAMP)
-      ORDER BY
-        SALESFORCECUSTOMER.MODDATETIME ASC;
-      -- Cursor left open for client application
-      OPEN cursor1;
-    END
-  P1 @
-
-CREATE OR REPLACE PROCEDURE SP_SALESFORCE_DOSSIER
-  (
-  IN FILTER_MODDATETIME VARCHAR(26) DEFAULT ''
-  ) DYNAMIC
-  RESULT SETS 1 P1:
-    BEGIN
-      DECLARE cursor1 CURSOR WITH
-      RETURN FOR
-      SELECT
-        SALESFORCEDOSSIER.PRIMARYKEY               ,
-        SALESFORCEDOSSIER.CUSTOMERFK               ,
-        SALESFORCEDOSSIER.CUSTOMERNR               ,
-        SALESFORCEDOSSIER.DOSSIERNR                ,
-        SALESFORCEDOSSIER.REVISIONNR               ,
-        SALESFORCEDOSSIER.DESTINATIONCODE          ,
-        SALESFORCEDOSSIER.DEPDATE                  ,
-        SALESFORCEDOSSIER.CREATEDATE               ,
-        SALESFORCEDOSSIER.DOSSIERSTATE             ,
-        SALESFORCEDOSSIER.NRPAX                    ,
-        SALESFORCEDOSSIER.RETURNDATE               ,
-        SALESFORCEDOSSIER.CODE1                    ,
-        SALESFORCEDOSSIER.CODE2                    ,
-        SALESFORCEDOSSIER.CODE3                    ,
-        SALESFORCEDOSSIER.CODE4                    ,
-        SALESFORCEDOSSIER.SCORE                    ,
-        SALESFORCEDOSSIER.TITLE                    ,
-        SALESFORCEDOSSIER.TITLECODE                ,
-        SALESFORCEDOSSIER.OWNERCODE                ,
-        SALESFORCEDOSSIER.OWNERNAME                ,
-        SALESFORCEDOSSIER.NROFFERSPRINTED          ,
-        SALESFORCEDOSSIER.NRINVOICESPRINTED        ,
-        SALESFORCEDOSSIER.NRCREDITNOTESPRINTED     ,
-        SALESFORCEDOSSIER.FIRSTOFFERPRINTDATE      ,
-        SALESFORCEDOSSIER.LASTOFFERPRINTDATE       ,
-        SALESFORCEDOSSIER.FIRSTINVOICEPRINTDATE    ,
-        SALESFORCEDOSSIER.LASTINVOICEPRINTDATE     ,
-        SALESFORCEDOSSIER.FIRSTCREDITNOTEPRINTDATE ,
-        SALESFORCEDOSSIER.LASTCREDITNOTEPRINTDATE  ,
-        SALESFORCEDOSSIER.TURNOVERNETTO            ,
-        SALESFORCEDOSSIER.TURNOVERBRUTTO           ,
-        SALESFORCEDOSSIER.TURNOVERNETTOEXCLFLIGHT  ,
-        SALESFORCEDOSSIER.TURNOVERBRUTTOEXCLFLIGHT ,
-        SALESFORCEDOSSIER.BUY                      ,
-        SALESFORCEDOSSIER.BUYEXCLFLIGHT            ,
-        SALESFORCEDOSSIER.MARGINBRUTTO             ,
-        SALESFORCEDOSSIER.MARGINNETTO              ,
-        SALESFORCEDOSSIER.MARGINBRUTTOEXCLFLIGHT   ,
-        SALESFORCEDOSSIER.MARGINNETTOEXCLFLIGHT    ,
-        SALESFORCEDOSSIER.MODDATETIME              ,
-        SALESFORCEDOSSIER.MD5                      ,
-        SALESFORCEDOSSIER.ACTION
-      FROM
-        SALESFORCEDOSSIER SALESFORCEDOSSIER
-      WHERE
-        SALESFORCEDOSSIER.MODDATETIME > cast(coalesce(NULLIF(FILTER_MODDATETIME, ''), current timestamp - 50 years) as TIMESTAMP)
-      ORDER BY
-        SALESFORCEDOSSIER.MODDATETIME ASC;
-      -- Cursor left open for client application
-      OPEN cursor1;
-    END
-  P1 @
-
-CREATE OR REPLACE PROCEDURE SP_SALESFORCE_MEMBERSHIP
-  (
-  IN FILTER_MODDATETIME VARCHAR(26) DEFAULT ''
-  ) DYNAMIC
-  RESULT SETS 1 P1:
-    BEGIN
-      DECLARE cursor1 CURSOR WITH
-      RETURN FOR
-      SELECT
-        SALESFORCEMEMBERSHIP.PRIMARYKEY  ,
-        SALESFORCEMEMBERSHIP.NUMBER      ,
-        SALESFORCEMEMBERSHIP.EXPIRY      ,
-        SALESFORCEMEMBERSHIP.NUMBER2     ,
-        SALESFORCEMEMBERSHIP.TYPE        ,
-        SALESFORCEMEMBERSHIP.CODE        ,
-        SALESFORCEMEMBERSHIP.CODEDESC    ,
-        SALESFORCEMEMBERSHIP.CUSTOMERFK  ,
-        SALESFORCEMEMBERSHIP.CUSTOMERNR  ,
-        SALESFORCEMEMBERSHIP.MODDATETIME ,
-        SALESFORCEMEMBERSHIP.MD5         ,
-        SALESFORCEMEMBERSHIP.ACTION
-      FROM
-        SALESFORCEMEMBERSHIP SALESFORCEMEMBERSHIP
-      WHERE
-        SALESFORCEMEMBERSHIP.MODDATETIME > cast(coalesce(NULLIF(FILTER_MODDATETIME, ''), current timestamp - 50 years) as TIMESTAMP)
-      ORDER BY
-        SALESFORCEMEMBERSHIP.MODDATETIME ASC;
-      -- Cursor left open for client application
-      OPEN cursor1;
-    END
-  P1 @
-
 CREATE OR REPLACE PROCEDURE SP_SALESFORCE_CUSTOMER_ACTION
   (
   IN IN_ACTION        VARCHAR(26) DEFAULT 'GET' ,
@@ -186,10 +23,12 @@ CREATE OR REPLACE PROCEDURE SP_SALESFORCE_CUSTOMER_ACTION
   ) DYNAMIC
   RESULT SETS 1 MODIFIES SQL DATA P1:
     BEGIN
-      ATOMIC DECLARE NextCustomerNr INTEGER DEFAULT 0;
-      DECLARE Customer_Type_Seq     VARCHAR(20) DEFAULT '';
-      DECLARE Payment_Condition_Seq VARCHAR(20) DEFAULT '';
-      DECLARE Rechempf_Seq          VARCHAR(20) DEFAULT '';
+      ATOMIC DECLARE NextCustomerNr       INTEGER DEFAULT 0;
+      DECLARE Customer_Type_Seq           VARCHAR(20) DEFAULT '';
+      DECLARE Payment_Condition_Seq       VARCHAR(20) DEFAULT '';
+      DECLARE Rechempf_Seq                VARCHAR(20) DEFAULT '';
+      DECLARE Customer_Anrede_Seq         VARCHAR(20) DEFAULT '';
+      DECLARE Customer_Anrede_Briefanrede VARCHAR(40) DEFAULT '';
       /* CENTRAL will fetch and increment the GLOBAL table, which BRANCH will fetch and UPDATE the REPGLOBAL for the branch */
       DECLARE BIRTHDATE_AS_DATE DATE;
       DECLARE Customer_Nr_Type  VARCHAR(20) DEFAULT 'CENTRAL';
@@ -275,7 +114,7 @@ CREATE OR REPLACE PROCEDURE SP_SALESFORCE_CUSTOMER_ACTION
       FROM
         SYSIBM.SYSDUMMY1;
       /* Clean up parameters that have possibly been sent in lowercase or capitalized */
-      SET Orig_In_Action   = COALESCE(IN_ACTION,'');
+      SET Orig_In_Action   = COALESCE(IN_ACTION, '');
       SET IN_ACTION        = UPPER(COALESCE("IN_ACTION", 'GET'));
       SET IN_CUSTOMER_NR   = COALESCE(IN_CUSTOMER_NR, 0);
       SET IN_SALUTATION    = COALESCE(IN_SALUTATION, '');
@@ -360,6 +199,67 @@ CREATE OR REPLACE PROCEDURE SP_SALESFORCE_CUSTOMER_ACTION
       ELSE
         IN_MAILING
       END;
+      SELECT
+        AN_SEQ ,
+        CASE
+          IN_LANGUAGE
+        WHEN
+          'EN'
+        THEN
+          AN_SALUTLETTER_E
+        WHEN
+          'FR'
+        THEN
+          AN_SALUTLETTER_F
+        WHEN
+          'IT'
+        THEN
+          AN_SALUTLETTER_I
+        ELSE
+          AN_SALUTLETTER_D
+        END
+      INTO
+        Customer_Anrede_Seq ,
+        Customer_Anrede_Briefanrede
+      FROM
+        DB2ADMIN.ANREDE
+      WHERE
+        RTRIM(UPPER(
+          CASE
+            IN_LANGUAGE
+          WHEN
+            'EN'
+          THEN
+            AN_ENGLISCH
+          WHEN
+            'FR'
+          THEN
+            AN_FRANZ
+          WHEN
+            'IT'
+          THEN
+            AN_ITAL
+          ELSE
+            AN_DEUTSCH
+          END), '.') = RTRIM(UPPER(IN_SALUTATION), '.')
+      AND COALESCE(
+          CASE
+            IN_LANGUAGE
+          WHEN
+            'EN'
+          THEN
+            AN_ENGLISCH
+          WHEN
+            'FR'
+          THEN
+            AN_FRANZ
+          WHEN
+            'IT'
+          THEN
+            AN_ITAL
+          ELSE
+            AN_DEUTSCH
+          END, '') <> '';
       /* IF IN_ACTION = 'INSERT' AND LASTNAME <> '' */
       IF
         IN_ACTION       = 'INSERT'
@@ -705,7 +605,15 @@ CREATE OR REPLACE PROCEDURE SP_SALESFORCE_CUSTOMER_ACTION
             ''      ,
             ''      ,
             ''      ,
-            ''      ,
+            CASE
+              COALESCE(Customer_Anrede_Briefanrede,'')
+            WHEN
+              ''
+            THEN
+              ''
+            ELSE
+              CAST((COALESCE(Customer_Anrede_Briefanrede,'') || ' ' || IN_LASTNAME) as VARCHAR(70))
+            END ,
             (
               CASE
                 IN_LANGUAGE
@@ -829,55 +737,14 @@ CREATE OR REPLACE PROCEDURE SP_SALESFORCE_CUSTOMER_ACTION
                 1
               ELSE
                 0
-              END )  ,
-            IN_MAIL2 ,
-            ''       ,
-            ''       ,
-            ''       ,
-            ''       ,
-            ''       ,
-            (
-              SELECT
-                AN_SEQ
-              FROM
-                DB2ADMIN.ANREDE
-              WHERE
-                RTRIM(UPPER(
-                  CASE
-                    IN_LANGUAGE
-                  WHEN
-                    'EN'
-                  THEN
-                    AN_ENGLISCH
-                  WHEN
-                    'FR'
-                  THEN
-                    AN_FRANZ
-                  WHEN
-                    'IT'
-                  THEN
-                    AN_ITAL
-                  ELSE
-                    AN_DEUTSCH
-                  END ),'.') = RTRIM(UPPER(IN_SALUTATION),'.')
-              AND COALESCE(
-                  CASE
-                    IN_LANGUAGE
-                  WHEN
-                    'EN'
-                  THEN
-                    AN_ENGLISCH
-                  WHEN
-                    'FR'
-                  THEN
-                    AN_FRANZ
-                  WHEN
-                    'IT'
-                  THEN
-                    AN_ITAL
-                  ELSE
-                    AN_DEUTSCH
-                  END , '') <> '' ) ,
+              END )             ,
+            IN_MAIL2            ,
+            ''                  ,
+            ''                  ,
+            ''                  ,
+            ''                  ,
+            ''                  ,
+            Customer_Anrede_Seq ,
             (
               SELECT
                 (
@@ -1054,12 +921,12 @@ CREATE OR REPLACE PROCEDURE SP_SALESFORCE_CUSTOMER_ACTION
             "JB_LOCKMINUTES"
           )
         SELECT
-          NEXTVAL FOR SEQ_JOB                          ,
-          'TOUCH_CUSTOMER'                             ,
-          CURRENT TIMESTAMP                            ,
-          CAST(PREVVAL FOR SEQ_RECHEMPF AS VARCHAR(20)),
-          CAST(NextCustomerNr AS VARCHAR(20))          ,
-          ''                                           ,
+          NEXTVAL FOR SEQ_JOB                           ,
+          'TOUCH_CUSTOMER'                              ,
+          CURRENT TIMESTAMP                             ,
+          CAST(PREVVAL FOR SEQ_RECHEMPF AS VARCHAR(20)) ,
+          CAST(NextCustomerNr AS VARCHAR(20))           ,
+          ''                                            ,
           1
         FROM
           SYSIBM.SYSDUMMY1
@@ -1135,53 +1002,11 @@ CREATE OR REPLACE PROCEDURE SP_SALESFORCE_CUSTOMER_ACTION
               CAST(NULL AS DATE)
             ELSE
               CAST(IN_BIRTHDATE AS DATE)
-            END )               ,
-          R_INTERNET  = IN_MAIL1 ,
-          R_ADD_EMAIL = IN_MAIL2 ,
-          R_ANSEQ     =
-          (
-            SELECT
-              AN_SEQ
-            FROM
-              DB2ADMIN.ANREDE
-            WHERE
-              RTRIM(UPPER(
-                CASE
-                  IN_LANGUAGE
-                WHEN
-                  'EN'
-                THEN
-                  AN_ENGLISCH
-                WHEN
-                  'FR'
-                THEN
-                  AN_FRANZ
-                WHEN
-                  'IT'
-                THEN
-                  AN_ITAL
-                ELSE
-                  AN_DEUTSCH
-                END ),'.') = RTRIM(UPPER(IN_SALUTATION),'.')
-            AND COALESCE(
-                CASE
-                  IN_LANGUAGE
-                WHEN
-                  'EN'
-                THEN
-                  AN_ENGLISCH
-                WHEN
-                  'FR'
-                THEN
-                  AN_FRANZ
-                WHEN
-                  'IT'
-                THEN
-                  AN_ITAL
-                ELSE
-                  AN_DEUTSCH
-                END , '') <> '' ) ,
-          R_LANG          = (
+            END )                          ,
+          R_INTERNET  = IN_MAIL1            ,
+          R_ADD_EMAIL = IN_MAIL2            ,
+          R_ANSEQ     = Customer_Anrede_Seq ,
+          R_LANG      = (
             CASE
               IN_LANGUAGE
             WHEN
