@@ -395,7 +395,7 @@ BEGIN
                   AND coalesce(TOOMISC.PASSIVEFROMDATE, currentdate) > currentdate
                   )
                 )
-              THEN func_get_allotment2(IN_TOCODE, x.MISCKEY, 'M', enddate, x.ALLOTMENTENDDATE, currentdate)
+              THEN func_get_allotment2(IN_TOCODE, x.MISCKEY, 'M', startdate, x.ALLOTMENTENDDATE, currentdate)
             ELSE 'XX'
             END
           )
