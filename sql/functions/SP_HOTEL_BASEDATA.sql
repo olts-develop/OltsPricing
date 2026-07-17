@@ -1,0 +1,92 @@
+CREATE
+    OR REPLACE PROCEDURE SP_HOTEL_BASEDATA (IN IN_INCL_PASSIVE INTEGER DEFAULT 0) DYNAMIC RESULT SETS 1
+
+P1:
+
+BEGIN
+    DECLARE cursor1 CURSOR WITH RETURN
+    FOR
+    SELECT COALESCE(HOTEL.HO_SEQ, '') AS HOTELSEQ
+        , COALESCE(LAND.C_IATACODE, '') AS CNTRY
+        , COALESCE(REGION.RE_VOLL, '') AS REGION
+        , COALESCE(SUBCAT.SC_VOLL, '') AS CITY
+        , COALESCE(HO_NAME, '') AS "NAME"
+        , COALESCE(NULLIF(HO_NAMEF, ''), HO_NAME, '') AS NAME_F
+        , COALESCE(DEST_CODE, '') AS DEST_CODE
+        , COALESCE(HO_HOTELCODE, '') AS HOTELCODE
+        , COALESCE(HO_STRASSE, '') AS STREET
+        , COALESCE(HO_STRASSEZUSATZ, '') AS STREET2
+        , COALESCE(HO_PLZ, '') AS PCODE
+        , TRIM(COALESCE(HO_TELVOR, '') || COALESCE(HO_TEL, '')) AS PHONE
+        , TRIM(COALESCE(HO_FAXVOR, '') || COALESCE(HO_FAX, '')) AS FAX
+        , TRIM(COALESCE(HO_NATELVOR, '') || COALESCE(HO_NATEL, '')) AS CELL
+        , COALESCE(HO_INTERNET, '') AS EMAIL
+        , COALESCE(HV_CODE, '') AS HOTELVENDOR
+        , COALESCE(HO_KAT, '') AS CATEGORYSTRING
+        , COALESCE(KA_NBR, 0.0) AS CATEGORYNR
+        , COALESCE(HO_WETUCONTENTID, 0) AS WETUID
+        , COALESCE(HO_GIATAID, 0) AS GIATAID
+        , COALESCE(HO_GIATAOBJECTCODE, '') AS GIATAOBJECTCODE
+        , COALESCE(ZI_SEQ, '') AS ROOMSEQ
+        , COALESCE(ZI_DEUTSCH, '') AS ROOMNAME_DE
+        , COALESCE(ZI_ENGLISCH, '') AS ROOMNAME_EN
+        , COALESCE(ZI_FRANZ, '') AS ROOMNAME_FR
+        , COALESCE(ZI_ITAL, '') AS ROOMNAME_IT
+        , COALESCE(ZI_BESCHRIEBDEUTSCH, '') AS DESC_DE
+        , COALESCE(ZI_BESCHRIEBENGL, '') AS DESC_EN
+        , COALESCE(ZI_BESCHRIEBFRANZ, '') AS DESC_FR
+        , COALESCE(ZI_BESCHRIEBITAL, '') AS DESC_IT
+        , COALESCE(ZI_MAHLZEITDEUTSCH, '') AS MEAL_DE
+        , COALESCE(ZI_MAHLZEITENGL, '') AS MEAL_EN
+        , COALESCE(ZI_MAHLZEITFRANZ, '') AS MEAL_FR
+        , COALESCE(ZI_MAHLZEITITAL, '') AS MEAL_IT
+        , COALESCE(ZI_ANZAHLPERS, 0) AS OCCUPANCY
+        , COALESCE(ZI_ADD_BED_CHD, 0) AS ADD_BED_CHD
+        , COALESCE(ZI_ADD_BED_ADLT, 0) AS ADD_BED_ADLT
+        , COALESCE(ZI_TOURBOCODE, '') AS "CODE"
+        , COALESCE(ZI_TOURBOMEALCODE, '') AS MEALCODE
+    FROM HOTEL
+    INNER JOIN ZIMMER ON ZI_HOSEQ = HO_SEQ
+    INNER JOIN LAND ON C_SEQ = HO_CSEQ
+    INNER JOIN REGION ON RE_SEQ = HO_RESEQ
+    INNER JOIN SUBCAT ON SC_SEQ = HO_SCSEQ
+    LEFT OUTER JOIN DESTINATION ON DEST_SEQ = HO_DESTSEQ
+    LEFT OUTER JOIN HOTELVENDOR ON HV_SEQ = HO_HVSEQ
+    LEFT OUTER JOIN KATEGORIE ON KA_SEQ = HO_KASEQ
+    WHERE C_SEQ = HO_CSEQ
+        AND RE_SEQ = HO_RESEQ
+        AND SC_SEQ = HO_SCSEQ
+        AND (
+            CASE 
+                WHEN (
+                        coalesce(HO_PASSIV, 0) = 1
+                        AND (
+                            HO_PASSIVABDATUM IS NULL
+                            OR HO_PASSIVABDATUM <= CURRENT DATE
+                            )
+                        )
+                    THEN 1
+                ELSE 0
+                END
+            ) = IN_INCL_PASSIVE
+        AND (
+            CASE 
+                WHEN (
+                        coalesce(ZI_PASSIV, 0) = 1
+                        AND (
+                            ZI_PASSIVABDATUM IS NULL
+                            OR ZI_PASSIVABDATUM <= CURRENT DATE
+                            )
+                        )
+                    THEN 1
+                ELSE 0
+                END
+            ) = IN_INCL_PASSIVE
+    ORDER BY HOTELSEQ
+        , ZI_DEUTSCH;
+
+    /* Cursor left open for client application */
+    OPEN cursor1;
+END
+
+P1 @

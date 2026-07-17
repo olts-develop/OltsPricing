@@ -54,6 +54,10 @@ call cf3.bat func_flightpricing.sql
 
 call cf3.bat SP_PRICING_AV_HOTEL.sql
 call cf3.bat SP_PRICING_AV_MISC.sql
+call cf3.bat SP_PRICING_AV_FLIGHT.sql
+call cf3.bat SP_FLIGHT_LEG_ALLOT.sql
+call cf3.bat SP_HOTEL_BASEDATA.sql
+call cf3.bat SP_SALESFORCE.sql
 
 db2 connect reset>>createfunctions.log
 
