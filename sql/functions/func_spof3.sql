@@ -234,7 +234,10 @@ BEGIN
               )
             OR (so.ruletype = 'Always')
             )
-          AND so.days <= daysbetweenstartend
+          AND so.days <= daysbetweenstartend + 1
+		  /* @/MOD:rb:2026-08-27: Active hat ein Problem gemeldet bei Special-Offers Anfangsdatum relevant und EndDays.
+		  Vor der Anpassung war "AND so.days <= daysbetweenstartend"
+		  */
         ORDER BY so.days DESC
           ,so.todaybase DESC
           ,so.datefrom ASC
